@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using algorithmscSharp.Eigenvalues;
 
 namespace algorithmscSharp
 {
@@ -8,9 +9,12 @@ namespace algorithmscSharp
     {
         static void Main(string[] args)
         {
+            /*
             string input = "THE OFFICE party will be in Dec. this year.  the ExacT date will be sET by mid Nov.  hope to see you ALL there!  tickets are $15.00 to help cover the cost of Catering.";
             string output = TextInputHandler.formatInput(input);
             Console.WriteLine(output);
+            */
+            NashEq.TestFindNashEq();
         }
     }
 }
