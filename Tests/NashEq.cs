@@ -9,32 +9,23 @@ namespace algorithmscSharp.Eigenvalues
         public static void TestFindNashEq(){
             
             Console.WriteLine("Prisoner's Dilemma");
-            
-            //3,3 0,5
-            //5,0 1,1
-            
-            MatrixR P1 = new MatrixR(new double[,]{{ 3, 0, },
-                                                  {  5, 1, }});
-            MatrixR P2 = new MatrixR(new double[,]{{ 3, 5, },
-                                                  {  0, 1, }});
-            var test = FindNashEq(P1, P2);
+            MatrixR P1columns = new MatrixR(new double[,]{{ 3, 0, },
+                                                         {  5, 1, }});
+            MatrixR P2rows = new MatrixR(new double[,]{{ 3, 5, },
+                                                      {  0, 1, }});
+            var test = FindNashEq(P1columns, P2rows);
             foreach (var tuple in test)
             {
                 Console.WriteLine("P1 {0} - P2 {1} - Score {2}", tuple.Item1, tuple.Item2, tuple.Item3);
             }
             
-            
             /*
             Console.WriteLine("Hawk - Dove");
-            
-            //0,3 0,1
-            //1,2 3,2
-            
-            var P1 = new MatrixR(new double[,]{{ 0, 0, },
-                                               { 1, 3, }});
-            var P2 = new MatrixR(new double[,]{{ 3, 1, },
-                                               { 2, 2, }});
-            var test = FindNashEq(P1, P2);
+            var P1columns = new MatrixR(new double[,]{{ 0, 1, },
+                                                      { 3, 2, }});
+            var P2rows = new MatrixR(new double[,]{{ 0, 3, },
+                                                   { 1, 2, }});
+            var test = FindNashEq(P1columns, P2rows);
             foreach (var tuple in test)
             {
                 Console.WriteLine("P1 {0} - P2 {1} - Score {2}", tuple.Item1, tuple.Item2, tuple.Item3);
@@ -42,14 +33,23 @@ namespace algorithmscSharp.Eigenvalues
             */
             /*
             Console.WriteLine("Pigs Game");
-            //4,6 2,0
-            //2,-1 3,0
-
-            var P1 = new MatrixR(new double[,]{{ 4, 2, },
-                                               { 2, 3, }});
-            var P2 = new MatrixR(new double[,]{{ 6, 0, },
-                                               { -1, 0, }});
-            var test = FindNashEq(P1, P2);
+            var P1columns = new MatrixR(new double[,]{{ 4, 2, },
+                                                      { 2, 3, }});
+            var P2rows = new MatrixR(new double[,]{{ 6, 0, },
+                                                  { -1, 0, }});
+            var test = FindNashEq(P1columns, P2rows);
+            foreach (var tuple in test)
+            {
+                Console.WriteLine("P1 {0} - P2 {1} - Score {2}", tuple.Item1, tuple.Item2, tuple.Item3);
+            }
+            */
+            /*
+            Console.WriteLine("Matching Pennies");
+            var P1columns = new MatrixR(new double[,]{{ 1, -1, },
+                                               { -1, 1, }});
+            var P2rows = new MatrixR(new double[,]{{ -1, 1, },
+                                               { 1, -1, }});
+            var test = FindNashEq(P1columns, P2rows);
             foreach (var tuple in test)
             {
                 Console.WriteLine("P1 {0} - P2 {1} - Score {2}", tuple.Item1, tuple.Item2, tuple.Item3);
