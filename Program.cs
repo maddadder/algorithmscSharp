@@ -14,7 +14,8 @@ namespace algorithmscSharp
             string output = TextInputHandler.formatInput(input);
             Console.WriteLine(output);
             */
-            NashEq.TestFindNashEq();
+            //NashEq.TestFindNashEq();
+            algorithmscSharp.Selection.PizzaPlanet.PrintOutput();
         }
     }
 }
