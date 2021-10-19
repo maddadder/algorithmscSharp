@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/bin/Debug/net5.0/algorithmscSharp.dll",
+            "program": "${workspaceRoot}/Lib/bin/Debug/net5.0/Lib.dll",
             "args": [],
             "cwd": "${workspaceRoot}",
             "externalConsole": false,

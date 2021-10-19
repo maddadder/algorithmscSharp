@@ -9,7 +9,7 @@
             "command": "dotnet",
             "args": [
                 "build",
-                "${workspaceRoot}/algorithmscSharp.csproj"
+                "${workspaceRoot}/Lib/Lib.csproj"
             ],
             "problemMatcher": "$msCompile",
             "group": {

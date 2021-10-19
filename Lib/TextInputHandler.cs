@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace algorithmscSharp
+namespace Lib
 {
     class TextInputHandler
     {

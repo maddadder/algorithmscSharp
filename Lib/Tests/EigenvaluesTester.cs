@@ -1,7 +1,7 @@
 ﻿using System;
 using XuMath;
 
-namespace algorithmscSharp.Eigenvalues
+namespace Lib.Eigenvalues
 {
     public class EigenvaluesTester
     {

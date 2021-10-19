@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Linq;
-namespace algorithmscSharp.Selection
+namespace Lib.Selection
 {
     // C# program in-place Merge Sort
 // sum.
