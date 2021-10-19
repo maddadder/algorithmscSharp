@@ -15,7 +15,8 @@ namespace algorithmscSharp
             Console.WriteLine(output);
             */
             //NashEq.TestFindNashEq();
-            algorithmscSharp.Selection.PizzaPlanet.PrintOutput();
+            //algorithmscSharp.Selection.PizzaPlanet.PrintOutput();
+            algorithmscSharp.Selection.TestReverse.PrintOutput();
         }
     }
 }
