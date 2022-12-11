@@ -43,11 +43,11 @@ namespace Test
             Debug.WriteLine("control end");
             Debug.WriteLine(sw.Elapsed.Ticks);
             Assert.AreEqual(test, control);
-            if(testDuration > controlDuration){
-                Debug.WriteLine("Control Wins");
+            if(testDuration < controlDuration){
+                Debug.WriteLine("Test Wins");
             }
             else{
-                Debug.WriteLine("Test Wins");
+                Debug.WriteLine("Control Wins");
             }
         }
     }
