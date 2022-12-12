@@ -8,11 +8,12 @@ using System.Text;
 namespace Lib.Operations
 {
 
-    public static class Multiplication
+    public class Multiplication
     {
-        
-        public static BigInteger Multiply(string inputA, string inputB)
+        public BigInteger Multiply(KeyValuePair<string,string> input) => this.Memoized(input, x =>
         {
+            string inputA = input.Key;
+            string inputB = input.Value;
             if(inputA.Length == 1 && inputB.Length == 1)
                 return (System.Numerics.BigInteger.Parse(inputA) * BigInteger.Parse(inputB));
 
@@ -33,14 +34,14 @@ namespace Lib.Operations
             var d = inputB.Substring(inputB.Length / 2, inputB.Length / 2);
             var p = (BigInteger.Parse(a)+BigInteger.Parse(b)).ToString();
             var q = (BigInteger.Parse(c)+BigInteger.Parse(d)).ToString();
-            var ac = Multiply(a,c);
-            var bd = Multiply(b,d);
-            var pq = Multiply(p,q);
+            var ac = Multiply(new KeyValuePair<string,string>(a,c));
+            var bd = Multiply(new KeyValuePair<string,string>(b,d));
+            var pq = Multiply(new KeyValuePair<string,string>(p,q));
             var adbc = pq - ac - bd;
             var result = (BigInteger.Pow(10,inputA.Length) * ac) + 
                          (BigInteger.Pow(10,inputA.Length/2) * adbc) +
                          bd;
             return (BigInteger)result;
-        }
+        });
     }
 }
