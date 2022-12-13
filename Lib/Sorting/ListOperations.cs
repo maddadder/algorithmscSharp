@@ -1,61 +1,57 @@
 using System;
-using Extensions;
+using System.Collections.Generic;
 
 namespace Lib.Sorting
 {
     public static class ListOperations
     {
-        public static int[] MergeSort(int[] input)
+        public static IEnumerable<T> MergeSort<T>(T[] input) where T : IComparable
         {
-            return SplitAndSort(input);
+            return SplitRecursive(input, input.Length);
         }
-        private static int[] SplitAndSort(int[] input)
+        
+        private static T[] SplitRecursive<T>(T[] input, int inputSize) where T : IComparable
         {
-            int inputSize = input.Length;
-            if (inputSize == 0)
+            if (inputSize <= 1)
                 return input;
-            if (inputSize == 1)
-                return input;
-            if (inputSize == 2)
-            {
-                if (input[0] < input[1])
-                {
-                    return input;
-                }
-                else
-                {
-                    return new int[2]{input[1], input[0]};
-                }
-            }
-            
-            var left = input.Slice(0,inputSize/2);
-            var right = input.Slice(inputSize/2,(int)Math.Ceiling(inputSize/(double)2));
-            left = SplitAndSort(left);
-            right = SplitAndSort(right);
-            return Merge(left,right,inputSize);
+            var leftLength = inputSize/2;
+            var rightLength = inputSize - leftLength;
+            T[] left = new T[leftLength];
+            T[] right = new T[rightLength];
+            Array.Copy(input, left, leftLength);
+            Array.Copy(input, leftLength, right, 0, rightLength);
+            SplitRecursive(left, leftLength);
+            SplitRecursive(right, rightLength);
+            return Merge(input, left, right, inputSize, leftLength, rightLength);
         }
-        private static int[] Merge(int[] left, int[] right, int inputSize)
+        private static T[] Merge<T>(T[] input, T[] left, T[] right, int inputSize, int leftLength, int rightLength) where T : IComparable
         {
-            int i = 0;
-            int j = 0;
-            int[] combined = new int[inputSize];
-            left = left.Add(int.MaxValue);
-            right = right.Add(int.MaxValue);
-
+            var leftIndex = 0;
+            var rightIndex = 0;
             for(var k = 0;k<inputSize;k++)
             {
-                if(left[i] < right[j])
+                if(leftIndex == leftLength)
                 {
-                    combined[k] = left[i];
-                    i+=1;
+                    input[k] = right[rightIndex];
+                    rightIndex += 1;
+                }
+                else if(rightIndex == rightLength)
+                {
+                    input[k] = left[leftIndex];
+                    leftIndex += 1;
+                }
+                else if(left[leftIndex].CompareTo(right[rightIndex]) < 0)
+                {
+                    input[k] = left[leftIndex];
+                    leftIndex += 1;
                 }
                 else
                 {
-                    combined[k] = right[j];
-                    j+=1;
+                    input[k] = right[rightIndex];
+                    rightIndex += 1;
                 }
             }
-            return combined;
+            return input;
         }
         public static string Reverse(string input)
         {

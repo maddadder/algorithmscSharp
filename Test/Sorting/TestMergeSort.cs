@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lib.Sorting;
 namespace Test
@@ -16,7 +15,7 @@ namespace Test
                     .OrderBy(i => i.Item1)
                     .Select(i => i.Item2).ToArray();
         }
-        public static int[] Control_Sort( int[] input )
+        public static IEnumerable<int> Control_Sort( IEnumerable<int> input )
         {
             return input.OrderBy(p => p).ToArray();
         }
@@ -24,11 +23,13 @@ namespace Test
         [TestMethod]
         public void Test_MergeSort()
         {
-            int[] input = RandomList((int)Math.Pow(10,7)).ToArray();
+            var input = RandomList((int)Math.Pow(10,7));
+            var inputControl = new int[input.Length];
+            Array.Copy(input, inputControl, input.Length);
             Stopwatch sw = new Stopwatch();
             Debug.WriteLine("test begin");
             sw.Start();
-            int[] test = ListOperations.MergeSort(input);
+            var test = ListOperations.MergeSort(input);
             sw.Stop();
             var testDuration = sw.Elapsed;
             Debug.WriteLine("test end");
@@ -36,13 +37,15 @@ namespace Test
             Debug.WriteLine("control begin");
             sw.Reset();
             sw.Start();
-            int[] control = Control_Sort(input);
+            var control = Control_Sort(inputControl);
             sw.Stop();
             var controlDuration = sw.Elapsed;
             Debug.WriteLine("control end");
             Debug.WriteLine(sw.ElapsedMilliseconds);
-            for(var i=0;i<control.Length;i++){
-                Assert.AreEqual(test[i], control[i]);
+            var testList = test.ToArray();
+            var controlList = control.ToArray();
+            for(var i=0;i<control.Count();i++){
+                Assert.AreEqual(testList[i], controlList[i]);
             }
             
             if(testDuration < controlDuration){
