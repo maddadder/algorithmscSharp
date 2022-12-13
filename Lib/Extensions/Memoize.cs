@@ -1,6 +1,8 @@
 using System.Runtime.CompilerServices;
 using System.Collections.Concurrent;
-namespace System
+using System;
+
+namespace Extensions
 {
     public static class MemoizerExtension
     {

@@ -1,13 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using Extensions;
 
 namespace Lib.Sorting
 {
-
     public static class ListOperations
     {
         public static int[] MergeSort(int[] input)
@@ -16,12 +11,12 @@ namespace Lib.Sorting
         }
         private static int[] SplitAndSort(int[] input)
         {
-            int n = input.Length;
-            if (n == 0)
+            int inputSize = input.Length;
+            if (inputSize == 0)
                 return input;
-            if (n == 1)
+            if (inputSize == 1)
                 return input;
-            if (n == 2)
+            if (inputSize == 2)
             {
                 if (input[0] < input[1])
                 {
@@ -33,34 +28,34 @@ namespace Lib.Sorting
                 }
             }
             
-            var left = input.Slice(0,n/2);
-            var right = input.Slice(n/2,(int)Math.Ceiling(n/(double)2));
-            var c = SplitAndSort(left);
-            var d = SplitAndSort(right);
-            return Merge(c,d,n);
+            var left = input.Slice(0,inputSize/2);
+            var right = input.Slice(inputSize/2,(int)Math.Ceiling(inputSize/(double)2));
+            left = SplitAndSort(left);
+            right = SplitAndSort(right);
+            return Merge(left,right,inputSize);
         }
-        private static int[] Merge(int[] left, int[] right, int n)
+        private static int[] Merge(int[] left, int[] right, int inputSize)
         {
             int i = 0;
             int j = 0;
-            int[] result = new int[n];
+            int[] combined = new int[inputSize];
             left = left.Add(int.MaxValue);
             right = right.Add(int.MaxValue);
 
-            for(var k = 0;k<n;k++)
+            for(var k = 0;k<inputSize;k++)
             {
                 if(left[i] < right[j])
                 {
-                    result[k] = left[i];
+                    combined[k] = left[i];
                     i+=1;
                 }
                 else
                 {
-                    result[k] = right[j];
+                    combined[k] = right[j];
                     j+=1;
                 }
             }
-            return result;
+            return combined;
         }
         public static string Reverse(string input)
         {
