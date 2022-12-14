@@ -42,7 +42,7 @@ namespace Test
             Stopwatch sw = new Stopwatch();
             Debug.WriteLine("test begin");
             sw.Start();
-            var test = ClosestPair.FindClosestPair<Point2dPair, Point2d>(input);
+            var test = ClosestPair.FindClosestPair<Point2d,Point2dPair>(input);
             sw.Stop();
             var testDuration = sw.Elapsed;
             Debug.WriteLine("test end");
@@ -50,7 +50,7 @@ namespace Test
             Debug.WriteLine("control begin");
             sw.Reset();
             sw.Start();
-            var control = ClosestPair.FindClosestPairBruteForce<Point2dPair, Point2d>(inputControl);
+            var control = ClosestPair.FindClosestPairBruteForce<Point2d,Point2dPair>(inputControl);
             sw.Stop();
             var controlDuration = sw.Elapsed;
             Debug.WriteLine("control end");
