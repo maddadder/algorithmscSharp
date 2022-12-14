@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lib.Sorting
 {
     public static class ListOperations
     {
-        public static IEnumerable<T> MergeSort<T>(T[] input) where T : IComparable
+        public static IEnumerable<T> MergeSort<T>(IEnumerable<T> input) where T : IComparable
         {
-            return SplitRecursive(input, input.Length);
+            var array = input.ToArray();
+            return SplitRecursive(array, array.Length);
         }
         
         private static T[] SplitRecursive<T>(T[] input, int inputSize) where T : IComparable
@@ -53,20 +55,21 @@ namespace Lib.Sorting
             }
             return input;
         }
-        public static string Reverse(string input)
+        public static IEnumerable<T> Reverse<T>(IEnumerable<T> input)
         {
-            char[] output = input.ToCharArray();
-            int length = input.Length;
+            var inputArray = input.ToArray();
+            int length = inputArray.Length;
+            T[] output = new T[length];
             int mid = length/2;
             int len = length - 1;
             for(var i=0;i<mid;i++)
             {
-                char left = input[i];
-                char right = input[len-i];
+                var left = inputArray[i];
+                var right = inputArray[len-i];
                 output[i] = right;
                 output[len-i] = left;
             }
-            return new string(output);
+            return output;
         }
     }
 }

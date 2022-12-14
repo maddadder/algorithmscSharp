@@ -30,6 +30,7 @@ namespace Test
             Debug.WriteLine("test begin");
             sw.Start();
             var test = ListOperations.MergeSort(input);
+            var reverse = ListOperations.Reverse<int>(test);
             sw.Stop();
             var testDuration = sw.Elapsed;
             Debug.WriteLine("test end");
@@ -38,6 +39,7 @@ namespace Test
             sw.Reset();
             sw.Start();
             var control = Control_Sort(inputControl);
+            var control_reverse = control.Reverse<int>();
             sw.Stop();
             var controlDuration = sw.Elapsed;
             Debug.WriteLine("control end");

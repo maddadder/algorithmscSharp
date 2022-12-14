@@ -26,11 +26,11 @@ namespace Test
         [TestMethod]
         public void Test_Reverse_Sort()
         {
-            string input = RandomString((int)Math.Pow(10, 8));
+            string input = RandomString((int)Math.Pow(10, 4));
             Stopwatch sw = new Stopwatch();
             Debug.WriteLine("test begin");
             sw.Start();
-            string test = ListOperations.Reverse(input);
+            var test = new string(ListOperations.Reverse(input).ToArray());
             sw.Stop();
             var testDuration = sw.Elapsed;
             Debug.WriteLine("test end");
