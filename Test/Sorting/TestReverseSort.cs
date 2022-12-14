@@ -30,7 +30,7 @@ namespace Test
             Stopwatch sw = new Stopwatch();
             Debug.WriteLine("test begin");
             sw.Start();
-            var test = new string(ListOperations.Reverse(input).ToArray());
+            var test = new string(MergeSortClass.Reverse(input).ToArray());
             sw.Stop();
             var testDuration = sw.Elapsed;
             Debug.WriteLine("test end");

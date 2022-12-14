@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Lib.Sorting
 {
-    public static class ListOperations
+    public static class MergeSortClass
     {
         public static IEnumerable<T> MergeSort<T>(IEnumerable<T> input) where T : IComparable
         {

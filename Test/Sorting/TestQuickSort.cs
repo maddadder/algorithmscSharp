@@ -5,7 +5,7 @@ using Lib.Sorting;
 namespace Test
 {
     [TestClass]
-    public class TestMergeSort
+    public class TestQuickSort
     {
         public static int[] RandomList(int length)
         {
@@ -21,7 +21,7 @@ namespace Test
         }
 
         [TestMethod]
-        public void Test_MergeSort()
+        public void Test_QuickSort()
         {
             var input = RandomList((int)Math.Pow(10,7));
             var inputControl = new int[input.Length];
@@ -29,8 +29,7 @@ namespace Test
             Stopwatch sw = new Stopwatch();
             Debug.WriteLine("test begin");
             sw.Start();
-            var test = MergeSortClass.MergeSort(input);
-            var reverse = MergeSortClass.Reverse<int>(test);
+            QuickSortClass.QuickSort(input);
             sw.Stop();
             var testDuration = sw.Elapsed;
             Debug.WriteLine("test end");
@@ -44,10 +43,9 @@ namespace Test
             var controlDuration = sw.Elapsed;
             Debug.WriteLine("control end");
             Debug.WriteLine(sw.ElapsedMilliseconds);
-            var testList = test.ToArray();
             var controlList = control.ToArray();
             for(var i=0;i<control.Count();i++){
-                Assert.AreEqual(testList[i], controlList[i]);
+                Assert.AreEqual(input[i], controlList[i]);
             }
             
             if(testDuration < controlDuration){
