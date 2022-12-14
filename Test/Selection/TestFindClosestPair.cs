@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
 using Lib.Selection;
+using Models;
 
 namespace Test
 {
@@ -15,15 +16,15 @@ namespace Test
             return Enumerable.Range(0, length)
                     .Select(i => (float)rand.NextDouble()).ToArray();
         }
-        public static Vector2[] ToVector(float[] x, float[] y)
+        public static Point2d[] ToPoint2d(float[] x, float[] y)
         {
             var len = x.Length;
             if(len!=y.Length)
                 throw new InvalidOperationException("input size must match");
-            Vector2[] output = new Vector2[len];
+            Point2d[] output = new Point2d[len];
             for(var i=0;i<len;i++)
             {
-                output[i] = new Vector2(x[i],y[i]);
+                output[i] = new Point2d(x[i],y[i]);
             }
             return output;
         }
@@ -32,16 +33,16 @@ namespace Test
         {
             var inputX = RandomList((int)Math.Pow(10,4));
             var inputY = RandomList((int)Math.Pow(10,4));
-            var input = ToVector(inputX, inputY);
+            var input = ToPoint2d(inputX, inputY);
             var inputControlX = new float[inputX.Length];
             var inputControlY = new float[inputY.Length];
             Array.Copy(inputX, inputControlX, inputX.Length);
             Array.Copy(inputY, inputControlY, inputY.Length);
-            var inputControl = ToVector(inputControlX, inputControlY);
+            var inputControl = ToPoint2d(inputControlX, inputControlY);
             Stopwatch sw = new Stopwatch();
             Debug.WriteLine("test begin");
             sw.Start();
-            var test = ClosestPair.FindClosestPair(input);
+            var test = ClosestPair.FindClosestPair<Point2dPair, Point2d>(input);
             sw.Stop();
             var testDuration = sw.Elapsed;
             Debug.WriteLine("test end");
@@ -49,12 +50,14 @@ namespace Test
             Debug.WriteLine("control begin");
             sw.Reset();
             sw.Start();
-            var control = ClosestPair.FindClosestPairBruteForce(inputControl);
+            var control = ClosestPair.FindClosestPairBruteForce<Point2dPair, Point2d>(inputControl);
             sw.Stop();
             var controlDuration = sw.Elapsed;
             Debug.WriteLine("control end");
             Debug.WriteLine(sw.ElapsedMilliseconds);
-            Assert.AreEqual(test.Item1, control.Item1);
+            var testDistance = test.DistanceSquared();
+            var controlDistance = control.DistanceSquared();
+            Assert.AreEqual(testDistance,controlDistance);
             
             if(testDuration < controlDuration){
                 Debug.WriteLine("Test Wins");
