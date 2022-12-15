@@ -6,39 +6,42 @@ namespace Lib.Sorting
 {
     public static class QuickSortClass
     {
-        public static void QuickSort<T>(T[] input) where T : IComparable
+        public static void QuickSort<T>(IList<T> input) where T : IComparable
         {
             Random random = new Random();
-            SolveRecursive(input, 0, input.Length, random);
+            SolveRecursive(input, 0, input.Count, random);
         }
-        private static void SolveRecursive<T>(T[] input, int left, int right, Random random) where T : IComparable
+        private static void SolveRecursive<T>(IList<T> input, int start, int end, Random random) where T : IComparable
         {
-            if (left >= right)
+            if (start >= end)
                 return;
-            var i = random.Next(left,right-1);
-            Swap(input, left, i);
-            var j = Partition<T>(input, left, right);
-            SolveRecursive(input,left, j, random);
-            SolveRecursive(input,j+1,right, random);
+            var pivotLocation = random.Next(start,end);
+            var pivotIndex = Partition(input, pivotLocation, start, end);
+            SolveRecursive(input,start, pivotIndex, random);
+            SolveRecursive(input,pivotIndex+1,end, random);
         }
-        private static void Swap<T>(T[] input, int left, int right)
+        public static void Swap<T>(IList<T> input, int start, int end)
         {
-            var temp = input[left];
-            input[left] = input[right];
-            input[right] = temp;
+            var temp = input[start];
+            input[start] = input[end];
+            input[end] = temp;
         }
-        private static int Partition<T>(T[] input, int left, int right) where T : IComparable
+        public static int Partition<T>(IList<T> input, int pivotLocation, int start, int end) where T : IComparable
         {
-            var pivot = input[left];
-            var i = left + 1;
-            for(var j=left+1;j<right;j++){
+            Swap(input, start, pivotLocation); //make pivot the first item in list
+            T pivot = input[start]; //the pivot boundary
+            //invariant:
+            //increment j such that each element between i and j is less than the pivot boundary.
+            //i and j should delineate a boundary between processsed elements less than and greater than the pivot
+            int i = start + 1; 
+            for(int j=i;j<end;j++){
                 if (input[j].CompareTo(pivot) < 0){
-                    Swap(input, j, i);
-                    i += 1;
+                    Swap(input, j, i); //put j behind the pivot boundary
+                    i += 1; //restores invariant
                 }
             }
-            Swap(input, left, i-1);
-            return i-1;
+            Swap(input, start, i-1); //restore original swap
+            return i-1; //report final pivot position
         }
     }
 }
