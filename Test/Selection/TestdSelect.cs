@@ -17,15 +17,26 @@ namespace Test
                     .OrderBy(i => i.Item1)
                     .Select(i => i.Item2).ToArray();
         }
-        public static IEnumerable<int> Control_Sort( IEnumerable<int> input )
+        public static IEnumerable<T> Control_Sort<T>( IEnumerable<T> input ) where T : IComparable
         {
             return input.OrderBy(p => p).ToArray();
         }
-
+        public List<string> ListOfStrings(int len)
+        {
+            List<string> Items = new List<string>(len);
+            for(var i = 0;i<len;i++)
+            {
+                var s = TestReverseSort.RandomString((int)Math.Pow(10, 2));
+                Items.Add(s);
+            }
+            return Items;
+        }
         [TestMethod]
         public void Test_dSelect()
         {
-            int index = 5;
+            int index = 50;
+            //var input = TestReverseSort.RandomString((int)Math.Pow(10, 2)).ToArray().Distinct().ToArray();
+            //var input = ListOfStrings((int)Math.Pow(10,1)).ToArray();
             var input = RandomList((int)Math.Pow(10,6));
             var inputControl = new int[input.Length];
             Array.Copy(input, inputControl, input.Length);

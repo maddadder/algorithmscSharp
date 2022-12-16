@@ -45,9 +45,10 @@ namespace Lib.Selection
             if (start >= end)
                 return list[0];
             var pivot = ChoosePivot(list, start, end);
+
+            //this requires the list to only contain distinct items (no duplicates)
+            var pivotLocation = list.IndexOf(pivot);
             
-            //this requires the list type is an int
-            var pivotLocation = Convert.ToInt32(pivot);
             var pivotIndex = QuickSortClass.Partition(list,pivotLocation,start,end);
             if(pivotIndex == Nth)
             {
