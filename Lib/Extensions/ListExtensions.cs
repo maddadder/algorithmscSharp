@@ -18,27 +18,25 @@ namespace Extensions
             result[target.Length] = item;
             return result;
         }
-        public static List<T>[] Partition<T>(List<T> list, int totalPartitions)
+        public static IEnumerable<IEnumerable<T>> SplitByChunks<T>(this IEnumerable<T> source, int chunkSize)
         {
-            if (list == null)
-                throw new ArgumentNullException("list");
-            if (totalPartitions < 1)
-                throw new ArgumentOutOfRangeException("totalPartitions");
-            List<T>[] partitions = new List<T>[totalPartitions];
-            int maxSize = (int)Math.Ceiling(list.Count / (double)totalPartitions);
-            int k = 0;
-            for (int i = 0; i < partitions.Length; i++)
+            if (chunkSize < 1)
+            throw new ArgumentException("Chunk size must be greater than zero.");
+
+            IEnumerator<T> enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                partitions[i] = new List<T>();
-                for (int j = k; j < k + maxSize; j++)
-                {
-                    if (j >= list.Count)
-                        break;
-                    partitions[i].Add(list[j]);
-                }
-                k += maxSize;
+                yield return getChunk(enumerator, chunkSize);
             }
-            return partitions;
+        }
+
+        private static IEnumerable<T> getChunk<T>(IEnumerator<T> enumerator, int chunkSize)
+        {
+            int count = 0;
+            do
+            {
+                yield return enumerator.Current;
+            } while (++count < chunkSize && enumerator.MoveNext());           
         }
     }
 }

@@ -2,10 +2,12 @@ using System;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lib.Sorting;
+using Lib.Selection;
+
 namespace Test
 {
     [TestClass]
-    public class TestQuickSort
+    public class TestdSelect
     {
         public static int[] RandomList(int length)
         {
@@ -21,15 +23,16 @@ namespace Test
         }
 
         [TestMethod]
-        public void Test_QuickSort()
+        public void Test_dSelect()
         {
+            int index = 5;
             var input = RandomList((int)Math.Pow(10,6));
             var inputControl = new int[input.Length];
             Array.Copy(input, inputControl, input.Length);
             Stopwatch sw = new Stopwatch();
             Debug.WriteLine("test begin");
             sw.Start();
-            QuickSortClass.QuickSort(input);
+            var test = dSelect.FindNthSmallestNumber(input,index);
             sw.Stop();
             var testDuration = sw.Elapsed;
             Debug.WriteLine("test end");
@@ -38,15 +41,13 @@ namespace Test
             sw.Reset();
             sw.Start();
             var control = Control_Sort(inputControl);
-            var control_reverse = control.Reverse<int>();
             sw.Stop();
             var controlDuration = sw.Elapsed;
             Debug.WriteLine("control end");
             Debug.WriteLine(sw.ElapsedMilliseconds);
+
             var controlList = control.ToArray();
-            for(var i=0;i<control.Count();i++){
-                Assert.AreEqual(input[i], controlList[i]);
-            }
+            Assert.AreEqual(controlList[index], test);
             
             if(testDuration < controlDuration){
                 Debug.WriteLine("Test Wins");
