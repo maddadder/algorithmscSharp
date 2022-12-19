@@ -21,12 +21,12 @@ namespace Test
         {
             return input.OrderBy(p => p).ToArray();
         }
-        public List<string> ListOfStrings(int len)
+        public static List<string> ListOfStrings(int len, int strLen)
         {
             List<string> Items = new List<string>(len);
             for(var i = 0;i<len;i++)
             {
-                var s = TestReverseSort.RandomString((int)Math.Pow(10, 2));
+                var s = TestReverseSort.RandomString(strLen);
                 Items.Add(s);
             }
             return Items;
