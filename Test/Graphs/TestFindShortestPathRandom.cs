@@ -26,19 +26,19 @@ namespace Test
 
             for (int i = 0; i < inputX.Length-1; i++)
             {
-                var names = inputX[i];
-                var movies = inputX[i+1];
+                var nodeA = inputX[i];
+                var nodeB = inputX[i+1];
 
-                if(!graph.ContainsVertex(names))
+                if(!graph.ContainsVertex(nodeA))
                 {
-                    graph.AddVertex(names);
+                    graph.AddVertex(nodeA);
                 }
 
-                if(!graph.ContainsVertex(movies))
+                if(!graph.ContainsVertex(nodeB))
                 {
-                    graph.AddVertex(movies);
+                    graph.AddVertex(nodeB);
                 }
-                graph.AddEdge(names, movies);
+                graph.AddEdge(nodeA, nodeB);
             }
 
             var node1 = inputX[0];
