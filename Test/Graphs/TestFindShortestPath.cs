@@ -47,8 +47,8 @@ namespace Test
                 graph.AddEdge(names, movies);
             }
 
-            string actor1 = "Kevin Spacey";
-            string actor2 = "Sean Connery";
+            string actor1 = "Kevin Bacon";
+            string actor2 = "Harrison Ford";
 
             if(!graph.ContainsVertex(actor1)) // check actor 1 exists
             {
@@ -76,7 +76,10 @@ namespace Test
             {
                 Debug.WriteLine($"{results[j]} was in {results[j + 1]} with {results[j + 2]}.");
             }
-
+            var test = graph.FindClosestDistancesUsingHeap(actor1);
+            foreach(var t in test.Where(x => x.Key == actor2)){
+                Debug.WriteLine($"{t.Key},{t.Value/2}");
+            }
         }
     }
 }

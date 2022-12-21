@@ -318,6 +318,16 @@ namespace Lib.Graphs
             return marks;
         }
 
+        private SortedDictionary<T, int> SetAllVertexDistances()
+        {
+            SortedDictionary<T, int> marks = new SortedDictionary<T, int>();
+            foreach (T key in Vertices.Keys)
+            {
+                marks[key] = 10000;
+            }
+            return marks;
+        }
+
         private bool Equal(T vertex1, T vertex2)
         {
             return (vertex1.CompareTo(vertex2) == 0);
@@ -351,6 +361,74 @@ namespace Lib.Graphs
                     yield return potentialVertex;
                 }
             }
+        }
+
+        public SortedDictionary<T, int> FindClosestDistancesUsingHeap(T sourceVertex)
+        {
+            List<T> accessibleVertices = FindAccessibleVertices(sourceVertex);
+
+            SortedDictionary<T, int>  distances = SetAllVertexDistances();
+            SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
+
+            distances[sourceVertex] = 0;
+
+            int numOfVisitedVertices = 0;
+
+            PriorityQueue<T,int> indexNDistance = new PriorityQueue<T,int>();
+            indexNDistance.Enqueue(sourceVertex, 0);
+
+            while (numOfVisitedVertices != accessibleVertices.Count)
+            {
+                // Remove one from priority queue
+                var currentVisitedIndex = indexNDistance.Dequeue();
+
+                // If it's not visited visit
+                if (isVertexVisited[currentVisitedIndex] == false)
+                {
+                    isVertexVisited[currentVisitedIndex] = true;
+                    numOfVisitedVertices++;
+
+                    List<T> edgesFromVertex = Vertices[currentVisitedIndex].EdgeList;
+
+                    foreach (var edge in edgesFromVertex)
+                    {
+                        var edgeWight = 1; //hardcoded for now
+                        int currentCalculatedDist = edgeWight + distances[currentVisitedIndex];
+
+                        if (distances[edge] > currentCalculatedDist)
+                        {
+                            distances[edge] = currentCalculatedDist;
+                            indexNDistance.Enqueue(edge, currentCalculatedDist);
+                        }
+                    }
+                }
+            }
+
+            return distances;
+        }
+
+        public List<T> FindAccessibleVertices(T vertex)
+        {
+            List<T> accessibleVertices = new List<T>();
+            Queue<T> verticesToVisit = new Queue<T>();
+
+            verticesToVisit.Enqueue(vertex);
+
+            while (verticesToVisit.Count != 0)
+            {
+                T currentVertexIndex = verticesToVisit.Dequeue();
+
+                if (accessibleVertices.Contains(currentVertexIndex) == false)
+                {
+                    accessibleVertices.Add(currentVertexIndex);
+
+                    List<T> edges = Vertices[currentVertexIndex].EdgeList;
+
+                    edges.ForEach(v => verticesToVisit.Enqueue(v));
+                }
+            }
+
+            return accessibleVertices;
         }
 
         public void DumpGraph()
