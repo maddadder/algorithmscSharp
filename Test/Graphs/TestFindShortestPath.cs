@@ -20,7 +20,7 @@ namespace Test
             }
 
             string[] lines = File.ReadAllLines(sourceFile);
-           
+            var random = new Random(); 
             MathGraph<string> graph = new MathGraph<string>();
 
             for (int i = 0; i < lines.Length; i++)
@@ -44,7 +44,7 @@ namespace Test
                 {
                     graph.AddVertex(movies);
                 }
-                graph.AddEdge(names, movies);
+                graph.AddEdge(names, movies, 1);
             }
 
             string actor1 = "Kevin Bacon";

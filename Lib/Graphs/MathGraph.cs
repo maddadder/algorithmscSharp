@@ -7,11 +7,13 @@ namespace Lib.Graphs
     public class Vertex<T>
     {
         public List<T> EdgeList;
+        public List<float> EdgeWeights;
         public T Component;
 
         public Vertex(T component=default)
         {
             EdgeList = new List<T>();
+            EdgeWeights = new List<float>();
             Component = component;
         }
     }
@@ -89,22 +91,22 @@ namespace Lib.Graphs
             return;
         }
 
-        public void AddEdge(T vertex1, T vertex2)
+        public void AddEdge(T vertex1, T vertex2, float weight = 1)
         {
             if (!ContainsVertex(vertex1))
             {
-                string msg = $"Vertex '{vertex1}' is not in the graph";
-                throw new ArgumentException(msg);
+                AddVertex(vertex1);
             }
 
             if (!ContainsVertex(vertex2))
             {
-                string msg = $"Vertex '{vertex2}' is not in the graph";
-                throw new ArgumentException(msg);
+                AddVertex(vertex2);
             }
 
             Vertices[vertex1].EdgeList.Add(vertex2);
+            Vertices[vertex1].EdgeWeights.Add(weight);
             Vertices[vertex2].EdgeList.Add(vertex1);
+            Vertices[vertex2].EdgeWeights.Add(weight);
             edgeCount++;
 
             // Union Find algorithm to maintain graph components with each new edge
@@ -318,9 +320,9 @@ namespace Lib.Graphs
             return marks;
         }
 
-        private SortedDictionary<T, int> SetAllVertexDistances()
+        private SortedDictionary<T, float> SetAllVertexDistances()
         {
-            SortedDictionary<T, int> marks = new SortedDictionary<T, int>();
+            SortedDictionary<T, float> marks = new SortedDictionary<T, float>();
             foreach (T key in Vertices.Keys)
             {
                 marks[key] = 10000;
@@ -363,18 +365,18 @@ namespace Lib.Graphs
             }
         }
 
-        public SortedDictionary<T, int> FindClosestDistancesUsingHeap(T sourceVertex)
+        public SortedDictionary<T, float> FindClosestDistancesUsingHeap(T sourceVertex)
         {
             List<T> accessibleVertices = FindAccessibleVertices(sourceVertex);
 
-            SortedDictionary<T, int>  distances = SetAllVertexDistances();
+            SortedDictionary<T, float>  distances = SetAllVertexDistances();
             SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
 
             distances[sourceVertex] = 0;
 
             int numOfVisitedVertices = 0;
 
-            PriorityQueue<T,int> indexNDistance = new PriorityQueue<T,int>();
+            PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
             indexNDistance.Enqueue(sourceVertex, 0);
 
             while (numOfVisitedVertices != accessibleVertices.Count)
@@ -389,17 +391,19 @@ namespace Lib.Graphs
                     numOfVisitedVertices++;
 
                     List<T> edgesFromVertex = Vertices[currentVisitedIndex].EdgeList;
-
+                    List<float> edgeWeightsFromVertex = Vertices[currentVisitedIndex].EdgeWeights;
+                    int i = 0;
                     foreach (var edge in edgesFromVertex)
                     {
-                        var edgeWight = 1; //hardcoded for now
-                        int currentCalculatedDist = edgeWight + distances[currentVisitedIndex];
+                        var edgeWight = edgeWeightsFromVertex[i];
+                        var currentCalculatedDist = edgeWight + distances[currentVisitedIndex];
 
                         if (distances[edge] > currentCalculatedDist)
                         {
                             distances[edge] = currentCalculatedDist;
                             indexNDistance.Enqueue(edge, currentCalculatedDist);
                         }
+                        i++;
                     }
                 }
             }

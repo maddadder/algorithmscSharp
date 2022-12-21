@@ -20,8 +20,8 @@ namespace Test
         [TestMethod]
         public void Test_FindShortestPathRandom()
         {
-            var inputX = RandomList((int)Math.Pow(10,1));
-
+            var inputX = RandomList((int)Math.Pow(10,1)).OrderBy(x => x).ToArray();
+            Random rand = new Random();
             MathGraph<int> graph = new MathGraph<int>();
 
             for (int i = 0; i < inputX.Length-1; i++)
@@ -38,7 +38,7 @@ namespace Test
                 {
                     graph.AddVertex(nodeB);
                 }
-                graph.AddEdge(nodeA, nodeB);
+                graph.AddEdge(nodeA, nodeB, 1);
             }
 
             var node1 = inputX[0];
@@ -70,7 +70,9 @@ namespace Test
             {
                 Debug.WriteLine($"{results[j]} was in {results[j + 1]} with {results[j + 2]}.");
             }
-
+            var pathDistances = graph.FindClosestDistancesUsingHeap(node1);
+            var distance = pathDistances.Where(x => x.Key == node2).First().Value;
+             Debug.WriteLine($"The distance between {node1} and {node2} is {distance}.");
         }
     }
 }
