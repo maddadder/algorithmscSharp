@@ -1,6 +1,6 @@
 using System;
 using System.Numerics;
-namespace Models
+namespace Lib.Model
 {
     public class LineSegment : IComparable
     {

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
 using Lib.Selection;
-using Models;
+using Lib.Model;
 
 namespace Test
 {

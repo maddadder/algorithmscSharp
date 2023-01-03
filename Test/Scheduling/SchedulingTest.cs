@@ -1,22 +1,11 @@
 using System;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Lib.Sorting;
-using Lib.Selection;
+using Lib.Model;
 
 namespace Test.Scheduling
 {
-    public class Job
-    {
-        public Job(int weight, int length)
-        {
-            Weight = weight;
-            Length = length;
-        }
-
-        public int Length { get; private set; }
-        public int Weight { get; private set; }
-    }
+    
     [TestClass]
     public class SchedulingTest
     {
