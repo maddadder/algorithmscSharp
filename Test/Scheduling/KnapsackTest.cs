@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lib.Model;
+using Extensions;
 
 namespace Test.Scheduling
 {
@@ -13,46 +14,63 @@ namespace Test.Scheduling
         [TestMethod]
         public void Knapsack_Test(){
             var jobs = new List<Job>();
-            jobs.Add(new Job(3,5));
-            jobs.Add(new Job(1,2));
-            var result = knapsack(jobs.ToArray(), 4);
-            Debug.WriteLine(result.Item1);
-            foreach(var row in result.Item2){
-                Debug.WriteLine($"{row.Weight},{row.Length}");
+            Random rand = new Random();
+            var ItemsInHouse = 1000;
+            int cost = ItemsInHouse*2;
+            for(var i = 0;i<ItemsInHouse;i++){
+                jobs.Add(new Job(rand.Next(1,ItemsInHouse),rand.Next(1,ItemsInHouse)));
             }
+            Tuple<Job[], int>[, ] matrix = new Tuple<Job[], int>[ItemsInHouse + 1, ItemsInHouse*2 + 1];
+            var result = knapsack(new Tuple<Job[], int>(jobs.ToArray(), cost), matrix);
+            var sumSubset = result.Item1.Sum(x => x.Cost());
+            Debug.WriteLine($"The cost (in space) of the items in the knapsack is {sumSubset}.");
+            Debug.WriteLine($"The bag can only carry {cost}");
         }
         ///Returns a tuple of total value, and the items
-        public Tuple<int,Job[]> knapsack(Job[] toConsider, int avail)
+        public Tuple<Job[], int> knapsack(Tuple<Job[],int> input, Tuple<Job[], int>[, ] matrix)
         {
+            Job[] toConsider = input.Item1;
+            int n = toConsider.Count();
+            int avail = input.Item2;
+
             //base case
-            if(toConsider.Length == 0 || avail == 0)
+            if (matrix[n, avail] != null)
             {
-                return new Tuple<int, Job[]>(0, new Job[]{});
+                return matrix[n, avail];
+            } 
+            else if(toConsider.Length == 0 || avail == 0)
+            {
+                return new Tuple<Job[], int>(new Job[]{}, 0);
             }
-            else if(toConsider[0].Cost() > avail){
+            else if(toConsider[0].Cost() > avail)
+            {
                 //explore right branch only
-                return knapsack(toConsider.Skip(1).ToArray(), avail);
+                return knapsack(new Tuple<Job[], int>(toConsider.Skip(1).ToArray(), avail), matrix);
             }
             else
             {
-                var nextItem = toConsider[0];
+                Job nextItem = toConsider[0];
                 //explore left branch
-                var with = knapsack(toConsider.Skip(1).ToArray(), avail - nextItem.Cost());
-                var withVal = with.Item1;
-                var withToTake = with.Item2;
+                Tuple<Job[], int> with = knapsack(new Tuple<Job[], int>(toConsider.Skip(1).ToArray(), avail - nextItem.Cost()), matrix);
+                Job[] withToTake = with.Item1;
+                int withVal = with.Item2;
                 withVal += nextItem.Value();
                 //explore right branch
-                var without = knapsack(toConsider.Skip(1).ToArray(), avail);
-                var withoutVal = without.Item1;
-                var withoutToTake = without.Item2;
+                var without = knapsack(new Tuple<Job[], int>(toConsider.Skip(1).ToArray(), avail), matrix);
+                var withoutToTake = without.Item1;
+                var withoutVal = without.Item2;
+                Tuple<Job[], int> result = null;
                 //Choose better branch
-                if(withVal > withoutVal){
-                    return new Tuple<int, Job[]>(withVal, withToTake.Concat(new Job[]{nextItem}).ToArray());
+                if(withVal > withoutVal)
+                {
+                    result = new Tuple<Job[], int>(withToTake.Concat(new Job[]{nextItem}).ToArray(), withVal);
                 }
                 else
                 {
-                    return new Tuple<int, Job[]>(withoutVal, withoutToTake);
+                    result = new Tuple<Job[], int>(withoutToTake, withoutVal);
                 }
+                matrix[n,avail] = result;
+                return result;
             }
         }
     }
