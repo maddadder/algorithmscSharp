@@ -27,6 +27,7 @@ namespace Lib.Graphs
         private SortedDictionary<T, Vertex<T>> Vertices;
         private SortedDictionary<T, T> parent;
         private SortedDictionary<T, float> ComponentWeights;
+        private SortedDictionary<T, int> Components;
         private int edgeCount;
 
         public MathGraph(string graphName = "None")
@@ -39,6 +40,7 @@ namespace Lib.Graphs
             GraphName = graphName;
             Vertices = new SortedDictionary<T, Vertex<T>>();
             ComponentWeights = new SortedDictionary<T, float>();
+            Components = new SortedDictionary<T, int>();
             parent = new SortedDictionary<T, T>();
             edgeCount = 0;
         }
@@ -58,7 +60,7 @@ namespace Lib.Graphs
 
         public int CountComponents()
         {
-            return ComponentWeights.Count;
+            return Components.Count;
         }
 
         public float CountConnectedTo(T vertex)
@@ -70,7 +72,7 @@ namespace Lib.Graphs
             }
 
             T component = GetFinalComponentName(vertex);
-            return ComponentWeights[component];
+            return Components[component];
         }
 
         public int CountAdjacent(T vertex)
@@ -93,7 +95,7 @@ namespace Lib.Graphs
             }
 
             Vertices.Add(vertex, new Vertex<T>(vertex));
-            ComponentWeights.Add(vertex, 1);
+            Components.Add(vertex, 1);
             return;
         }
 
@@ -126,17 +128,17 @@ namespace Lib.Graphs
             T v2 = GetFinalComponentName(vertex2.Component);
             if (!Equal(v1, v2))
             {
-                if (ComponentWeights[v1] < ComponentWeights[v2])
+                if (Components[v1] < Components[v2])
                 {
                     Vertices[v1].Component = v2;
-                    ComponentWeights[v2] += ComponentWeights[v1];
-                    ComponentWeights.Remove(v1);
+                    Components[v2] += Components[v1];
+                    Components.Remove(v1);
                 }
                 else
                 {
                     Vertices[v2].Component = v1;
-                    ComponentWeights[v1] += ComponentWeights[v2];
-                    ComponentWeights.Remove(v2);
+                    Components[v1] += Components[v2];
+                    Components.Remove(v2);
                 }
             }
         }
@@ -341,6 +343,15 @@ namespace Lib.Graphs
             }
             return marks;
         }
+        private SortedDictionary<T, T> SetAllVertexParents()
+        {
+            SortedDictionary<T, T> marks = new SortedDictionary<T, T>();
+            foreach (T key in Vertices.Keys)
+            {
+                marks[key] = default;
+            }
+            return marks;
+        }
 
         private bool Equal(T vertex1, T vertex2)
         {
@@ -380,6 +391,7 @@ namespace Lib.Graphs
         public SortedDictionary<T, float> Dijkstra(T left)
         {
             ComponentWeights = SetAllVertexDistances();
+            parent = SetAllVertexParents();
             SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
             ComponentWeights[left] = 0;
             PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
@@ -402,6 +414,7 @@ namespace Lib.Graphs
         }
         public System.Collections.Generic.SortedDictionary<T, Lib.Graphs.Vertex<T>> prims_mst(T left) {
             ComponentWeights = SetAllVertexDistances();
+            parent = SetAllVertexParents();
             SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
             ComponentWeights[left] = 0;
             PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
@@ -441,10 +454,7 @@ namespace Lib.Graphs
                 var result = key.CompareTo(source);
                 if (result != 0) {
                     total += ComponentWeights[key];
-                    if(parent.ContainsKey(key) && ComponentWeights.ContainsKey(key))
-                    {
-                        Debug.WriteLine("( {0} - {1} ) = {2}", parent[key], key, ComponentWeights[key]);
-                    }
+                    Debug.WriteLine("( {0} - {1} ) = {2}", parent[key], key, ComponentWeights[key]);
                 }
             }
             Debug.WriteLine(total);

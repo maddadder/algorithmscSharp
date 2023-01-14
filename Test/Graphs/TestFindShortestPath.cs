@@ -46,6 +46,8 @@ namespace Test
                 }
                 graph.AddEdge(names, movies, 1);
             }
+            var components = graph.CountComponents();
+            Debug.WriteLine($"Components: {components}");
 
             string actor1 = "Carrie Fisher";
             string actor2 = "Michael Caine";
@@ -77,10 +79,11 @@ namespace Test
                 Debug.WriteLine($"{results[j]} was in {results[j + 1]} with {results[j + 2]}.");
             }
             var test = graph.Dijkstra(actor1);
-            foreach(var t in test.Where(x => x.Key == actor2)){
-                Debug.WriteLine($"{t.Key},{t.Value}");
-            }
-            graph.print_distances(actor1);
+            Debug.WriteLine($"Dijkstra's Distance from {actor1} to {actor2} is {test[actor2]}");
+            Debug.WriteLine($"Distance Asc");
+            graph.print_distances(actor1, 100, true);
+            Debug.WriteLine($"Distance Dsc");
+            graph.print_distances(actor1, 100, false);
             
             var source = "Kevin Spacey";
 
@@ -92,8 +95,6 @@ namespace Test
             // Assert
             Assert.AreEqual(expectedCost, graph_mst.Sum(x => graph.GetComponentWeights()[x.Key]));
 
-            var components = graph.CountConnectedTo(source);
-            Debug.WriteLine($"Components: {components}");
         }
     }
 }

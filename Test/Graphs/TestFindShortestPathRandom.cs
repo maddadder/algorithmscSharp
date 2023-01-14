@@ -40,6 +40,9 @@ namespace Test
                 }
                 graph.AddEdge(nodeA, nodeB, 1);
             }
+            
+            var components = graph.CountComponents();
+            Debug.WriteLine($"Components: {components}");
 
             var node1 = inputX[0];
             var node2 = inputX[inputX.Length-1];
@@ -84,9 +87,6 @@ namespace Test
             var graph_mst = graph.prims_mst(source);
             // Assert
             Assert.AreEqual(expectedCost, graph_mst.Sum(x => graph.GetComponentWeights()[x.Key]));
-
-            var components = graph.CountComponents();
-            Debug.WriteLine($"Components: {components}");
         }
     }
 }
