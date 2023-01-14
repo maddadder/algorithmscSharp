@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Lib.Graphs
 {
     public class Vertex<T>
     {
-        public List<T> EdgeList;
-        public List<float> EdgeWeights;
+        public List<Vertex<T>> EdgeList;
+        public float EdgeWeight;
         public T Component;
 
         public Vertex(T component=default)
         {
-            EdgeList = new List<T>();
-            EdgeWeights = new List<float>();
+            EdgeList = new List<Vertex<T>>();
+            EdgeWeight = 100000;
             Component = component;
         }
     }
@@ -24,7 +25,8 @@ namespace Lib.Graphs
         private string GraphName;
 
         private SortedDictionary<T, Vertex<T>> Vertices;
-        private SortedDictionary<T, int> ComponentWeights;
+        private SortedDictionary<T, T> parent;
+        private SortedDictionary<T, float> ComponentWeights;
         private int edgeCount;
 
         public MathGraph(string graphName = "None")
@@ -36,7 +38,8 @@ namespace Lib.Graphs
         {
             GraphName = graphName;
             Vertices = new SortedDictionary<T, Vertex<T>>();
-            ComponentWeights = new SortedDictionary<T, int>();
+            ComponentWeights = new SortedDictionary<T, float>();
+            parent = new SortedDictionary<T, T>();
             edgeCount = 0;
         }
 
@@ -55,7 +58,7 @@ namespace Lib.Graphs
             return ComponentWeights.Count;
         }
 
-        public int CountConnectedTo(T vertex)
+        public float CountConnectedTo(T vertex)
         {
             if (!ContainsVertex(vertex))
             {
@@ -93,25 +96,31 @@ namespace Lib.Graphs
 
         public void AddEdge(T vertex1, T vertex2, float weight = 1)
         {
-            if (!ContainsVertex(vertex1))
+            AddEdge(new Vertex<T>(vertex1), new Vertex<T>(vertex2), weight);
+        }
+
+        public void AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, float weight = 1)
+        {
+            if (!ContainsVertex(vertex1.Component))
             {
-                AddVertex(vertex1);
+                AddVertex(vertex1.Component);
             }
 
-            if (!ContainsVertex(vertex2))
+            if (!ContainsVertex(vertex2.Component))
             {
-                AddVertex(vertex2);
+                AddVertex(vertex2.Component);
             }
-
-            Vertices[vertex1].EdgeList.Add(vertex2);
-            Vertices[vertex1].EdgeWeights.Add(weight);
-            Vertices[vertex2].EdgeList.Add(vertex1);
-            Vertices[vertex2].EdgeWeights.Add(weight);
+            vertex1.EdgeWeight = weight;
+            vertex2.EdgeWeight = weight;
+            Vertices[vertex1.Component].EdgeList.Add(vertex2);
+            Vertices[vertex1.Component].EdgeWeight = weight;
+            Vertices[vertex2.Component].EdgeList.Add(vertex1);
+            Vertices[vertex2.Component].EdgeWeight = weight;
             edgeCount++;
 
             // Union Find algorithm to maintain graph components with each new edge
-            T v1 = GetFinalComponentName(vertex1);
-            T v2 = GetFinalComponentName(vertex2);
+            T v1 = GetFinalComponentName(vertex1.Component);
+            T v2 = GetFinalComponentName(vertex2.Component);
             if (!Equal(v1, v2))
             {
                 if (ComponentWeights[v1] < ComponentWeights[v2])
@@ -163,21 +172,21 @@ namespace Lib.Graphs
             return Vertices.ContainsKey(vertex);
         }
 
-        public bool ContainsEdge(T vertex1, T vertex2)
+        public bool ContainsEdge(Vertex<T> vertex1, Vertex<T> vertex2)
         {
-            if (!ContainsVertex(vertex1))
+            if (!ContainsVertex(vertex1.Component))
             {
                 string msg = $"Vertex '{vertex1}' is not in the graph";
                 throw new ArgumentException(msg);
             }
 
-            if (!ContainsVertex(vertex2))
+            if (!ContainsVertex(vertex2.Component))
             {
                 string msg = $"Vertex '{vertex2}' is not in the graph";
                 throw new ArgumentException(msg);
             }
 
-            return Vertices[vertex1].EdgeList.Contains(vertex2);
+            return Vertices[vertex1.Component].EdgeList.Contains(vertex2);
         }
 
         public List<T> FindFirstPath(T vertex1, T vertex2)
@@ -227,15 +236,15 @@ namespace Lib.Graphs
             // If we have already visited the adjacent vertex, ignore it
             // Otherwise, we record it's position and then recurse deeper to it
 
-            foreach (T adj in Vertices[dstVertex].EdgeList)
+            foreach (var adj in Vertices[dstVertex].EdgeList)
             {
-                if (marked[adj])
+                if (marked[adj.Component])
                 {
                     continue;
                 }
 
-                edgeTo[adj] = dstVertex;
-                DepthFirstPathTo(srcVertex, adj, marked, edgeTo);
+                edgeTo[adj.Component] = dstVertex;
+                DepthFirstPathTo(srcVertex, adj.Component, marked, edgeTo);
             }
         }
 
@@ -288,18 +297,18 @@ namespace Lib.Graphs
             while (searchList.Count > 0)
             {
                 T v = searchList.Dequeue();
-                foreach (T adj in Vertices[v].EdgeList)
+                foreach (var adj in Vertices[v].EdgeList)
                 {
-                    if (marked[adj])
+                    if (marked[adj.Component])
                     {
                         continue;
                     }
 
-                    marked[adj] = true;
-                    searchList.Enqueue(adj);
-                    edgeTo[adj] = v;
+                    marked[adj.Component] = true;
+                    searchList.Enqueue(adj.Component);
+                    edgeTo[adj.Component] = v;
 
-                    if (Equal(srcVertex, adj))
+                    if (Equal(srcVertex, adj.Component))
                     {
                         Console.WriteLine($"Search completed in {count} steps");
                         return;
@@ -325,7 +334,7 @@ namespace Lib.Graphs
             SortedDictionary<T, float> marks = new SortedDictionary<T, float>();
             foreach (T key in Vertices.Keys)
             {
-                marks[key] = 10000;
+                marks[key] = 100000;
             }
             return marks;
         }
@@ -345,9 +354,9 @@ namespace Lib.Graphs
 
         public IEnumerable<T> EnumAdjacent(T vertex)
         {
-            foreach (T edge in Vertices[vertex].EdgeList)
+            foreach (var edge in Vertices[vertex].EdgeList)
             {
-                yield return edge;
+                yield return edge.Component;
             }
         }
 
@@ -390,18 +399,17 @@ namespace Lib.Graphs
                     isVertexVisited[currentVisitedIndex] = true;
                     numOfVisitedVertices++;
 
-                    List<T> edgesFromVertex = Vertices[currentVisitedIndex].EdgeList;
-                    List<float> edgeWeightsFromVertex = Vertices[currentVisitedIndex].EdgeWeights;
+                    var edgesFromVertex = Vertices[currentVisitedIndex].EdgeList;
                     int i = 0;
                     foreach (var edge in edgesFromVertex)
                     {
-                        var edgeWight = edgeWeightsFromVertex[i];
+                        var edgeWight = edge.EdgeWeight;
                         var currentCalculatedDist = edgeWight + distances[currentVisitedIndex];
-
-                        if (distances[edge] > currentCalculatedDist)
+                        var componentDistance = distances[edge.Component];
+                        if (componentDistance > currentCalculatedDist)
                         {
-                            distances[edge] = currentCalculatedDist;
-                            indexNDistance.Enqueue(edge, currentCalculatedDist);
+                            distances[edge.Component] = currentCalculatedDist;
+                            indexNDistance.Enqueue(edge.Component, currentCalculatedDist);
                         }
                         i++;
                     }
@@ -410,7 +418,48 @@ namespace Lib.Graphs
 
             return distances;
         }
+        public void prims_mst(T source) {
+            ComponentWeights = SetAllVertexDistances();
+            var vis = ClearAllVertexMarks();
 
+            ComponentWeights[source] = 0;
+            vis[source] = true;
+
+            PriorityQueue<T,float> pq = new PriorityQueue<T,float>();
+            pq.Enqueue(source, 0);
+
+            while (pq.Count > 0) {
+                T u = pq.Dequeue();
+                vis[u] = true;
+
+                for (int j = 0; j < Vertices[u].EdgeList.Count; j++) {
+                    T v = Vertices[u].EdgeList[j].Component;
+                    var w = Vertices[u].EdgeList[j].EdgeWeight;
+                    if (vis[v] == false && ComponentWeights[v].CompareTo(w) > 0) {
+                        ComponentWeights[v] =  w;
+                        parent[v] = u;
+                        pq.Enqueue(v, ComponentWeights[v]);
+                    }
+                }
+            }
+        }
+        public float print_distance(T source) {
+            float total = 0;
+            foreach (T key in Vertices.Keys)
+            {
+                var result = key.CompareTo(source);
+                if (result != 0) {
+                    total += ComponentWeights[key];
+                    if(parent.ContainsKey(key) && ComponentWeights.ContainsKey(key))
+                    {
+                        Debug.WriteLine("( {0} - {1} ) = {2}", parent[key], key, ComponentWeights[key]);
+                    }
+                }
+            }
+            Debug.WriteLine(total);
+            return total;
+        }
+        
         public List<T> FindAccessibleVertices(T vertex)
         {
             List<T> accessibleVertices = new List<T>();
@@ -426,9 +475,9 @@ namespace Lib.Graphs
                 {
                     accessibleVertices.Add(currentVertexIndex);
 
-                    List<T> edges = Vertices[currentVertexIndex].EdgeList;
+                    var edges = Vertices[currentVertexIndex].EdgeList;
 
-                    edges.ForEach(v => verticesToVisit.Enqueue(v));
+                    edges.ForEach(v => verticesToVisit.Enqueue(v.Component));
                 }
             }
 
@@ -449,9 +498,9 @@ namespace Lib.Graphs
             foreach (T vertex in Vertices.Keys)
             {
                 Console.Write($"{vertex}: ");
-                foreach (T adj in Vertices[vertex].EdgeList)
+                foreach (var adj in Vertices[vertex].EdgeList)
                 {
-                    Console.Write($"{{{adj}}} ");
+                    Console.Write($"{{{adj.Component}}} ");
                 }
                 Console.WriteLine();
             }
@@ -460,6 +509,22 @@ namespace Lib.Graphs
         public override string ToString()
         {
             return $"Graph {GraphName}: {Vertices.Count} vertices and {edgeCount} edges";
+        }
+        public static float managePrimsMST(string[] lines) {
+            MathGraph<int> mst = new MathGraph<int>();
+            string[] line1 = lines[0].Split(' ');
+
+            for (int i = 1; i <= lines.Length - 2; i++) {
+                string[] all_edge = lines[i].Split(' ');
+                int u = int.Parse(all_edge[0])-1;
+                int v = int.Parse(all_edge[1])-1;
+                int w = int.Parse(all_edge[2]);
+                mst.AddEdge(u,v,w);
+            }
+
+            int source = int.Parse(lines[lines.Length-1]);
+            mst.prims_mst(source);
+            return mst.print_distance(source);
         }
     }
 }

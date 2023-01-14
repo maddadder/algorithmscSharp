@@ -88,6 +88,16 @@ namespace Test
             {
                 Debug.WriteLine($"{results[j]} was in {results[j + 1]} with {results[j + 2]}.");
             }
+
+            var source = node1;
+            graph.prims_mst(source);
+
+            // Act
+            var actualCost = graph.print_distance(source);
+   
+
+            var components = graph.CountComponents();
+            Debug.WriteLine($"Components: {components}");
         }
     }
 }

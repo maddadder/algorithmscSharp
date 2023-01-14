@@ -72,7 +72,20 @@ namespace Test
             }
             var pathDistances = graph.FindClosestDistancesUsingHeap(node1);
             var distance = pathDistances.Where(x => x.Key == node2).First().Value;
-             Debug.WriteLine($"The distance between {node1} and {node2} is {distance}.");
+            Debug.WriteLine($"The distance between {node1} and {node2} is {distance}.");
+
+            var source = node1;
+            graph.prims_mst(source);
+
+            float expectedCost = 9;
+
+            // Act
+            var actualCost = graph.print_distance(source);
+            // Assert
+            Assert.AreEqual(expectedCost, actualCost);
+
+            var components = graph.CountComponents();
+            Debug.WriteLine($"Components: {components}");
         }
     }
 }

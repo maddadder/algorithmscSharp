@@ -80,6 +80,20 @@ namespace Test
             foreach(var t in test.Where(x => x.Key == actor2)){
                 Debug.WriteLine($"{t.Key},{t.Value/2}");
             }
+
+            var source = "Kevin Spacey";
+            graph.prims_mst(source);
+
+            float expectedCost = 68203220;
+
+            // Act
+            var actualCost = graph.print_distance(source);
+            
+            // Assert
+            Assert.AreEqual(expectedCost, actualCost);
+
+            var components = graph.CountConnectedTo(source);
+            Debug.WriteLine($"Components: {components}");
         }
     }
 }

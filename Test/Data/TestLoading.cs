@@ -35,12 +35,15 @@ namespace Test.Data
                 count+=1;
             }
             
-            var components = graph.CountComponents();
+            
             var test = graph.FindClosestDistancesUsingHeap("Toy Story 3 (2010)");
             foreach(var t in test.OrderBy(x => x.Value).Take(100))
             {
                 Debug.WriteLine($"{t.Key},{t.Value}");
             }
+            
+            var components = graph.CountComponents();
+            Debug.WriteLine($"Components:{components}");
         }
     }
 }
