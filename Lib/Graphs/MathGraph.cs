@@ -62,7 +62,14 @@ namespace Lib.Graphs
         {
             return Components.Count;
         }
-
+        public SortedDictionary<T, int> GetComponents()
+        {
+            return Components;
+        }
+        public T GetParent(T vertex)
+        {
+            return parent[vertex];
+        }
         public float CountConnectedTo(T vertex)
         {
             if (!ContainsVertex(vertex))
@@ -516,9 +523,9 @@ namespace Lib.Graphs
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {
                 string[] all_edge = lines[i].Split(' ');
-                int u = int.Parse(all_edge[0])-1;
-                int v = int.Parse(all_edge[1])-1;
-                int w = int.Parse(all_edge[2]);
+                int u = int.Parse(all_edge[0]);
+                int v = int.Parse(all_edge[1]);
+                float w = float.Parse(all_edge[2]);
                 mst.AddEdge(u,v,w);
             }
 
