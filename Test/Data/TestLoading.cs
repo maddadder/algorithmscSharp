@@ -36,7 +36,7 @@ namespace Test.Data
             }
             
             
-            var test = graph.FindClosestDistancesUsingHeap("Toy Story 3 (2010)");
+            var test = graph.Dijkstra("Toy Story 3 (2010)");
             foreach(var t in test.OrderBy(x => x.Value).Take(100))
             {
                 Debug.WriteLine($"{t.Key},{t.Value}");

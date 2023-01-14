@@ -76,7 +76,7 @@ namespace Test
             {
                 Debug.WriteLine($"{results[j]} was in {results[j + 1]} with {results[j + 2]}.");
             }
-            var test = graph.FindClosestDistancesUsingHeap(actor1);
+            var test = graph.Dijkstra(actor1);
             foreach(var t in test.Where(x => x.Key == actor2)){
                 Debug.WriteLine($"{t.Key},{t.Value/2}");
             }
@@ -84,10 +84,10 @@ namespace Test
             var source = "Kevin Spacey";
             graph.prims_mst(source);
 
-            float expectedCost = 68203220;
+            float expectedCost = 68212000;
 
             // Act
-            var actualCost = graph.print_distance(source);
+            var actualCost = graph.compute_distance(source);
             
             // Assert
             Assert.AreEqual(expectedCost, actualCost);

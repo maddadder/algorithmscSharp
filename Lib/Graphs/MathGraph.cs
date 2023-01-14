@@ -374,76 +374,57 @@ namespace Lib.Graphs
             }
         }
 
-        public SortedDictionary<T, float> FindClosestDistancesUsingHeap(T sourceVertex)
+        public SortedDictionary<T, float> Dijkstra(T left)
         {
-            List<T> accessibleVertices = FindAccessibleVertices(sourceVertex);
-
-            SortedDictionary<T, float>  distances = SetAllVertexDistances();
-            SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
-
-            distances[sourceVertex] = 0;
-
-            int numOfVisitedVertices = 0;
-
-            PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
-            indexNDistance.Enqueue(sourceVertex, 0);
-
-            while (numOfVisitedVertices != accessibleVertices.Count)
-            {
-                // Remove one from priority queue
-                var currentVisitedIndex = indexNDistance.Dequeue();
-
-                // If it's not visited visit
-                if (isVertexVisited[currentVisitedIndex] == false)
-                {
-                    isVertexVisited[currentVisitedIndex] = true;
-                    numOfVisitedVertices++;
-
-                    var edgesFromVertex = Vertices[currentVisitedIndex].EdgeList;
-                    int i = 0;
-                    foreach (var edge in edgesFromVertex)
-                    {
-                        var edgeWight = edge.EdgeWeight;
-                        var currentCalculatedDist = edgeWight + distances[currentVisitedIndex];
-                        var componentDistance = distances[edge.Component];
-                        if (componentDistance > currentCalculatedDist)
-                        {
-                            distances[edge.Component] = currentCalculatedDist;
-                            indexNDistance.Enqueue(edge.Component, currentCalculatedDist);
-                        }
-                        i++;
-                    }
-                }
-            }
-
-            return distances;
-        }
-        public void prims_mst(T source) {
             ComponentWeights = SetAllVertexDistances();
-            var vis = ClearAllVertexMarks();
-
-            ComponentWeights[source] = 0;
-            vis[source] = true;
-
-            PriorityQueue<T,float> pq = new PriorityQueue<T,float>();
-            pq.Enqueue(source, 0);
-
-            while (pq.Count > 0) {
-                T u = pq.Dequeue();
-                vis[u] = true;
-
-                for (int j = 0; j < Vertices[u].EdgeList.Count; j++) {
-                    T v = Vertices[u].EdgeList[j].Component;
-                    var w = Vertices[u].EdgeList[j].EdgeWeight;
-                    if (vis[v] == false && ComponentWeights[v].CompareTo(w) > 0) {
-                        ComponentWeights[v] =  w;
-                        parent[v] = u;
-                        pq.Enqueue(v, ComponentWeights[v]);
+            SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
+            ComponentWeights[left] = 0;
+            //isVertexVisited[source] = true; <-- source node is checked first
+            PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
+            indexNDistance.Enqueue(left, 0);
+            while (indexNDistance.Count > 0) {
+                left = indexNDistance.Dequeue();
+                if (isVertexVisited[left] == false) {
+                    isVertexVisited[left] = true;
+                    foreach (var right in Vertices[left].EdgeList) {
+                        var currentCalculatedDist = ComponentWeights[left] + right.EdgeWeight;
+                        if (ComponentWeights[right.Component].CompareTo(currentCalculatedDist) > 0)
+                        {
+                            ComponentWeights[right.Component] = currentCalculatedDist;
+                            parent[right.Component] = left;
+                            indexNDistance.Enqueue(right.Component, currentCalculatedDist);
+                        }
+                    }
+                }
+            }
+            return ComponentWeights;
+        }
+        public void prims_mst(T left) {
+            ComponentWeights = SetAllVertexDistances();
+            SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
+            ComponentWeights[left] = 0;
+            isVertexVisited[left] = true;
+            PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
+            indexNDistance.Enqueue(left, 0);
+            while (indexNDistance.Count > 0) {
+                left = indexNDistance.Dequeue();
+                isVertexVisited[left] = true;
+                foreach (var right in Vertices[left].EdgeList) {
+                    if (isVertexVisited[right.Component] == false && 
+                        ComponentWeights[right.Component].CompareTo(right.EdgeWeight) > 0) 
+                    {
+                        ComponentWeights[right.Component] = right.EdgeWeight;
+                        parent[right.Component] = left;
+                        indexNDistance.Enqueue(right.Component, right.EdgeWeight);
                     }
                 }
             }
         }
-        public float print_distance(T source) {
+        public float compute_distance(T source) 
+        {
+            return Vertices.Keys.Sum(x => ComponentWeights[x]);
+        }
+        public float print_distances(T source) {
             float total = 0;
             foreach (T key in Vertices.Keys)
             {
@@ -524,7 +505,8 @@ namespace Lib.Graphs
 
             int source = int.Parse(lines[lines.Length-1]);
             mst.prims_mst(source);
-            return mst.print_distance(source);
+            mst.print_distances(source);
+            return mst.compute_distance(source);
         }
     }
 }

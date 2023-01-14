@@ -19,7 +19,8 @@ namespace Graphs
             var expectedCost = 4;
 
             // Act
-            var actualCost = mst.print_distance(source);
+            var actualCost = mst.compute_distance(source);
+            mst.print_distances(source);
 
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
@@ -39,8 +40,8 @@ namespace Graphs
             var expectedCost = 8;
 
             // Act
-            var actualCost = mst.print_distance(source);
-
+            var actualCost = mst.compute_distance(source);
+            mst.print_distances(source);
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
         }
@@ -58,8 +59,8 @@ namespace Graphs
             var expectedCost = 7;
 
             // Act
-            var actualCost = mst.print_distance(source);
-
+            var actualCost = mst.compute_distance(source);
+            mst.print_distances(source);
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
         }
@@ -81,8 +82,8 @@ namespace Graphs
             var expectedCost = 6;
 
             // Act
-            var actualCost = mst.print_distance(source);
-
+            var actualCost = mst.compute_distance(source);
+            mst.print_distances(source);
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
             
@@ -115,8 +116,8 @@ namespace Graphs
             var expectedCost = 37;
 
             // Act
-            var actualCost = mst.print_distance(source);
-
+            var actualCost = mst.compute_distance(source);
+            mst.print_distances(source);
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
         }
@@ -132,7 +133,7 @@ namespace Graphs
 
             // Act
             var actualCost = MathGraph<int>.managePrimsMST(lines);
-
+            
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
         }

@@ -70,17 +70,19 @@ namespace Test
             {
                 Debug.WriteLine($"{results[j]} was in {results[j + 1]} with {results[j + 2]}.");
             }
-            var pathDistances = graph.FindClosestDistancesUsingHeap(node1);
+            var pathDistances = graph.Dijkstra(5);
             var distance = pathDistances.Where(x => x.Key == node2).First().Value;
-            Debug.WriteLine($"The distance between {node1} and {node2} is {distance}.");
+            Debug.WriteLine($"The distance between {5} and {node2} is {distance}.");
+            graph.print_distances(5);
 
-            var source = node1;
+
+            var source = 5;
             graph.prims_mst(source);
 
             float expectedCost = 9;
 
             // Act
-            var actualCost = graph.print_distance(source);
+            var actualCost = graph.compute_distance(source);
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
 

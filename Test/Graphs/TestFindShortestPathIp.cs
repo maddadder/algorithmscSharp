@@ -93,7 +93,7 @@ namespace Test
             graph.prims_mst(source);
 
             // Act
-            var actualCost = graph.print_distance(source);
+            var actualCost = graph.compute_distance(source);
    
 
             var components = graph.CountComponents();
