@@ -399,7 +399,7 @@ namespace Lib.Graphs
             }
             return ComponentWeights;
         }
-        public void prims_mst(T left) {
+        public float prims_mst(T left) {
             ComponentWeights = SetAllVertexDistances();
             SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
             ComponentWeights[left] = 0;
@@ -419,11 +419,9 @@ namespace Lib.Graphs
                     }
                 }
             }
-        }
-        public float compute_distance(T source) 
-        {
             return Vertices.Keys.Sum(x => ComponentWeights[x]);
         }
+  
         public float print_distances(T source) {
             float total = 0;
             foreach (T key in Vertices.Keys)
@@ -504,9 +502,9 @@ namespace Lib.Graphs
             }
 
             int source = int.Parse(lines[lines.Length-1]);
-            mst.prims_mst(source);
+            var result = mst.prims_mst(source);
             mst.print_distances(source);
-            return mst.compute_distance(source);
+            return result;
         }
     }
 }

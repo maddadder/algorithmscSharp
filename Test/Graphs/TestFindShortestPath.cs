@@ -82,12 +82,11 @@ namespace Test
             }
 
             var source = "Kevin Spacey";
-            graph.prims_mst(source);
 
             float expectedCost = 68212000;
 
             // Act
-            var actualCost = graph.compute_distance(source);
+            var actualCost = graph.prims_mst(source);
             
             // Assert
             Assert.AreEqual(expectedCost, actualCost);

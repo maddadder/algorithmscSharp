@@ -77,12 +77,11 @@ namespace Test
 
 
             var source = 5;
-            graph.prims_mst(source);
 
             float expectedCost = 9;
 
             // Act
-            var actualCost = graph.compute_distance(source);
+            var actualCost = graph.prims_mst(source);
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
 

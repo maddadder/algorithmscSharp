@@ -13,13 +13,12 @@ namespace Graphs
             
             mst.AddEdge(0,1,4);
             int source = 0;
-            mst.prims_mst(source);
             
 
             var expectedCost = 4;
 
             // Act
-            var actualCost = mst.compute_distance(source);
+            var actualCost = mst.prims_mst(source);
             mst.print_distances(source);
 
             // Assert
@@ -35,12 +34,11 @@ namespace Graphs
             mst.AddEdge(0,1,4);
             mst.AddEdge(1,2,4);
             int source = 0;
-            mst.prims_mst(source);
 
             var expectedCost = 8;
 
             // Act
-            var actualCost = mst.compute_distance(source);
+            var actualCost = mst.prims_mst(source);
             mst.print_distances(source);
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
@@ -54,12 +52,11 @@ namespace Graphs
             mst.AddEdge(0,1,4);
             mst.AddEdge(1,2,3);
             int source = 0;
-            mst.prims_mst(source);
 
             var expectedCost = 7;
 
             // Act
-            var actualCost = mst.compute_distance(source);
+            var actualCost = mst.prims_mst(source);
             mst.print_distances(source);
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
@@ -77,12 +74,11 @@ namespace Graphs
             mst.AddEdge(1,2,5);
             mst.AddEdge(2,3,2);
             int source = 0;
-            mst.prims_mst(source);
 
             var expectedCost = 6;
 
             // Act
-            var actualCost = mst.compute_distance(source);
+            var actualCost = mst.prims_mst(source);
             mst.print_distances(source);
             // Assert
             Assert.AreEqual(expectedCost, actualCost);
@@ -110,13 +106,12 @@ namespace Graphs
             mst.AddEdge(0,1,4);
             mst.AddEdge(3,5,14);
             int source = 0;
-            mst.prims_mst(source);
 
 
             var expectedCost = 37;
 
             // Act
-            var actualCost = mst.compute_distance(source);
+            var actualCost = mst.prims_mst(source);
             mst.print_distances(source);
             // Assert
             Assert.AreEqual(expectedCost, actualCost);

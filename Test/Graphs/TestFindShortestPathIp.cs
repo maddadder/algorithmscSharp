@@ -90,11 +90,10 @@ namespace Test
             }
 
             var source = node1;
-            graph.prims_mst(source);
 
             // Act
-            var actualCost = graph.compute_distance(source);
-   
+            var actualCost = graph.prims_mst(source);
+            graph.print_distances(source);
 
             var components = graph.CountComponents();
             Debug.WriteLine($"Components: {components}");
