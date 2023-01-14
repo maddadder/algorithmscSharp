@@ -18,11 +18,11 @@ namespace Graphs
             var expectedCost = 4;
 
             // Act
-            var actualCost = mst.prims_mst(source);
+            var graph = mst.prims_mst(source);
             mst.print_distances(source);
 
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }
 
         [TestMethod]
@@ -38,10 +38,10 @@ namespace Graphs
             var expectedCost = 8;
 
             // Act
-            var actualCost = mst.prims_mst(source);
+            var graph = mst.prims_mst(source);
             mst.print_distances(source);
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }
 
         [TestMethod]
@@ -56,10 +56,10 @@ namespace Graphs
             var expectedCost = 7;
 
             // Act
-            var actualCost = mst.prims_mst(source);
+            var graph = mst.prims_mst(source);
             mst.print_distances(source);
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }
 
         [TestMethod]
@@ -78,10 +78,10 @@ namespace Graphs
             var expectedCost = 6;
 
             // Act
-            var actualCost = mst.prims_mst(source);
+            var graph = mst.prims_mst(source);
             mst.print_distances(source);
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
             
         }
 
@@ -111,10 +111,10 @@ namespace Graphs
             var expectedCost = 37;
 
             // Act
-            var actualCost = mst.prims_mst(source);
+            var graph = mst.prims_mst(source);
             mst.print_distances(source);
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }
 
         [TestMethod]
@@ -122,60 +122,60 @@ namespace Graphs
         {
             string sourceFile = "../../../MST1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> pmst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>();
             
             var expectedCost = 5;
 
             // Act
-            var actualCost = MathGraph<int>.managePrimsMST(lines);
+            var graph = MathGraph<int>.managePrimsMST(mst, lines);
             
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }
         [TestMethod]
         public void TestIn2()
         {
             string sourceFile = "../../../MST2.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> pmst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>();
             
             var expectedCost = -3612829;
 
             // Act
-            var actualCost = MathGraph<int>.managePrimsMST(lines);
+            var graph = MathGraph<int>.managePrimsMST(mst, lines);
 
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }
         [TestMethod]
         public void TestIn3()
         {
             string sourceFile = "../../../MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> pmst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>();
             
             var expectedCost = 14;
 
             // Act
-            var actualCost = MathGraph<int>.managePrimsMST(lines);
+            var graph = MathGraph<int>.managePrimsMST(mst, lines);
         
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }
         [TestMethod]
         public void TestIn4()
         {
             string sourceFile = "../../../MST4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> pmst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>();
 
             var expectedCost = 4;
 
             // Act
-            var actualCost = MathGraph<int>.managePrimsMST(lines);;
+            var graph = MathGraph<int>.managePrimsMST(mst, lines);;
         
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }
     }
 }

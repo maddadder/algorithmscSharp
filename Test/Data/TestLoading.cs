@@ -41,7 +41,19 @@ namespace Test.Data
             {
                 Debug.WriteLine($"{t.Key},{t.Value}");
             }
-            
+            Debug.WriteLine("");
+            foreach(var t in test.OrderByDescending(x => x.Value).Take(100))
+            {
+                Debug.WriteLine($"{t.Key},{t.Value}");
+            }
+            Debug.WriteLine("");
+
+            var movie1 = "Star Wars: Episode IV - A New Hope (1977)";
+            Debug.WriteLine($"{movie1} Sorted Asc");
+            var test2 = graph.prims_mst(movie1);
+            graph.print_distances(movie1, 100, true);
+            Debug.WriteLine($"{movie1} Sorted Desc");
+            graph.print_distances(movie1, 100, false);
             var components = graph.CountComponents();
             Debug.WriteLine($"Components:{components}");
         }

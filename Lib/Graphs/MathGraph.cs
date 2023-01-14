@@ -42,7 +42,10 @@ namespace Lib.Graphs
             parent = new SortedDictionary<T, T>();
             edgeCount = 0;
         }
-
+        public SortedDictionary<T, float> GetComponentWeights()
+        {
+            return ComponentWeights;
+        }
         public int CountVertices()
         {
             return Vertices.Count;
@@ -379,31 +382,28 @@ namespace Lib.Graphs
             ComponentWeights = SetAllVertexDistances();
             SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
             ComponentWeights[left] = 0;
-            //isVertexVisited[source] = true; <-- source node is checked first
             PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
             indexNDistance.Enqueue(left, 0);
             while (indexNDistance.Count > 0) {
                 left = indexNDistance.Dequeue();
-                if (isVertexVisited[left] == false) {
-                    isVertexVisited[left] = true;
-                    foreach (var right in Vertices[left].EdgeList) {
-                        var currentCalculatedDist = ComponentWeights[left] + right.EdgeWeight;
-                        if (ComponentWeights[right.Component].CompareTo(currentCalculatedDist) > 0)
-                        {
-                            ComponentWeights[right.Component] = currentCalculatedDist;
-                            parent[right.Component] = left;
-                            indexNDistance.Enqueue(right.Component, currentCalculatedDist);
-                        }
+                isVertexVisited[left] = true;
+                foreach (var right in Vertices[left].EdgeList) {
+                    var currentCalculatedDist = ComponentWeights[left] + right.EdgeWeight;
+                    if (isVertexVisited[right.Component] == false && 
+                        ComponentWeights[right.Component].CompareTo(currentCalculatedDist) > 0) 
+                    {
+                        ComponentWeights[right.Component] = currentCalculatedDist;
+                        parent[right.Component] = left;
+                        indexNDistance.Enqueue(right.Component, currentCalculatedDist);
                     }
                 }
             }
             return ComponentWeights;
         }
-        public float prims_mst(T left) {
+        public System.Collections.Generic.SortedDictionary<T, Lib.Graphs.Vertex<T>> prims_mst(T left) {
             ComponentWeights = SetAllVertexDistances();
             SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
             ComponentWeights[left] = 0;
-            isVertexVisited[left] = true;
             PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
             indexNDistance.Enqueue(left, 0);
             while (indexNDistance.Count > 0) {
@@ -419,12 +419,24 @@ namespace Lib.Graphs
                     }
                 }
             }
-            return Vertices.Keys.Sum(x => ComponentWeights[x]);
+            return Vertices;
         }
   
-        public float print_distances(T source) {
+        public float print_distances(T source, int limit = 1000, bool? asc = true) {
             float total = 0;
-            foreach (T key in Vertices.Keys)
+            IEnumerable<T> results = null;
+            if(asc == true){
+                results = Vertices.Keys.OrderBy(x => ComponentWeights[x]).Take(limit);
+            }
+            else if(asc == false)
+            {
+                results = Vertices.Keys.OrderByDescending(x => ComponentWeights[x]).Take(limit);
+            }
+            else
+            {
+                results = Vertices.Keys.Take(limit);
+            }
+            foreach (T key in results)
             {
                 var result = key.CompareTo(source);
                 if (result != 0) {
@@ -489,10 +501,9 @@ namespace Lib.Graphs
         {
             return $"Graph {GraphName}: {Vertices.Count} vertices and {edgeCount} edges";
         }
-        public static float managePrimsMST(string[] lines) {
-            MathGraph<int> mst = new MathGraph<int>();
+        public static System.Collections.Generic.SortedDictionary<int, Lib.Graphs.Vertex<int>> managePrimsMST(MathGraph<int> mst, string[] lines) 
+        {
             string[] line1 = lines[0].Split(' ');
-
             for (int i = 1; i <= lines.Length - 2; i++) {
                 string[] all_edge = lines[i].Split(' ');
                 int u = int.Parse(all_edge[0])-1;

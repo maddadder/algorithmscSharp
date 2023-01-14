@@ -47,8 +47,8 @@ namespace Test
                 graph.AddEdge(names, movies, 1);
             }
 
-            string actor1 = "Kevin Bacon";
-            string actor2 = "Harrison Ford";
+            string actor1 = "Carrie Fisher";
+            string actor2 = "Michael Caine";
 
             if(!graph.ContainsVertex(actor1)) // check actor 1 exists
             {
@@ -66,7 +66,7 @@ namespace Test
             List<string> results = graph.FindShortestPath(actor1, actor2);
 
             //6. Calculate the degrees of separation score
-            int degree = (results.Count - 1) / 2;
+            int degree = (results.Count - 1);
             Debug.WriteLine($"{actor1} has been in {graph.CountAdjacent(actor1)} movie(s) and {actor2} has been in {graph.CountAdjacent(actor2)} movie(s).");
             Debug.WriteLine($"The degree of separation between {actor1} and {actor2} is {degree}.");
             Debug.WriteLine("SHORTEST PATH:");
@@ -78,18 +78,19 @@ namespace Test
             }
             var test = graph.Dijkstra(actor1);
             foreach(var t in test.Where(x => x.Key == actor2)){
-                Debug.WriteLine($"{t.Key},{t.Value/2}");
+                Debug.WriteLine($"{t.Key},{t.Value}");
             }
-
+            graph.print_distances(actor1);
+            
             var source = "Kevin Spacey";
 
             float expectedCost = 68212000;
 
             // Act
-            var actualCost = graph.prims_mst(source);
+            var graph_mst = graph.prims_mst(source);   
             
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph_mst.Sum(x => graph.GetComponentWeights()[x.Key]));
 
             var components = graph.CountConnectedTo(source);
             Debug.WriteLine($"Components: {components}");

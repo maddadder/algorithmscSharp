@@ -81,9 +81,9 @@ namespace Test
             float expectedCost = 9;
 
             // Act
-            var actualCost = graph.prims_mst(source);
+            var graph_mst = graph.prims_mst(source);
             // Assert
-            Assert.AreEqual(expectedCost, actualCost);
+            Assert.AreEqual(expectedCost, graph_mst.Sum(x => graph.GetComponentWeights()[x.Key]));
 
             var components = graph.CountComponents();
             Debug.WriteLine($"Components: {components}");
