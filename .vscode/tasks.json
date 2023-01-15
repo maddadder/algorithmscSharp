@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Test/Test.csproj",
+                "${workspaceFolder}/PrimsMaze/PrimsMaze.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/Test/Test.csproj",
+                "${workspaceFolder}/PrimsMaze/PrimsMaze.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/Test/Test.csproj"
+                "${workspaceFolder}/PrimsMaze/PrimsMaze.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
