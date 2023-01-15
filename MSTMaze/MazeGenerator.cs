@@ -4,7 +4,7 @@ namespace MSTMaze
     {
         private readonly Random _rnd = new();
         // NOTE: cells grid dimensions must be odd, odd (will give size 1 border around maze)
-        private readonly bool[,] _cells = new bool[21,21]; // All maze cells default to wall (false), not path (true)
+        private readonly bool[,] _cells = new bool[41,41]; // All maze cells default to wall (false), not path (true)
 
         private struct CellPosition {
             public int X;
