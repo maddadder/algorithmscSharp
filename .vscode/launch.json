@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/KruskalsMaze/bin/Debug/net7.0/KruskalsMaze.dll",
+            "program": "${workspaceFolder}/MSTMaze/bin/Debug/net7.0/MSTMaze.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/KruskalsMaze",
+            "cwd": "${workspaceFolder}/MSTMaze",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
