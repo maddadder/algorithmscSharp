@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/PrimsMaze/PrimsMaze.csproj",
+                "${workspaceFolder}/KruskalsMaze/KruskalsMaze.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/PrimsMaze/PrimsMaze.csproj",
+                "${workspaceFolder}/KruskalsMaze/KruskalsMaze.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/PrimsMaze/PrimsMaze.csproj"
+                "${workspaceFolder}/KruskalsMaze/KruskalsMaze.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

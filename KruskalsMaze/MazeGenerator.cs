@@ -1,4 +1,4 @@
-namespace PrimsMaze 
+namespace KruskalsMaze 
 {
     public class MazeGenerator
     {
