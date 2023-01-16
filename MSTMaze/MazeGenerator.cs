@@ -123,7 +123,7 @@ namespace MSTMaze
         }
 
         private static void renderMaze(bool[,] maze, string title = "Generating maze...") {
-            Console.Clear();
+            Console.SetCursorPosition(0, 0);
             Console.WriteLine(title);
             Console.WriteLine("");
             for (var x = 0; x < maze.GetLength(0); x++) {
