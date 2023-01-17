@@ -4,7 +4,7 @@ namespace MSTMaze
     {
         private readonly Random _rnd = new();
         // NOTE: cells grid dimensions must be odd, odd (will give size 1 border around maze)
-        private readonly int[,] _cells = new int[11,11]; // All maze cells default to wall (false), not path (true)
+        private readonly int[,] _cells = new int[41,41]; // All maze cells default to wall (false), not path (true)
 
         private struct CellPosition {
             public int X;
@@ -137,10 +137,10 @@ namespace MSTMaze
         }
         // Function to convert adjacency
         // list to adjacency matrix
-        public static List<List<int>> convert(int[,] a)
+        public static List<List<int>> convertToAdjacencyList(int[,] adjacencyMatrix)
         {
             // no of vertices
-            int l = a.GetLength(0);
+            int l = adjacencyMatrix.GetLength(0);
             List<List<int>> adjListArray = new List<List<int>>(l);
             int i, j;
 
@@ -153,11 +153,11 @@ namespace MSTMaze
             }
 
 
-            for (i = 0; i < a.GetLength(0); i++)
+            for (i = 0; i < adjacencyMatrix.GetLength(0); i++)
             {
-                for (j = 0; j < a.GetLength(1); j++)
+                for (j = 0; j < adjacencyMatrix.GetLength(1); j++)
                 {
-                    if (a[i,j] == 1)
+                    if (adjacencyMatrix[i,j] == 1)
                     {
                         adjListArray[i].Add(j);
                     }
@@ -168,19 +168,24 @@ namespace MSTMaze
         }
 
         // Function to print the adjacency list
-        public static void printList(List<List<int>> adjListArray)
+        public static string[] convertToEdgeList(List<List<int>> adjListArray)
         {
+            List<string> lines = new List<string>();
+            
+            lines.Add("1 1"); //<-- unknown and ignored
+            var first = "";
             // Print the adjacency list
             for (int v = 0; v < adjListArray.Count; v++)
             {
                 foreach (int u in adjListArray[v])
                 {
-                    Console.Write(v);
-                    Console.Write(" " + u);
-                    Console.Write(" " + 1);
-                    Console.WriteLine();
+                    if(string.IsNullOrEmpty(first))
+                        first = v.ToString();
+                    lines.Add(v + " " + u + " " + 1);
                 }
             }
+            lines.Add(first);
+            return lines.ToArray();
         }
     }
 }

@@ -106,12 +106,12 @@ namespace Lib.Graphs
             return;
         }
 
-        public void AddEdge(T vertex1, T vertex2, float weight = 1, bool twoway = true)
+        public void AddEdge(T vertex1, T vertex2, float weight = 1, bool isUndirectedGraph = true)
         {
-            AddEdge(new Vertex<T>(vertex1), new Vertex<T>(vertex2), weight, twoway);
+            AddEdge(new Vertex<T>(vertex1), new Vertex<T>(vertex2), weight, isUndirectedGraph);
         }
 
-        public void AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, float weight = 1, bool twoway = true)
+        public void AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, float weight = 1, bool isUndirectedGraph = true)
         {
             if (!ContainsVertex(vertex1.Component))
             {
@@ -126,7 +126,7 @@ namespace Lib.Graphs
             vertex2.EdgeWeight = weight;
             Vertices[vertex1.Component].EdgeList.Add(vertex2);
             Vertices[vertex1.Component].EdgeWeight = weight;
-            if(twoway){
+            if(isUndirectedGraph){
                 Vertices[vertex2.Component].EdgeList.Add(vertex1);
                 Vertices[vertex2.Component].EdgeWeight = weight;
             }
@@ -550,7 +550,7 @@ namespace Lib.Graphs
         {
             return $"Graph {GraphName}: {Vertices.Count} vertices and {edgeCount} edges";
         }
-        public static SortedDictionary<int, Lib.Graphs.Vertex<int>> managePrimsMST(MathGraph<int> mst, string[] lines, bool twoway = true) 
+        public static SortedDictionary<int, Lib.Graphs.Vertex<int>> managePrimsMST(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {
@@ -558,7 +558,7 @@ namespace Lib.Graphs
                 int u = int.Parse(all_edge[0]);
                 int v = int.Parse(all_edge[1]);
                 float w = float.Parse(all_edge[2]);
-                mst.AddEdge(u,v,w,twoway);
+                mst.AddEdge(u,v,w,isUndirectedGraph);
             }
 
             int source = int.Parse(lines[lines.Length-1]);
