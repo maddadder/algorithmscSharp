@@ -84,7 +84,8 @@ namespace Test
             float expectedCost = 9;
 
             // Act
-            var graph_mst = graph.prims_mst(source);
+            graph.prims_mst(source);
+            var graph_mst = graph.GetVertices();
             // Assert
             Assert.AreEqual(expectedCost, graph_mst.Sum(x => graph.GetComponentWeights()[x.Key]));
         }

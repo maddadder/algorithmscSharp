@@ -53,6 +53,10 @@ namespace Lib.Graphs
             return Vertices.Count;
         }
 
+        public SortedDictionary<T, Vertex<T>> GetVertices(){
+            return Vertices;
+        }
+
         public int CountEdges()
         {
             return edgeCount;
@@ -421,7 +425,7 @@ namespace Lib.Graphs
             }
             return ComponentWeights;
         }
-        public System.Collections.Generic.SortedDictionary<T, Lib.Graphs.Vertex<T>> prims_mst(T left) {
+        public SortedDictionary<T, float> prims_mst(T left) {
             ComponentWeights = SetAllVertexDistances();
             parent = SetAllVertexParents();
             SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
@@ -441,7 +445,7 @@ namespace Lib.Graphs
                     }
                 }
             }
-            return Vertices;
+            return ComponentWeights;
         }
   
         public float print_distances(T source, int limit = 1000, bool? asc = true) {
@@ -562,9 +566,23 @@ namespace Lib.Graphs
             }
 
             int source = int.Parse(lines[lines.Length-1]);
-            var result = mst.prims_mst(source);
+            mst.prims_mst(source);
+            var result = mst.GetVertices();
             mst.print_distances(source);
             return result;
+        }
+        public static SortedDictionary<int, Lib.Graphs.Vertex<int>> LoadGraph(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
+        {
+            string[] line1 = lines[0].Split(' ');
+            for (int i = 1; i <= lines.Length - 2; i++) {
+                string[] all_edge = lines[i].Split(' ');
+                int u = int.Parse(all_edge[0]);
+                int v = int.Parse(all_edge[1]);
+                float w = float.Parse(all_edge[2]);
+                mst.AddEdge(u,v,w,isUndirectedGraph);
+            }
+
+            return mst.GetVertices();
         }
     }
 }

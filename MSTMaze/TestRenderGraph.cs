@@ -11,7 +11,7 @@ namespace MSTMaze
         {
             MathGraph<int> mst = new MathGraph<int>();
             var isUndirectedGraph = false;
-            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.managePrimsMST(mst, lines, isUndirectedGraph);
+            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
             MathGraph<int>.renderGraph(graph);
         }
         public static void RenderMaze1(){
@@ -19,7 +19,7 @@ namespace MSTMaze
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>();
             var isUndirectedGraph = false;
-            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.managePrimsMST(mst, lines, isUndirectedGraph);
+            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
             MathGraph<int>.renderGraph(graph);
         }
         private static int[] RandomList(int length)
@@ -55,9 +55,9 @@ namespace MSTMaze
                     }
                     graph.AddEdge(nodeA, nodeB, 1, true);
                 }
-                var graph_mst = graph.prims_mst(inputX[inputX.Length/2]);
+                var vertices = graph.GetVertices();
                 Console.SetCursorPosition(0, 0);
-                MathGraph<int>.renderGraph(graph_mst);
+                MathGraph<int>.renderGraph(vertices);
             }
         }
     }

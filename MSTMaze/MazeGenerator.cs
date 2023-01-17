@@ -135,6 +135,21 @@ namespace MSTMaze
                 Console.WriteLine("");
             }
         }
+        public static void printAdjacencyMatrix(int[,] maze, string title = "Generating maze...") {
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine(title);
+            Console.WriteLine("");
+            for (var x = 0; x < maze.GetLength(0); x++) {
+                for (var y = 0; y < maze.GetLength(1); y++) {
+                    if(y == maze.GetLength(1) - 1)
+                        Console.Write($"{(maze[x,y] == 1 ? "1" : "0")}");
+                    else
+                        Console.Write($"{(maze[x,y] == 1 ? "1," : "0,")}");
+                }
+                Console.WriteLine("");
+            }
+        }
         // Function to convert adjacency
         // list to adjacency matrix
         public static List<List<int>> convertToAdjacencyList(int[,] adjacencyMatrix)

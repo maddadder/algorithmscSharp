@@ -50,7 +50,8 @@ namespace Test.Data
 
             var movie1 = "Star Wars: Episode IV - A New Hope (1977)";
             Debug.WriteLine($"{movie1} Sorted Asc");
-            var test2 = graph.prims_mst(movie1);
+            graph.prims_mst(movie1);
+            var test2 = graph.GetVertices();
             graph.print_distances(movie1, 100, true);
             Debug.WriteLine($"{movie1} Sorted Desc");
             graph.print_distances(movie1, 100, false);
