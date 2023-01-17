@@ -4,7 +4,7 @@ namespace MSTMaze
     {
         private readonly Random _rnd = new();
         // NOTE: cells grid dimensions must be odd, odd (will give size 1 border around maze)
-        private readonly bool[,] _cells = new bool[41,41]; // All maze cells default to wall (false), not path (true)
+        private readonly int[,] _cells = new int[11,11]; // All maze cells default to wall (false), not path (true)
 
         private struct CellPosition {
             public int X;
@@ -15,8 +15,9 @@ namespace MSTMaze
             }
         }
 
-        public bool[,] GenerateMaze() {
-            Console.Clear();
+        public int[,] GenerateMaze(bool render) {
+            if(render)
+                Console.Clear();
 
             // Random starting position must be odd, odd (will give size 1 border around maze)
 
@@ -28,7 +29,7 @@ namespace MSTMaze
                 X = 1,
                 Y = 1
             };
-            setCell(posRnd, true); // Set initial random cell to path
+            setCell(posRnd, 1); // Set initial random cell to path
 
             var candidateCells = new HashSet<CellPosition>();
             candidateCells.UnionWith(getCandidateCellsFor(posRnd, false)); // Get cell's wall candidates
@@ -49,9 +50,10 @@ namespace MSTMaze
 
                 // Remove this candidate call from hashset collection
                 candidateCells.Remove(thisCell);
-
-                renderMaze(_cells);
-                Thread.Sleep(50);
+                if(render){
+                    renderMaze(_cells);
+                    Thread.Sleep(50);
+                }
             }
 
             return _cells;
@@ -62,7 +64,7 @@ namespace MSTMaze
         /// </summary>
         /// <param name="posRnd">The position of the cell to set.</param>
         /// <param name="isPath">The state to set the cell to.  If true, sets to path; otherwise, sets to wall.</param>
-        private void setCell(CellPosition posRnd, bool isPath) {
+        private void setCell(CellPosition posRnd, int isPath) {
             _cells[posRnd.X, posRnd.Y] = isPath;
         }
 
@@ -74,8 +76,8 @@ namespace MSTMaze
         private void connectCell(CellPosition cellA, CellPosition cellB) {
             var x = (cellA.X + cellB.X) / 2;
             var y = (cellA.Y + cellB.Y) / 2;
-            _cells[cellB.X, cellB.Y] = true;
-            _cells[x, y] = true;
+            _cells[cellB.X, cellB.Y] = 1;
+            _cells[x, y] = 1;
         }
 
         private bool cellHasValidPosition(CellPosition position) {
@@ -102,19 +104,19 @@ namespace MSTMaze
             var westCandidate = new CellPosition { X = position.X - 2, Y = position.Y };
 
             if (cellHasValidPosition(northCandidate)) {
-                if (_cells[northCandidate.X, northCandidate.Y]) { candidatePathCells.Add(northCandidate); }
+                if (_cells[northCandidate.X, northCandidate.Y] == 1) { candidatePathCells.Add(northCandidate); }
                 else { candidateWallCells.Add(northCandidate); }
             }
             if (cellHasValidPosition(eastCandidate)) {
-                if (_cells[eastCandidate.X, eastCandidate.Y]) { candidatePathCells.Add(eastCandidate); }
+                if (_cells[eastCandidate.X, eastCandidate.Y] == 1) { candidatePathCells.Add(eastCandidate); }
                 else { candidateWallCells.Add(eastCandidate); }
             }
             if (cellHasValidPosition(southCandidate)) {
-                if (_cells[southCandidate.X, southCandidate.Y]) { candidatePathCells.Add(southCandidate); }
+                if (_cells[southCandidate.X, southCandidate.Y] == 1) { candidatePathCells.Add(southCandidate); }
                 else { candidateWallCells.Add(southCandidate); }
             }
             if (cellHasValidPosition(westCandidate)) {
-                if (_cells[westCandidate.X, westCandidate.Y]) { candidatePathCells.Add(westCandidate); }
+                if (_cells[westCandidate.X, westCandidate.Y] == 1) { candidatePathCells.Add(westCandidate); }
                 else { candidateWallCells.Add(westCandidate); }
             }
 
@@ -122,15 +124,62 @@ namespace MSTMaze
             else { return candidateWallCells; }
         }
 
-        private static void renderMaze(bool[,] maze, string title = "Generating maze...") {
+        private static void renderMaze(int[,] maze, string title = "Generating maze...") {
             Console.SetCursorPosition(0, 0);
             Console.WriteLine(title);
             Console.WriteLine("");
             for (var x = 0; x < maze.GetLength(0); x++) {
                 for (var y = 0; y < maze.GetLength(1); y++) {
-                    Console.Write($"{(maze[x,y] ? "⬜" : "⬛")}");
+                    Console.Write($"{(maze[x,y] == 1 ? "⬜" : "⬛")}");
                 }
                 Console.WriteLine("");
+            }
+        }
+        // Function to convert adjacency
+        // list to adjacency matrix
+        public static List<List<int>> convert(int[,] a)
+        {
+            // no of vertices
+            int l = a.GetLength(0);
+            List<List<int>> adjListArray = new List<List<int>>(l);
+            int i, j;
+
+            // Create a new list for each
+            // vertex such that adjacent
+            // nodes can be stored
+            for (i = 0; i < l; i++)
+            {
+                adjListArray.Add(new List<int>());
+            }
+
+
+            for (i = 0; i < a.GetLength(0); i++)
+            {
+                for (j = 0; j < a.GetLength(1); j++)
+                {
+                    if (a[i,j] == 1)
+                    {
+                        adjListArray[i].Add(j);
+                    }
+                }
+            }
+
+            return adjListArray;
+        }
+
+        // Function to print the adjacency list
+        public static void printList(List<List<int>> adjListArray)
+        {
+            // Print the adjacency list
+            for (int v = 0; v < adjListArray.Count; v++)
+            {
+                foreach (int u in adjListArray[v])
+                {
+                    Console.Write(v);
+                    Console.Write(" " + u);
+                    Console.Write(" " + 1);
+                    Console.WriteLine();
+                }
             }
         }
     }
