@@ -163,7 +163,7 @@ namespace Graphs
 
             // Act
             var graph = MathGraph<int>.managePrimsMST(mst, lines);
-        
+            //MathGraph<int>.printAdjacencyMatrix(graph);
             // Assert
             Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }

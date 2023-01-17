@@ -550,6 +550,46 @@ namespace Lib.Graphs
                 }
             }
         }
+        public static void printAdjacencyMatrix(SortedDictionary<int, Lib.Graphs.Vertex<int>> graph) 
+        {
+            var len = graph.Max(x => x.Key) + 2;
+            Console.WriteLine("");
+            for(var i = 0;i<len;i++)
+            {
+                if(graph.ContainsKey(i))
+                {
+                    for(var j = 0;j<len;j++)
+                    {
+                        if(graph[i].EdgeList.Select(_ => _.Component).Contains(j))
+                        {
+                            if(j == len - 1)
+                                Console.Write($"1");
+                            else
+                                Console.Write($"1,");
+                        }
+                        else
+                        {
+                            if(j == len - 1)
+                                Console.Write($"0");
+                            else
+                                Console.Write($"0,");
+                        }
+                    }
+                    Console.WriteLine("");
+                }
+                else
+                {
+                    for(var j = 0;j<len;j++)
+                    {
+                        if(j == len - 1)
+                            Console.Write($"0");
+                        else
+                            Console.Write($"0,");
+                    }
+                    Console.WriteLine("");
+                }
+            }
+        }
         public override string ToString()
         {
             return $"Graph {GraphName}: {Vertices.Count} vertices and {edgeCount} edges";

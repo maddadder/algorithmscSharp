@@ -60,5 +60,15 @@ namespace MSTMaze
                 MathGraph<int>.renderGraph(vertices);
             }
         }
+        //Visualize online at https://graphonline.ru/en/
+        public static void printMST3AsAdjacencyMatrix()
+        {
+            string sourceFile = "../../../MST3.txt";
+            string[] lines = System.IO.File.ReadAllLines(sourceFile);
+            MathGraph<int> mst = new MathGraph<int>();
+            var isUndirectedGraph = false;
+            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
+            MathGraph<int>.printAdjacencyMatrix(graph);
+        }
     }
 }
