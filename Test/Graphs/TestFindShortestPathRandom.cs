@@ -11,8 +11,8 @@ namespace Test
         public static int[] RandomList(int length)
         {
             Random rand = new Random();
-            return Enumerable.Range(0, length)
-                    .Select(i => new Tuple<int, int>(rand.Next(length), i))
+            return Enumerable.Range(1, length)
+                    .Select(i => new Tuple<int, int>(rand.Next(1, length), i))
                     .OrderBy(i => i.Item1)
                     .Select(i => i.Item2).ToArray();
         }
@@ -88,6 +88,10 @@ namespace Test
             var graph_mst = graph.GetVertices();
             // Assert
             Assert.AreEqual(expectedCost, graph_mst.Sum(x => graph.GetComponentWeights()[x.Key]));
+
+            var t = graph.CalculateMWISFrom(1);
+            Debug.WriteLine(t);
+            Assert.AreEqual(30, t);
         }
     }
 }

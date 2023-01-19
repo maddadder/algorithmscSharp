@@ -55,6 +55,20 @@ namespace Test.DynamicProgramming
             for(var i = 0;i<expectedUsedNodeIds.Length;i++)
                 Assert.AreEqual(expectedUsedNodeIds.ToList()[i], actualUsedNodeIDs[i]);
         }
+
+        [TestMethod]
+        [DataRow(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, 30, new int[] { 9, 7, 5, 3, 1 })]
+        public void CalculateMaximumWeightedIndependentSet_TenNodes(int[] nodes, long expectedResult, int[] expectedUsedNodeIds)
+        {
+            Graph graph = new Graph(nodes);
+
+            long actualResult = graph.CalculateMWIS();
+            List<int> actualUsedNodeIDs = graph.UsedNodeIds.ToList();
+
+            Assert.AreEqual(expectedResult, actualResult);
+            for(var i = 0;i<expectedUsedNodeIds.Length;i++)
+                Assert.AreEqual(expectedUsedNodeIds.ToList()[i], actualUsedNodeIDs[i]);
+        }
         [TestMethod]
         public void CalculateMaximumWeightedIndependentSet_CourseraAssignment()
         {
@@ -135,7 +149,7 @@ namespace Test.DynamicProgramming
             results[0] = 0;
             results[1] = nodes[0];
             if(useRecursion){
-                var result = CalculateWMIS(nodes.Length);
+                var result = CalculateMWIS(nodes.Length);
                 CalculateUsedNodeIDs();
                 return result;
             }
@@ -145,7 +159,7 @@ namespace Test.DynamicProgramming
             CalculateUsedNodeIDs();
             return results[nodes.Length];
         }
-        private long CalculateWMIS(long n) => this.Memoized(n, x =>
+        private long CalculateMWIS(long n) => this.Memoized(n, x =>
         {
             if (n == 0)
             {
@@ -156,8 +170,8 @@ namespace Test.DynamicProgramming
             }
             else
             {
-                var s1 = CalculateWMIS(n - 1);
-                var s2 = CalculateWMIS(n - 2);
+                var s1 = CalculateMWIS(n - 1);
+                var s2 = CalculateMWIS(n - 2);
                 results[n] = Math.Max(s1, s2 + nodes[n-1]);
                 return results[n];
             }
