@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lib.Model;
 using Extensions;
 
-namespace Test.Scheduling
+namespace Test.DynamicProgramming
 {
     
     [TestClass]

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lib.Model;
 
-namespace Test.Scheduling
+namespace Test.DynamicProgramming
 {
     
     [TestClass]
