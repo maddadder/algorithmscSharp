@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.DynamicProgramming
@@ -128,16 +129,38 @@ namespace Test.DynamicProgramming
             }
         }
 
-        public long CalculateMWIS()
+        public long CalculateMWIS(bool useRecursion = false)
         {
             results = new long[nodes.Length + 1];
             results[0] = 0;
             results[1] = nodes[0];
+            if(useRecursion){
+                var result = CalculateWMIS(nodes.Length);
+                CalculateUsedNodeIDs();
+                return result;
+            }
             for(var i = 2;i<=nodes.Length;i++){
                 results[i] = Math.Max(results[i-1], results[i-2] + nodes[i-1]);
             }
             CalculateUsedNodeIDs();
             return results[nodes.Length];
         }
+        private long CalculateWMIS(long n) => this.Memoized(n, x =>
+        {
+            if (n == 0)
+            {
+                return 0;
+            }
+            else if (n == 1){
+                return nodes[n-1];
+            }
+            else
+            {
+                var s1 = CalculateWMIS(n - 1);
+                var s2 = CalculateWMIS(n - 2);
+                results[n] = Math.Max(s1, s2 + nodes[n-1]);
+                return results[n];
+            }
+        });
     }
 }
