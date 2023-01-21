@@ -10,68 +10,59 @@ namespace Test.DynamicProgramming
     [TestClass]
     public class KnapsackTest
     {
-        
         [TestMethod]
         public void Knapsack_Test(){
             var jobs = new List<Job>();
             Random rand = new Random();
-            var ItemsInHouse = 1000;
-            int cost = ItemsInHouse*2;
-            for(var i = 0;i<ItemsInHouse;i++){
-                jobs.Add(new Job(rand.Next(1,ItemsInHouse),rand.Next(1,ItemsInHouse)));
+            var Budget = 10000;
+            int cost = Budget*2;
+            for(var i = 0;i<Budget;i++){
+                var val = rand.Next(1,Budget);
+                jobs.Add(new Job(val,val));
             }
-            Tuple<Job[], int>[, ] matrix = new Tuple<Job[], int>[ItemsInHouse + 1, ItemsInHouse*2 + 1];
-            var result = knapsack(new Tuple<Job[], int>(jobs.ToArray(), cost), matrix);
-            var sumSubset = result.Item1.Sum(x => x.Cost());
-            Debug.WriteLine($"The cost (in space) of the items in the knapsack is {sumSubset}.");
+            var result = knapsack(jobs.ToArray(), cost);
+            Debug.WriteLine($"The total value (in length) of the items in the knapsack is {result}.");
             Debug.WriteLine($"The bag can only carry {cost}");
         }
-        ///Returns a tuple of total value, and the items
-        public Tuple<Job[], int> knapsack(Tuple<Job[],int> input, Tuple<Job[], int>[, ] matrix)
+        [TestMethod]
+        [DataRow(new int[] { 3,2,4,4 }, new int[] { 4,3,2,3 })]
+        [DataRow(new int[] { 3,2,4,4 }, new int[] { 3,2,4,4 })]
+        [DataRow(new int[] { 4,3,2,3 }, new int[] { 4,3,2,3 })]
+        public void Knapsack_TestWithFourItems(int[] weights, int[] lengths){
+            var cost = 6;
+            Job[] jobs = new Job[weights.Length];
+            for(var i = 0;i<weights.Length;i++){
+                jobs[i] = new Job(weights[i], lengths[i]);
+            }
+            var value = knapsack(jobs.ToArray(), cost);
+            Debug.WriteLine($"The total value (in length) of the items in the knapsack is {value}.");
+            Debug.WriteLine($"The bag can only carry {cost}");
+        }
+        public int knapsack(Job[] input, int Capacity)
         {
-            Job[] toConsider = input.Item1;
-            int n = toConsider.Count();
-            int avail = input.Item2;
+            // subproblem solutions
+            int[, ] matrix = new int[input.Length+1, Capacity+1];
 
-            //base case
-            if (matrix[n, avail] != null)
+            // base case
+            for(var c = 0;c<=Capacity;c++)
             {
-                return matrix[n, avail];
-            } 
-            else if(toConsider.Length == 0 || avail == 0)
-            {
-                return new Tuple<Job[], int>(new Job[]{}, 0);
+                matrix[0, c] = 0;
             }
-            else if(toConsider[0].Cost() > avail)
-            {
-                //explore right branch only
-                return knapsack(new Tuple<Job[], int>(toConsider.Skip(1).ToArray(), avail), matrix);
-            }
-            else
-            {
-                Job nextItem = toConsider[0];
-                //explore left branch
-                Tuple<Job[], int> with = knapsack(new Tuple<Job[], int>(toConsider.Skip(1).ToArray(), avail - nextItem.Cost()), matrix);
-                Job[] withToTake = with.Item1;
-                int withVal = with.Item2;
-                withVal += nextItem.Value();
-                //explore right branch
-                var without = knapsack(new Tuple<Job[], int>(toConsider.Skip(1).ToArray(), avail), matrix);
-                var withoutToTake = without.Item1;
-                var withoutVal = without.Item2;
-                Tuple<Job[], int> result = null;
-                //Choose better branch
-                if(withVal > withoutVal)
-                {
-                    result = new Tuple<Job[], int>(withToTake.Concat(new Job[]{nextItem}).ToArray(), withVal);
+
+            // systematically solve all subproblems
+            for(var i = 1;i<=input.Length;i++) {
+                for(var c = 0;c<=Capacity;c++) {
+                    // use recurrence from Corollary 16.5
+                    if (input[i-1].Cost() > c) {
+                        matrix[i, c] = matrix[i-1, c];
+                    } else {
+                        var case1 = matrix[i-1, c];
+                        var case2 = matrix[i-1, c-input[i-1].Cost()] + input[i-1].Value();
+                        matrix[i,c] = Math.Max(case1, case2);
+                    }
                 }
-                else
-                {
-                    result = new Tuple<Job[], int>(withoutToTake, withoutVal);
-                }
-                matrix[n,avail] = result;
-                return result;
             }
+            return matrix[input.Length, Capacity]; //solution to largest subproblem
         }
     }
 }

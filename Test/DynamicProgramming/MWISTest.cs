@@ -55,7 +55,19 @@ namespace Test.DynamicProgramming
             for(var i = 0;i<expectedUsedNodeIds.Length;i++)
                 Assert.AreEqual(expectedUsedNodeIds.ToList()[i], actualUsedNodeIDs[i]);
         }
+        [TestMethod]
+        [DataRow(new int[] { 3, 2, 1, 6, 4, 5 }, 14, new int[] { 5, 3, 0 })]
+        public void CalculateMaximumWeightedIndependentSet_SixNodes(int[] nodes, long expectedResult, int[] expectedUsedNodeIds)
+        {
+            Graph graph = new Graph(nodes);
 
+            long actualResult = graph.CalculateMWIS();
+            List<int> actualUsedNodeIDs = graph.UsedNodeIds.ToList();
+
+            Assert.AreEqual(expectedResult, actualResult);
+            for(var i = 0;i<expectedUsedNodeIds.Length;i++)
+                Assert.AreEqual(expectedUsedNodeIds.ToList()[i], actualUsedNodeIDs[i]);
+        }
         [TestMethod]
         [DataRow(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, 30, new int[] { 9, 7, 5, 3, 1 })]
         public void CalculateMaximumWeightedIndependentSet_TenNodes(int[] nodes, long expectedResult, int[] expectedUsedNodeIds)
