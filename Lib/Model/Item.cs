@@ -1,19 +1,19 @@
 using System;
 namespace Lib.Model
 {
-    public class Job
+    public class Item
     {
-        public Job(int weight, int length)
+        public Item(int value, int cost)
         {
-            Weight = weight;
-            Length = length;
+            Weight = value;
+            Size = cost;
         }
 
-        public int Length { get; private set; }
+        public int Size { get; private set; }
         public int Weight { get; private set; }
         public int Cost()
         {
-            return Length;
+            return Size;
         }
         public int Value()
         {
