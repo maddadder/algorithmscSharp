@@ -10,22 +10,26 @@ namespace Test.DynamicProgramming
     [TestClass]
     public class KnapsackTest
     {
+        int[, ] matrix;
+
         [TestMethod]
         public void Knapsack_Test(){
             var jobs = new List<Item>();
             Random rand = new Random();
-            var Budget = 10;
+            var Budget = 100;
             int cost = Budget*2;
             for(var i = 0;i<Budget;i++){
                 var val = rand.Next(1,Budget);
                 jobs.Add(new Item(val,val));
             }
-            var result = knapsack(jobs.ToArray(), cost);
-            Debug.WriteLine($"The total value (in weight) of the items in the knapsack is {result}.");
+            var value = knapsack(jobs.ToArray(), cost);
+            Debug.WriteLine($"The total value (in weight) of the items in the knapsack is {value}.");
             Debug.WriteLine($"The bag can only carry {cost}");
+            var result = knapsackReconstruction(jobs.ToArray(), cost);
+            Assert.AreEqual(value, result.Select(x => x.Value()).Sum());
         }
         [TestMethod]
-        //[DataRow(new int[] { 3,2,4,4 }, new int[] { 4,3,2,3 })]
+        [DataRow(new int[] { 3,2,4,4 }, new int[] { 4,3,2,3 })]
         [DataRow(new int[] { 5,4,3,2 }, new int[] { 4,3,2,1 })]
         public void Knapsack_TestWithFourItems(int[] values, int[] costs){
             var cost = 6;
@@ -36,11 +40,13 @@ namespace Test.DynamicProgramming
             var value = knapsack(jobs.ToArray(), cost);
             Debug.WriteLine($"The total value (in weight) of the items in the knapsack is {value}.");
             Debug.WriteLine($"The bag can only carry {cost}");
+            var result = knapsackReconstruction(jobs.ToArray(), cost);
+            Assert.AreEqual(value, result.Select(x => x.Value()).Sum());
         }
         public int knapsack(Item[] S, int Capacity)
         {
             // subproblem solutions
-            int[, ] matrix = new int[S.Length+1, Capacity+1];
+            matrix = new int[S.Length+1, Capacity+1];
 
             // base case
             for(var c = 0;c<=Capacity;c++)
@@ -76,6 +82,21 @@ namespace Test.DynamicProgramming
                 Debug.WriteLine("");
             }
             return matrix[S.Length, Capacity]; //solution to largest subproblem
+        }
+        public Item[] knapsackReconstruction(Item[] S, int Capacity)
+        {
+            List<Item> result = new List<Item>();
+            var c = Capacity;
+            for(var i=S.Length;i>0;i--){
+                var Si = S[i-1].Cost();
+                var Vi = S[i-1].Value();
+                if(Si <= c && matrix[i-1, c-Si] + Vi >= matrix[i-1,c])
+                {
+                    result.Add(S[i-1]);
+                    c-=Si;
+                }
+            }
+            return result.ToArray();
         }
     }
 }
