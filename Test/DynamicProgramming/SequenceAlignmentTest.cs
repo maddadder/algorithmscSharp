@@ -13,13 +13,14 @@ namespace Test.DynamicProgramming
         int[, ] matrix;
 
         [TestMethod]
-        [DataRow("AGGGCT", "AGGC A", 4, 5)]
-        [DataRow("ABC DEF", "ABCDEF", 4, 5)]
-        [DataRow("ACACATGCATCATGACTATGCATGCATGACTGACTGCATGCATGCATCCATCATGCATGCATCGATGCATGCATGACCACCTGTGTGACACATGCATGCGTGTGACATGCGAGACTCACTAGCGATGCATGCATGCATGCATGCATGC", "ATGATCATGCATGCATGCATCACACTGTGCATCAGAGAGAGCTCTCAGCAGACCACACACACGTGTGCAGAGAGCATGCATGCATGCATGCATGCATGGTAGCTGCATGCTATGAGCATGCAG", 4, 5)]
-        public void SequenceAlignment_Test(string X, string Y, int cost_gap, int cost_mismatch){
+        [DataRow("AGGGCT", "AGGC A", 4, 5, 13)]
+        [DataRow("ABC DEF", "ABCDEF", 4, 5, 4)]
+        [DataRow("ACACATGCATCATGACTATGCATGCATGACTGACTGCATGCATGCATCCATCATGCATGCATCGATGCATGCATGACCACCTGTGTGACACATGCATGCGTGTGACATGCGAGACTCACTAGCGATGCATGCATGCATGCATGCATGC", "ATGATCATGCATGCATGCATCACACTGTGCATCAGAGAGAGCTCTCAGCAGACCACACACACGTGTGCAGAGAGCATGCATGCATGCATGCATGCATGGTAGCTGCATGCTATGAGCATGCAG", 4, 5, 224)]
+        public void SequenceAlignment_Test(string X, string Y, int cost_gap, int cost_mismatch, int expectedResult){
             var value = sequenceAlignment(X.ToCharArray(), Y.ToCharArray(), cost_gap, cost_mismatch);
             sequenceAlignmentReconstruction(X.ToCharArray(), Y.ToCharArray(), cost_gap, cost_mismatch);
             Debug.WriteLine($"Result: {value}.");
+            Assert.AreEqual(expectedResult, value);
         }
         public int sequenceAlignment(char[] X, char[] Y, int cost_gap, int cost_mismatch)
         {
