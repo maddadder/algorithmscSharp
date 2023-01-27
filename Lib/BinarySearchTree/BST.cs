@@ -59,50 +59,26 @@ namespace Lib.BinarySearchTree
                 var current = stack.Dequeue();
                 if (current.Row > current.Column)
                 {
-                    //Debug.WriteLine("case1");
-
+                    
                 }
                 else
                 {
-                    //Debug.WriteLine("case2");
                     var currentItemIndex = table[current.Row,current.Column] - 1;
 
                     stack.Enqueue(new Help(current.Row, currentItemIndex - 1));
                     stack.Enqueue(new Help(currentItemIndex + 1, current.Column));
-
-                    if (keys[currentItemIndex].Added)                           
+                    var word = keys[currentItemIndex];
+                    if (word.Added)
                         continue;
 
-                    //var subBst = new BST(new BSTItem(keys[currentItemIndex]));
+                    bst.Add(new BSTItem(word));
+                    word.Added = true;
 
-                    bst.Add(new BSTItem(keys[currentItemIndex]));
-                    keys[currentItemIndex].Added = true;
-
-                    //if (current.Row == current.Column)
-                    //{
-                    //    subBst.Add(new BSTItem(keyDummies[currentItemIndex]));
-                    //    subBst.Add(new BSTItem(keyDummies[currentItemIndex + 1]));
-                    //}   
                 }
             }
 
             return bst;
         }
-
-        //public void Add(BSTItem item)
-        //{
-        //    if (item.Value == Item.Value)
-        //        throw new Exception("Value already in tree");
-
-        //    if (item.Value < Item.Value)
-        //    {
-        //        AddLeft(item);
-        //    }
-        //    else if (item.Value > Item.Value)
-        //    {
-        //        AddRight(item);
-        //    }
-        //}
 
         public void Add(BSTItem item)
         {
@@ -177,5 +153,30 @@ namespace Lib.BinarySearchTree
             }
         }
 
+        /*
+        For large datasets this will stackoverflow
+        public static BST FromTable(List<Word> keys, int[,] R)
+        {
+            //var KeysList = keys.ToList();
+            //KeysList.Insert(0,new Word());
+            return FromTable(keys, R, 0, R.GetLength(0) - 1);
+        }
+        static BST FromTable(List<Word> keys, int[,] R, int i, int j)
+        {
+            BST p = null;
+            var index = R[i,j];
+            if(i == j)
+            {
+                
+            }
+            else
+            {
+                var word = keys[index];
+                p = new BST(new BSTItem(word));
+                p.Left = FromTable(keys, R, i, index - 1); //left subtree
+                p.Right = FromTable(keys, R, index, j); //right subtree
+            }
+            return p;
+        }*/
     }
 }

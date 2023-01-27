@@ -12,7 +12,7 @@ namespace Lib.BinarySearchTree
         }
         
         public static int SumOfCounts;
-        public const int KeyThreshold = 12500;
+        public static int KeyThreshold = 12500;
 
 
         public List<Word> Keys { get; set; } = new List<Word>();
@@ -31,13 +31,13 @@ namespace Lib.BinarySearchTree
             Keys.Add(key);
         }
         
-        public Tuple<double[,], int[,]> OptimalBst()
+        public int[,] OptimalBst()
         {
             var keyProbs = Keys.Select(k => k.Probability).ToArray();
             return OptimalBst(keyProbs);
         }
 
-        public static Tuple<double[,], int[,]> OptimalBst(double[] keyProbs)
+        public static int[,] OptimalBst(double[] keyProbs)
         {
             var keyProbsList = keyProbs.ToList();
             keyProbsList.Insert(0, 0);
@@ -45,39 +45,47 @@ namespace Lib.BinarySearchTree
 
             var n = keyProbs.Length - 1;
 
-            var e = new double[n + 2,n+1];
-            var w = new double[n + 2,n+1];
+            var e = new double[n+1,n+1];
+            var w = new double[n+1,n+1];
             var root = new int[n,n];
-            /*
-            for (var i = 1; i <= n + 1; i++)
-            {
-                e[i] = new double[n + 1];
-                w[i] = new double[n + 1];
-                if (i <= n)
-                    root[i - 1] = new int[n];
-            }*/
 
-            for (var l = 1; l <= n; l++)
+            for (var s = 0; s <= n; s++)
             {
-                for (var i = 1; i <= n - l + 1; i++)
+                for (var i = 1;i<=n-s; i++)
                 {
-                    var j = i + l - 1;
-                    e[i,j] = double.PositiveInfinity;
-                    w[i,j] = w[i,j - 1] + keyProbs[j];
+                    var j = i + s;
+                    e[i-1,j] = double.PositiveInfinity;
+                    w[i-1,j] = w[i-1,j - 1] + keyProbs[j];
 
                     for (var r = i; r <= j; r++)
                     {
-                        var t = e[i,r - 1] + e[r + 1,j] + w[i,j];
-                        if (t < e[i,j])
+                        var t = e[i-1,r-1] + e[r,j] + w[i-1,j];
+                        if (t < e[i-1,j])
                         {
-                            e[i,j] = t;
+                            e[i-1,j] = t;
                             root[i - 1,j - 1] = r;
+                            //print(root);
                         }
                     }
                 }
             }
 
-            return Tuple.Create(e, root);
+            return root;
+        }
+        private static void print(int[, ] matrix)
+        {
+            Console.SetCursorPosition(0,1);
+            for(var i=0;i<matrix.GetLength(0);i++){
+                for(var j=0;j<matrix.GetLength(1);j++){
+                    if(matrix[i,j] > 0)
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    else
+                        Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(matrix[i,j].ToString("0")+",");
+                    System.Threading.Thread.Sleep(50);
+                }
+                Console.WriteLine("");
+            }
         }
     }
 }

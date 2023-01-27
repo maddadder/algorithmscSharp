@@ -27,12 +27,12 @@ namespace Test.DynamicProgramming
         public void OptimalBinarySearchTree_Test2()
         {
             //https://github.com/jackchammons/wordFrequency
-            string sourceFile = "../../../dictionary.txt";
+            string sourceFile = "../../../smalldictionary.txt";
             var lines = File.ReadLines(sourceFile);
             
             //https://github.com/gabrielKerekes/OptimalBSTAlgorithm
             var algorithm = new Algorithm();
-
+            Algorithm.KeyThreshold = 0;
             int i = 0;
             foreach (var line in lines)
             {
@@ -44,20 +44,20 @@ namespace Test.DynamicProgramming
             }
             Debug.WriteLine($"Word Count: {i}");
             Algorithm.SumOfCounts = i;
-            var result = algorithm.OptimalBst();
+            var root = algorithm.OptimalBst();
 
-            var bst = BST.FromTable(algorithm.Keys, result.Item2);
+            var bst = BST.FromTable(algorithm.Keys, root);
             Debug.WriteLine(BSTCost.Calculate(bst));
-            Debug.WriteLine($"a - {bst.Search("a")}");
-            Debug.WriteLine($"aardvark - {bst.Search("aardvark")}");
-            Debug.WriteLine($"aals - {bst.Search("aals")}");
-            Debug.WriteLine($"aluminum - {bst.Search("aluminum")}");
-            Debug.WriteLine($"mr - {bst.Search("mr")}");
-            Debug.WriteLine($"very - {bst.Search("very")}");
-            Debug.WriteLine($"year - {bst.Search("year")}");
-            Debug.WriteLine($"yes - {bst.Search("yes")}");
-            Debug.WriteLine($"our - {bst.Search("our")}");
-            Debug.WriteLine($"might - {bst.Search("might")}");
+            Debug.WriteLine($"alice - {bst.Search("alice")}");
+            Debug.WriteLine($"bob - {bst.Search("bob")}");
+            Debug.WriteLine($"charlie - {bst.Search("charlie")}");
+            Debug.WriteLine($"disruptive - {bst.Search("disruptive")}");
+            Debug.WriteLine($"equipment - {bst.Search("equipment")}");
+            Debug.WriteLine($"for - {bst.Search("for")}");
+            Debug.WriteLine($"go - {bst.Search("go")}");
+            Debug.WriteLine($"helped - {bst.Search("helped")}");
+            Debug.WriteLine($"i - {bst.Search("i")}");
+            Debug.WriteLine($"journal - {bst.Search("journal")}");
         }
     }
 }

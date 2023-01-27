@@ -14,6 +14,8 @@ namespace OBST
         {
             //https://github.com/jackchammons/wordFrequency
             string sourceFile = "../../../dictionary.txt";
+            //string sourceFile = "../../../smalldictionary.txt";
+            //Algorithm.KeyThreshold = 0;
             var lines = File.ReadLines(sourceFile);
 
             //https://github.com/gabrielKerekes/OptimalBSTAlgorithm
@@ -30,9 +32,9 @@ namespace OBST
             }
             Console.WriteLine($"Word Count: {i}");
             Algorithm.SumOfCounts = i;
-            var result = algorithm.OptimalBst();
+            var root = algorithm.OptimalBst();
 
-            var bst = BST.FromTable(algorithm.Keys, result.Item2);
+            var bst = BST.FromTable(algorithm.Keys, root);
             Console.WriteLine(BSTCost.Calculate(bst));
             while(true){
                 var text = Console.ReadLine();
