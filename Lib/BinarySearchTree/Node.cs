@@ -73,5 +73,30 @@ namespace Lib.BinarySearchTree
                 }
             }
         }
+        public static void Display(Node p, int padding)
+        {
+            if (p != null)
+            {
+                if (p.Right != null)
+                {
+                    Display(p.Right, padding + 4);
+                }
+                if (padding > 0)
+                {
+                    Console.Write(" ".PadLeft(padding));
+                }
+                if (p.Right != null)
+                {
+                    Console.Write("/\n");
+                    Console.Write(" ".PadLeft(padding));
+                }
+                Console.Write(p.NodeData.Value + "\n ");
+                if (p.Left != null)
+                {
+                    Console.Write(" ".PadLeft(padding) + "\\\n");
+                    Display(p.Left, padding + 4);
+                }
+            }
+        }
     }
 }
