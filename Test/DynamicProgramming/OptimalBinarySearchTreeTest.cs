@@ -1,9 +1,6 @@
 using System;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Lib.Model;
-using Extensions;
-using Lib.DynamicProgramming;
 using Lib.BinarySearchTree;
 
 namespace Test.DynamicProgramming
@@ -12,52 +9,31 @@ namespace Test.DynamicProgramming
     [TestClass]
     public class OptimalBinarySearchTreeTest
     {
-        
         [TestMethod]
-        [DataRow(new int [] {1, 2, 3}, new float[] {.8f, .1f, .1f})]
-        public void OptimalBinarySearchTree_Test(int[] keys, float[] freq)
+        [DataRow(new string[] {"a", "aa", "aah"}, new int[] {8, 1, 1}, 13f)]
+        [DataRow(new string[] {"a","aa","aah","aahed","aahing","aahs","aal","aalii","aaliis","aals","aardvark","aardvarks","aardwolf","aardwolves","aargh","aarrgh","aarrghh","aas","aasvogel","aasvogels","ab","aba","abaca","abacas","abaci","aback","abacterial","abacus","abacuses","abaft","abaka","abakas","abalone","abalones","abamp","abampere","abamperes","abamps","abandon","abandoned","abandoner","abandoners","abandoning","abandonment","abandonments","abandons","abapical","abas","abase","abased"}, new int[] {2,8,2,5,5,2,8,3,6,1,1,6,3,2,6,7,4,63,2,9,10,1,60,5,2,7,34,11,31,76,21,6,8,1,81,37,15,6,8,24,12,18,42,8,51,21,8,6,5,7}, 2780)]
+        public void OptimalBinarySearchTree_Test(string[] keys, int[] freq, float result)
         {
-            OptimalBinarySearchTree obst = new OptimalBinarySearchTree();
-            var n = keys.Length;
-            var value = obst.ComputeCost(keys, freq, n);
-            Debug.WriteLine($"Result: {value}.");
-            Assert.AreEqual(1.3f, value);
-        }
-        [TestMethod]
-        public void OptimalBinarySearchTree_Test2()
-        {
-            //https://github.com/jackchammons/wordFrequency
-            string sourceFile = "../../../smalldictionary.txt";
-            var lines = File.ReadLines(sourceFile);
-            
-            //https://github.com/gabrielKerekes/OptimalBSTAlgorithm
             var algorithm = new Algorithm();
             Algorithm.KeyThreshold = 0;
-            int i = 0;
-            foreach (var line in lines)
+            for(var i = 0;i<freq.Length;i++)
             {
-                var word = Word.FromLine(line);
+                var word = new Word { Value = keys[i], Count = freq[i] };
                 if(algorithm.Add(word))
                 {
-                    i++;
+                    
                 }
             }
-            Debug.WriteLine($"Word Count: {i}");
-            Algorithm.SumOfCounts = i;
+            Debug.WriteLine($"Word Count: {freq.Length}");
+            Debug.WriteLine($"Computing OptimalBst");
             var root = algorithm.OptimalBst();
+            Debug.WriteLine($"Generating BST with optimal solution {root.Item1}");
+            Assert.AreEqual(result, root.Item1);
+            var bst = BST.FromTable(algorithm.Keys, root.Item2);
 
-            var bst = BST.FromTable(algorithm.Keys, root);
-            Debug.WriteLine(BSTCost.Calculate(bst));
-            Debug.WriteLine($"alice - {bst.Search("alice")}");
-            Debug.WriteLine($"bob - {bst.Search("bob")}");
-            Debug.WriteLine($"charlie - {bst.Search("charlie")}");
-            Debug.WriteLine($"disruptive - {bst.Search("disruptive")}");
-            Debug.WriteLine($"equipment - {bst.Search("equipment")}");
-            Debug.WriteLine($"for - {bst.Search("for")}");
-            Debug.WriteLine($"go - {bst.Search("go")}");
-            Debug.WriteLine($"helped - {bst.Search("helped")}");
-            Debug.WriteLine($"i - {bst.Search("i")}");
-            Debug.WriteLine($"journal - {bst.Search("journal")}");
+            Debug.WriteLine($"a - {bst.Search("a")}");
+            Debug.WriteLine($"aa - {bst.Search("aa")}");
+            Debug.WriteLine($"aah - {bst.Search("aah")}");
         }
     }
 }

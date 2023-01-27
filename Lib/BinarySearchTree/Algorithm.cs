@@ -11,7 +11,6 @@ namespace Lib.BinarySearchTree
             
         }
         
-        public static int SumOfCounts;
         public static int KeyThreshold = 12500;
 
 
@@ -31,22 +30,16 @@ namespace Lib.BinarySearchTree
             Keys.Add(key);
         }
         
-        public int[,] OptimalBst()
+        public Tuple<int, int[,]> OptimalBst()
         {
-            var keyProbs = Keys.Select(k => k.Probability).ToArray();
+            var keyProbs = Keys.Select(k => k.Count).ToArray();
             return OptimalBst(keyProbs);
         }
 
-        public static int[,] OptimalBst(double[] keyProbs)
+        public static Tuple<int, int[,]> OptimalBst(int[] keyProbs)
         {
-            var keyProbsList = keyProbs.ToList();
-            keyProbsList.Insert(0, 0);
-            keyProbs = keyProbsList.ToArray();
-
-            var n = keyProbs.Length - 1;
-
-            var e = new double[n+1,n+1];
-            var w = new double[n+1,n+1];
+            var n = keyProbs.Length;
+            var e = new int[n+1,n+1];
             var root = new int[n,n];
 
             for (var s = 0; s <= n; s++)
@@ -54,23 +47,32 @@ namespace Lib.BinarySearchTree
                 for (var i = 1;i<=n-s; i++)
                 {
                     var j = i + s;
-                    e[i-1,j] = double.PositiveInfinity;
-                    w[i-1,j] = w[i-1,j - 1] + keyProbs[j];
-
-                    for (var r = i; r <= j; r++)
-                    {
-                        var t = e[i-1,r-1] + e[r,j] + w[i-1,j];
-                        if (t < e[i-1,j])
-                        {
-                            e[i-1,j] = t;
+                    var pk = sum(keyProbs, i-1, j);
+                    var min_cost = int.MaxValue;
+                    // we brute force compute the minimum cost of each root, excluding any recomputations.
+                    for (var r = i; r<=j;r++){
+                        if(min_cost.CompareTo(e[i-1,r-1] + e[r,j]) > 0){
+                            min_cost = e[i-1,r-1] + e[r,j];
                             root[i - 1,j - 1] = r;
-                            //print(root);
                         }
                     }
+                    // we store the sum of the cost of the tree
+                    e[i-1,j] = pk + min_cost;
+                    //print(e);
                 }
             }
 
-            return root;
+            return new Tuple<int, int[,]>(e[0,n],root);
+        }
+
+        // A utility function to get sum of array elements
+        // freq[i] to freq[j]
+        static int sum(int[] freq, int i, int j)
+        {
+            int s = 0;
+            for (int k = i; k < j; k++)
+                s += freq[k];
+            return s;
         }
         private static void print(int[, ] matrix)
         {

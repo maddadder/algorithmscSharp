@@ -31,11 +31,10 @@ namespace OBST
                 }
             }
             Console.WriteLine($"Word Count: {i}");
-            Algorithm.SumOfCounts = i;
+            Console.WriteLine($"Computing OptimalBst");
             var root = algorithm.OptimalBst();
-
-            var bst = BST.FromTable(algorithm.Keys, root);
-            Console.WriteLine(BSTCost.Calculate(bst));
+            Console.WriteLine($"Generating BST with optimal solution {root.Item1}");
+            var bst = BST.FromTable(algorithm.Keys, root.Item2);
             while(true){
                 var text = Console.ReadLine();
                 Console.WriteLine($"{text} - {bst.Search(text)}");

@@ -1,5 +1,4 @@
 ﻿using MSTMaze;
-using Lib.DynamicProgramming;
 using OBST;
 /*
 MazeGenerator mg = new MazeGenerator();
@@ -15,11 +14,5 @@ TestRenderGraph.PrintRandomGraph();
 //TestRenderGraph.printMST3AsAdjacencyMatrix(); //https://graphonline.ru/en/
 
 */
-/*
-var keys = new int [] {1, 2, 3};
-var freq = new float[] {.8f, .1f, .1f};
-OptimalBinarySearchTree obst = new OptimalBinarySearchTree();
-var n = keys.Length;
-var value = obst.ComputeCost(keys, freq, n);
-*/
+
 TestOBST.Test_OBST();

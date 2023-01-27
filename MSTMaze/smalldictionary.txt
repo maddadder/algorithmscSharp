@@ -1,4 +1,4 @@
-alice,2
+alice,1
 bob,2
 charlie,4
 disruptive,8

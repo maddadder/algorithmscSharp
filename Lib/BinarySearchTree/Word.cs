@@ -8,18 +8,6 @@ namespace Lib.BinarySearchTree
         public int Count { get; set; }
         public bool Added { get; set; } = false;
 
-        public double probability = double.NaN;
-        public double Probability
-        {
-            get
-            {
-                if (double.IsNaN(probability))
-                    probability = (double)Count / Algorithm.SumOfCounts;
-
-                return probability;
-            }
-        }
-
         public static Word FromLine(string line)
         {
             var splitLine = line.Split(',');
@@ -28,7 +16,7 @@ namespace Lib.BinarySearchTree
 
         public override string ToString()
         {
-            return $"V: {Value} C: {Count} P: {Probability}";
+            return $"V: {Value} C: {Count}";
         }
 
         public int CompareTo(object obj)
