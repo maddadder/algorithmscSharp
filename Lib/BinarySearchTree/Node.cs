@@ -5,24 +5,24 @@ using System.Linq;
 
 namespace Lib.BinarySearchTree
 {
-    public class BST
+    public class Node
     {
-        public BST Left { get; set; }
-        public BST Right { get; set; }
-        public BSTItem Item { get; set; }
+        public Node Left { get; set; }
+        public Node Right { get; set; }
+        public NodeData NodeData { get; set; }
 
-        public BST(BSTItem rootItem)
+        public Node(NodeData data)
         {
-            Item = rootItem;
+            NodeData = data;
         }
 
-        public static BST FromTable(List<Word> keys, int[,] R)
+        public static Node FromTable(List<NodeData> keys, int[,] R)
         {
             return FromTable(keys, R, 0, R.GetLength(0) - 1);
         }
-        static BST FromTable(List<Word> keys, int[,] R, int i, int j)
+        static Node FromTable(List<NodeData> keys, int[,] R, int i, int j)
         {
-            BST p = null;
+            Node p = null;
             if(i == j + 1)
             {
                 
@@ -30,8 +30,8 @@ namespace Lib.BinarySearchTree
             else
             {
                 var index = R[i,j] - 1;
-                var word = keys[index];
-                p = new BST(new BSTItem(word));
+                var data = keys[index];
+                p = new Node(data);
                 p.Left = FromTable(keys, R, i, index - 1); //left subtree
                 p.Right = FromTable(keys, R, index + 1, j); //right subtree
             }
@@ -46,10 +46,10 @@ namespace Lib.BinarySearchTree
             while (true)
             {
                 int comparisonResult;
-                if (current.Item.Word != null)
-                    comparisonResult = string.CompareOrdinal(str, current.Item.Word.Value);
+                if (current.NodeData != null)
+                    comparisonResult = string.CompareOrdinal(str, current.NodeData.Value);
                 else
-                    comparisonResult = 0;//string.CompareOrdinal(str, current.Item.Word.Value);
+                    comparisonResult = 0;
 
                 count++;
 
@@ -57,14 +57,14 @@ namespace Lib.BinarySearchTree
                 {
                     if (current.Left == null)
                         return int.MinValue;
-                    Console.WriteLine(current.Item.Word.Value);
+                    Console.WriteLine(current.NodeData.Value);
                     current = current.Left;
                 }
                 else if (comparisonResult > 0)
                 {
                     if (current.Right == null)
                         return int.MaxValue;
-                    Console.WriteLine(current.Item.Word.Value);
+                    Console.WriteLine(current.NodeData.Value);
                     current = current.Right;
                 }
                 else

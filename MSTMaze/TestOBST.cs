@@ -24,17 +24,17 @@ namespace OBST
             int i = 0;
             foreach (var line in lines)
             {
-                var word = Word.FromLine(line);
-                if(algorithm.Add(word))
+                var data = NodeData.FromLine(line);
+                if(algorithm.Add(data))
                 {
                     i++;
                 }
             }
-            Console.WriteLine($"Word Count: {i}");
+            Console.WriteLine($"NodeData Count: {i}");
             Console.WriteLine($"Computing OptimalBst");
             var root = algorithm.OptimalBst();
             Console.WriteLine($"Generating BST with optimal solution {root.Item1}");
-            var bst = BST.FromTable(algorithm.Keys, root.Item2);
+            var bst = Node.FromTable(algorithm.Keys, root.Item2);
             while(true){
                 var text = Console.ReadLine();
                 Console.WriteLine($"{text} - {bst.Search(text)}");

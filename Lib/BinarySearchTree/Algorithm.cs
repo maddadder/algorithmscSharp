@@ -14,18 +14,18 @@ namespace Lib.BinarySearchTree
         public static int KeyThreshold = 12500;
 
 
-        public List<Word> Keys { get; set; } = new List<Word>();
+        public List<NodeData> Keys { get; set; } = new List<NodeData>();
 
-        public bool Add(Word word)
+        public bool Add(NodeData data)
         {
-            if (word.Count > KeyThreshold){
-                AddKey(word);
+            if (data.Count > KeyThreshold){
+                AddKey(data);
                 return true;
             }
             return false;
         }
 
-        private void AddKey(Word key)
+        private void AddKey(NodeData key)
         {
             Keys.Add(key);
         }

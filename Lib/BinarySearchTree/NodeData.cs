@@ -2,16 +2,16 @@ using System;
 
 namespace Lib.BinarySearchTree
 {
-    public class Word : IComparable
+    public class NodeData : IComparable
     {
         public string Value { get; set; }
         public int Count { get; set; }
         public bool Added { get; set; } = false;
 
-        public static Word FromLine(string line)
+        public static NodeData FromLine(string line)
         {
             var splitLine = line.Split(',');
-            return new Word { Value = splitLine[0], Count = int.Parse(splitLine[1]) };
+            return new NodeData { Value = splitLine[0], Count = int.Parse(splitLine[1]) };
         }
 
         public override string ToString()
@@ -24,10 +24,10 @@ namespace Lib.BinarySearchTree
             if (obj == null)
                 return 1;
 
-            if (obj is Word other)
+            if (obj is NodeData other)
                 return string.Compare(Value, other.Value, StringComparison.Ordinal);
             else
-                throw new ArgumentException("Object is not a Word");
+                throw new ArgumentException("Object is not a NodeData");
         }
     }
 }
