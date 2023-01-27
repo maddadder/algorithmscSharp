@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace BinarySearchTree
+namespace Lib.BinarySearchTree
 {
     public class BSTItem
     {

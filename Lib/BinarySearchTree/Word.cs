@@ -1,6 +1,6 @@
 using System;
 
-namespace BinarySearchTree
+namespace Lib.BinarySearchTree
 {
     public class Word : IComparable
     {

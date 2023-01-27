@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BinarySearchTree
+namespace Lib.BinarySearchTree
 {
     public static class BSTCost
     {

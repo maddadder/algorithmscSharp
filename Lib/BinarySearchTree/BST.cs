@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace BinarySearchTree
+namespace Lib.BinarySearchTree
 {
     public class BST
     {
@@ -43,13 +43,13 @@ namespace BinarySearchTree
             }
         }
 
-        public static BST FromTable(List<Word> keys, int[][] table)
+        public static BST FromTable(List<Word> keys, int[,] table)
         {
             var stack = new Queue<Help>();
-            var rootHelp = new Help(0, table.Length - 1);
+            var rootHelp = new Help(0, table.GetLength(0) - 1);
             stack.Enqueue(rootHelp);
 
-            var rootIndex = table[rootHelp.Row][rootHelp.Column] - 1;
+            var rootIndex = table[rootHelp.Row,rootHelp.Column] - 1;
             var rootItem = new BSTItem(keys[rootIndex]);
             var bst = new BST(rootItem);
             keys[rootIndex].Added = true;
@@ -65,7 +65,7 @@ namespace BinarySearchTree
                 else
                 {
                     //Debug.WriteLine("case2");
-                    var currentItemIndex = table[current.Row][current.Column] - 1;
+                    var currentItemIndex = table[current.Row,current.Column] - 1;
 
                     stack.Enqueue(new Help(current.Row, currentItemIndex - 1));
                     stack.Enqueue(new Help(currentItemIndex + 1, current.Column));
@@ -159,15 +159,15 @@ namespace BinarySearchTree
                 if (comparisonResult < 0)
                 {
                     if (current.Left == null)
-                        return count;
-
+                        return int.MinValue;
+                    Console.WriteLine(current.Item.Word.Value);
                     current = current.Left;
                 }
                 else if (comparisonResult > 0)
                 {
                     if (current.Right == null)
                         return int.MaxValue;
-
+                    Console.WriteLine(current.Item.Word.Value);
                     current = current.Right;
                 }
                 else

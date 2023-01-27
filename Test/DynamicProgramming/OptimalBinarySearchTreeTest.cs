@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lib.Model;
 using Extensions;
 using Lib.DynamicProgramming;
-using BinarySearchTree;
+using Lib.BinarySearchTree;
 
 namespace Test.DynamicProgramming
 {
@@ -31,19 +31,19 @@ namespace Test.DynamicProgramming
             var lines = File.ReadLines(sourceFile);
             
             //https://github.com/gabrielKerekes/OptimalBSTAlgorithm
-            var algorithm = new Algorithm(lines.Count());
-
+            var algorithm = new Algorithm();
 
             int i = 0;
             foreach (var line in lines)
             {
                 var word = Word.FromLine(line);
-                algorithm.Add(word);
-                i++;
-                if(i > 5000)
-                    break;
+                if(algorithm.Add(word))
+                {
+                    i++;
+                }
             }
-
+            Debug.WriteLine($"Word Count: {i}");
+            Algorithm.SumOfCounts = i;
             var result = algorithm.OptimalBst();
 
             var bst = BST.FromTable(algorithm.Keys, result.Item2);
