@@ -55,6 +55,75 @@ namespace Lib.BinarySearchTree
             return new Tuple<int, int[,]>(e[0,n],root);
         }
 
+        private int[,] cache;
+        public int[,] root;
+        // A recursive function to calculate cost of
+        // optimal binary search tree
+        int OptimalBstRec(int[] freq, int i, int j)
+        {
+            
+            // Base cases
+            // no elements in this subarray
+            if (i == j + 1)    
+                return 0;
+            
+            // one element in this subarray   
+            if (j == i)    
+                return cache[i,j];
+            
+            // Reuse cost already calculated for the subproblems.
+            if (cache[i,j] > 0){
+                return cache[i,j];
+            }
+
+            // Get sum of freq[i], freq[i+1], ... freq[j]
+            int fsum = sum(freq, i, j);
+            
+            // Initialize minimum value
+            int min = int.MaxValue;
+            
+            // One by one consider all elements as root and
+            // recursively find cost of the BST, compare the
+            // cost with min and update min if needed
+            for (int r = i; r <= j; ++r)
+            {
+                int cost = OptimalBstRec(freq, i, r-1) +
+                                OptimalBstRec(freq, r+1, j) + fsum;
+                if (cost < min){
+                    min = cost;
+                    cache[i,j] = cost;
+                    root[i,j] = r + 1;
+                }
+            }
+            
+            // Return minimum value
+            return min;
+        }
+        
+        // The main function that calculates minimum cost of
+        // a Binary Search Tree. It mainly uses OptimalBstRec() to
+        // find the optimal cost.
+        public int OptimalBstRec(int[] freq)
+        {
+            var n = freq.Length;
+            root = new int[n,n];
+            cache = new int[n,n];
+            for (var i=0;i<n;i++){
+                cache[i,i] = freq[i];
+                root[i,i] = i + 1;
+            }
+            return OptimalBstRec(freq, 0, n-1);
+        }
+        
+        // A utility function to get sum of array elements
+        // freq[i] to freq[j]
+        int sum(int[] freq, int i, int j)
+        {
+            int s = 0;
+            for (int k = i; k <= j; k++)
+            s += freq[k];
+            return s;
+        }
         private static void print(int[, ] matrix)
         {
             Console.SetCursorPosition(0,1);

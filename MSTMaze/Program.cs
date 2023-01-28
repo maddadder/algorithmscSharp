@@ -15,4 +15,4 @@ TestRenderGraph.PrintRandomGraph();
 
 */
 
-TestOBST.Test_OBST();
+TestOBST.Test_OBSTRec();
