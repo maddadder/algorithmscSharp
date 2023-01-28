@@ -7,12 +7,12 @@ namespace Lib.BinarySearchTree
 {
     public class Algorithm
     {
-        public static int KeyThreshold = 12500;
+        public static int WeightThreshold = 12500;
         public List<NodeData> Keys { get; set; } = new List<NodeData>();
 
         public bool Add(NodeData data)
         {
-            if (data.Count > KeyThreshold){
+            if (data.Count > WeightThreshold){
                 Keys.Add(data);
                 return true;
             }

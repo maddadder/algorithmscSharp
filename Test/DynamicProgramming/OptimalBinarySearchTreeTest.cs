@@ -15,7 +15,7 @@ namespace Test.DynamicProgramming
         public void OptimalBinarySearchTree_Test(string[] words, int[] weights, int result)
         {
             var algorithm = new Algorithm();
-            Algorithm.KeyThreshold = 0;
+            Algorithm.WeightThreshold = 0;
             for(var i = 0;i<weights.Length;i++)
             {
                 var data = new NodeData { Value = words[i], Count = weights[i] };

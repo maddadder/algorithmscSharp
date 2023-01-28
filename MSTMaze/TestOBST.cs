@@ -15,7 +15,7 @@ namespace OBST
             //https://github.com/jackchammons/wordFrequency
             string sourceFile = "../../../dictionary.txt";
             //string sourceFile = "../../../smalldictionary.txt";
-            //Algorithm.KeyThreshold = 0;
+            //Algorithm.WeightThreshold = 0;
             var lines = File.ReadLines(sourceFile);
 
             //https://github.com/gabrielKerekes/OptimalBSTAlgorithm
