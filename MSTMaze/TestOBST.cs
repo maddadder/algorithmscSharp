@@ -13,9 +13,9 @@ namespace OBST
         public static void Test_OBST()
         {
             //https://github.com/jackchammons/wordFrequency
-            //string sourceFile = "../../../dictionary.txt";
-            string sourceFile = "../../../smalldictionary.txt";
-            Algorithm.KeyThreshold = 0;
+            string sourceFile = "../../../dictionary.txt";
+            //string sourceFile = "../../../smalldictionary.txt";
+            //Algorithm.KeyThreshold = 0;
             var lines = File.ReadLines(sourceFile);
 
             //https://github.com/gabrielKerekes/OptimalBSTAlgorithm
@@ -35,7 +35,7 @@ namespace OBST
             var root = algorithm.OptimalBst();
             Console.WriteLine($"Generating BST with optimal solution {root.Item1}");
             var bst = Node.FromTable(algorithm.Keys, root.Item2);
-            Node.Display(bst, 4);
+            //Node.Display(bst, 4);
             while(true){
                 var text = Console.ReadLine();
                 Console.WriteLine($"{text} - {bst.Search(text)}");

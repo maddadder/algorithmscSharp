@@ -14,11 +14,6 @@ namespace Lib.BinarySearchTree
             return new NodeData { Value = splitLine[0], Count = int.Parse(splitLine[1]) };
         }
 
-        public override string ToString()
-        {
-            return $"V: {Value} C: {Count}";
-        }
-
         public int CompareTo(object obj)
         {
             if (obj == null)
