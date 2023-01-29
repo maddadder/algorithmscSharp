@@ -54,7 +54,7 @@ namespace Test.DynamicProgramming
                 }
             }
             var keys = algorithm.Keys.Select(x => x.Count).ToArray();
-            var cost = algorithm.OptimalBstRec(keys);
+            var cost = algorithm.OptimalBstRecSlow(keys);
             Debug.WriteLine($"Cost of Optimal BST is {cost}");
             
             var bst = Node.FromTable(algorithm.Keys, algorithm.root);

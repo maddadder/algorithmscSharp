@@ -59,7 +59,7 @@ namespace Lib.BinarySearchTree
         public int[,] root;
         // A recursive function to calculate cost of
         // optimal binary search tree
-        int OptimalBstRec(int[] freq, int i, int j)
+        int OptimalBstRecSlow(int[] freq, int i, int j)
         {
             
             // Base cases
@@ -85,14 +85,14 @@ namespace Lib.BinarySearchTree
             // One by one consider all elements as root and
             // recursively find cost of the BST, compare the
             // cost with min and update min if needed
-            for (int r = i; r <= j; ++r)
+            for (int r = i; r <= j; r++)
             {
-                int cost = OptimalBstRec(freq, i, r-1) +
-                                OptimalBstRec(freq, r+1, j) + fsum;
+                int cost = OptimalBstRecSlow(freq, i, r-1) +
+                                OptimalBstRecSlow(freq, r+1, j) + fsum;
                 if (cost < min){
                     min = cost;
                     cache[i,j] = cost;
-                    root[i,j] = r + 1;
+                    root[i-1,j-1] = r;
                 }
             }
             
@@ -101,18 +101,18 @@ namespace Lib.BinarySearchTree
         }
         
         // The main function that calculates minimum cost of
-        // a Binary Search Tree. It mainly uses OptimalBstRec() to
+        // a Binary Search Tree. It mainly uses OptimalBstRecSlow() to
         // find the optimal cost.
-        public int OptimalBstRec(int[] freq)
+        public int OptimalBstRecSlow(int[] freq)
         {
             var n = freq.Length;
             root = new int[n,n];
-            cache = new int[n,n];
+            cache = new int[n+1,n+1];
             for (var i=0;i<n;i++){
-                cache[i,i] = freq[i];
+                cache[i+1,i+1] = freq[i];
                 root[i,i] = i + 1;
             }
-            return OptimalBstRec(freq, 0, n-1);
+            return OptimalBstRecSlow(freq, 1, n);
         }
         
         // A utility function to get sum of array elements
@@ -121,7 +121,7 @@ namespace Lib.BinarySearchTree
         {
             int s = 0;
             for (int k = i; k <= j; k++)
-            s += freq[k];
+            s += freq[k-1];
             return s;
         }
         private static void print(int[, ] matrix)

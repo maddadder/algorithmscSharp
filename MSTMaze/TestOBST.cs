@@ -12,6 +12,7 @@ namespace OBST
         //Visualize online at https://graphonline.ru/en/
         public static void Test_OBST()
         {
+            Console.WriteLine($"Start Time: {DateTime.Now}");
             //https://github.com/jackchammons/wordFrequency
             string sourceFile = "../../../dictionary.txt";
             //string sourceFile = "../../../smalldictionary.txt";
@@ -35,6 +36,7 @@ namespace OBST
             var root = algorithm.OptimalBst();
             Console.WriteLine($"Generating BST with optimal solution {root.Item1}");
             var bst = Node.FromTable(algorithm.Keys, root.Item2);
+            Console.WriteLine($"End Time: {DateTime.Now}");
             //Node.Display(bst, 4);
             while(true){
                 var text = Console.ReadLine();
@@ -42,8 +44,9 @@ namespace OBST
             }
         }
         //Visualize online at https://graphonline.ru/en/
-        public static void Test_OBSTRec()
+        public static void Test_OBSTRecSlow()
         {
+            Console.WriteLine($"Start Time: {DateTime.Now}");
             //https://github.com/jackchammons/wordFrequency
             string sourceFile = "../../../dictionary.txt";
             //string sourceFile = "../../../smalldictionary.txt";
@@ -65,10 +68,11 @@ namespace OBST
             Console.WriteLine($"NodeData Count: {i}");
             Console.WriteLine($"Computing OptimalBst");
             var keys = algorithm.Keys.Select(x => x.Count).ToArray();
-            var cost = algorithm.OptimalBstRec(keys);
+            var cost = algorithm.OptimalBstRecSlow(keys);
             Console.WriteLine($"Cost of Optimal BST is {cost}");
 
             var bst = Node.FromTable(algorithm.Keys, algorithm.root);
+            Console.WriteLine($"End Time: {DateTime.Now}");
             //Node.Display(bst, 4);
             while(true){
                 var text = Console.ReadLine();
