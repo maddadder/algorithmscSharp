@@ -7,7 +7,7 @@ namespace Lib.BinarySearchTree
 {
     public class Algorithm
     {
-        public static int WeightThreshold = 12500;
+        public static int WeightThreshold = 3000;
         public List<NodeData> Keys { get; set; } = new List<NodeData>();
 
         public bool Add(NodeData data)
@@ -31,7 +31,7 @@ namespace Lib.BinarySearchTree
             var e = new int[n+1,n+1];
             var w = new int[n+1,n+1];
             var root = new int[n,n];
-
+            
             for (var s = 0; s <= n; s++)
             {
                 for (var i = 1;i<=n-s; i++)
@@ -39,8 +39,17 @@ namespace Lib.BinarySearchTree
                     var j = i + s;
                     w[i-1,j] = w[i-1,j-1] + weights[j-1];
                     var min_cost = int.MaxValue;
-                    // we brute force compute the minimum cost of each root, excluding any recomputations.
-                    for (var r = i; r<=j;r++){
+
+                    var l_index = i;
+                    var r_index = j;
+                    // kuths speedup begin from O(n^3) to O(n^2)
+                    if(i!=j)
+                    {
+                        l_index = root[i-1,j-2];
+                        r_index = root[i,j-1];
+                    }
+                    // kuths speedup end
+                    for (var r = l_index; r<=r_index;r++){
                         if(min_cost.CompareTo(e[i-1,r-1] + e[r,j]) > 0){
                             min_cost = e[i-1,r-1] + e[r,j];
                             root[i - 1,j - 1] = r;
