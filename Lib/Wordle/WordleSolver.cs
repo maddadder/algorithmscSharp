@@ -67,8 +67,8 @@ namespace Lib.Wordle
                                 var badIntersect = aligned.Value.ToCharArray().Intersect(badchars);
                                 if(!badIntersect.Any())
                                 {
-                                    var cintersect = aligned.Value.ToCharArray().Intersect(contains);
-                                    if(cintersect.Count() == contains.Length){
+                                    var containsIntersect = aligned.Value.ToCharArray().Intersect(contains);
+                                    if(containsIntersect.Count() == contains.Length){
                                         if(!answers.ContainsKey(aligned.Value))
                                         {
                                             answers.Add(aligned.Value,score);
@@ -79,8 +79,8 @@ namespace Lib.Wordle
                             }
                         }
                         if(matches.Count == 0){
-                            var bintersect = aligned.Value.ToCharArray().Intersect(badchars);
-                            if(!bintersect.Any())
+                            var badIntersect = aligned.Value.ToCharArray().Intersect(badchars);
+                            if(!badIntersect.Any())
                             {
                                 var containsIntersect = aligned.Value.ToCharArray().Intersect(contains);
                                 if(containsIntersect.Count() == contains.Length){
