@@ -15,32 +15,7 @@ namespace Lib.Wordle
             //https://github.com/jackchammons/wordFrequency
             string sourceFile = "../../../dictionary.txt";
             //string sourceFile = "../../../smalldictionary.txt";
-            //Algorithm.WeightThreshold = 0;
             var lines = File.ReadLines(sourceFile);
-
-            //https://github.com/gabrielKerekes/OptimalBSTAlgorithm
-            var algorithm = new Algorithm();
-
-            int i = 0;
-            foreach (var line in lines)
-            {
-                var data = NodeData.FromLine(line);
-                if(algorithm.Add(data))
-                {
-                    i++;
-                }
-            }
-            Console.WriteLine($"NodeData Count: {i}");
-            Console.WriteLine($"Computing OptimalBst");
-            var root = algorithm.OptimalBst();
-            Console.WriteLine($"Generating BST with optimal solution {root.Item1}");
-            var bst = Node.FromTable(algorithm.Keys, root.Item2);
-            Console.WriteLine($"End Time: {DateTime.Now}");
-
-            Node.insertChildrenCount(bst);
- 
-            Console.WriteLine( "A Random Node From Tree : " +
-                                    Node.randomNode(bst));
             SequenceAligner sq = new SequenceAligner();
             //Node.Display(bst, 4);
             
@@ -54,14 +29,12 @@ namespace Lib.Wordle
                 var answers = new Dictionary<string, int>();
                 Console.WriteLine("word to match? (Required)");
                 word = Console.ReadLine();
-                var depth = bst.Search(word);
-                Console.WriteLine(depth);
-                while(depth == int.MinValue || depth == int.MaxValue)
+                var found = lines.Select(x => NodeData.FromLine(x).Value).Contains(word);
+                while(found == false)
                 {
                     Console.WriteLine("word to match? (Required)");
                     word = Console.ReadLine();
-                    depth = bst.Search(word);
-                    Console.WriteLine(depth);
+                    found = lines.Select(x => NodeData.FromLine(x).Value).Contains(word);
                 }
                 Console.WriteLine();
                 var indicies = "blank";
@@ -96,24 +69,25 @@ namespace Lib.Wordle
                     Console.WriteLine("does not contains character?");
                     badchars = Console.ReadLine();
                 }
-                var maxloops = algorithm.Keys.Count * 1000;
-                var loops = 0;
-                while(tries < 500){
-                    var attempt = Node.randomNode(bst);
+                foreach (var line in lines)
+                {
+                    var data = NodeData.FromLine(line);
+                    var attempt = data.Value;
                     //var cost = bst.Search(attempt);
                     if(attempt.Length == word.Length)
                     {
                         //Console.WriteLine($"{attempt}");
                         var score = sq.sequenceAlignment(word.ToCharArray(), attempt.ToCharArray(), 4, 5);
                         var aligned = sq.sequenceAlignmentReconstruction(word.ToCharArray(), attempt.ToCharArray(), 4, 5);
-                        foreach(var entry in matches)
+                        var badIntersect = aligned.Value.ToCharArray().Intersect(badchars.ToCharArray());
+                        if(!badIntersect.Any())
                         {
-                            if(aligned.Value[entry.Item2] == entry.Item1.ToCharArray()[0]){
-                                var badIntersect = aligned.Value.ToCharArray().Intersect(badchars.ToCharArray());
-                                if(!badIntersect.Any())
+                            var containsIntersect = aligned.Value.ToCharArray().Intersect(contains.ToCharArray());
+                            if(containsIntersect.Count() == contains.ToCharArray().Length){
+                                foreach(var index in matches)
                                 {
-                                    var containsIntersect = aligned.Value.ToCharArray().Intersect(contains.ToCharArray());
-                                    if(containsIntersect.Count() == contains.ToCharArray().Length){
+                                    if(aligned.Value[index.Item2] == index.Item1.ToCharArray()[0])
+                                    {
                                         if(!answers.ContainsKey(aligned.Value))
                                         {
                                             answers.Add(aligned.Value,score);
@@ -121,14 +95,8 @@ namespace Lib.Wordle
                                         tries+=1;
                                     }
                                 }
-                            }
-                        }
-                        if(matches.Count == 0){
-                            var badIntersect = aligned.Value.ToCharArray().Intersect(badchars.ToCharArray());
-                            if(!badIntersect.Any())
-                            {
-                                var containsIntersect = aligned.Value.ToCharArray().Intersect(contains.ToCharArray());
-                                if(containsIntersect.Count() == contains.ToCharArray().Length){
+                                if(matches.Count == 0)
+                                {
                                     if(!answers.ContainsKey(aligned.Value))
                                     {
                                         answers.Add(aligned.Value,score);
@@ -137,10 +105,6 @@ namespace Lib.Wordle
                                 }
                             }
                         }
-                    }
-                    loops+=1;
-                    if(loops > maxloops){
-                        break;
                     }
                 }
                 foreach(var item in answers.OrderBy(x => x.Value)){
