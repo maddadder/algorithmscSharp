@@ -64,8 +64,8 @@ namespace Lib.Wordle
                         foreach(var entry in matches)
                         {
                             if(aligned.Value[entry.Value] == entry.Key.ToCharArray()[0]){
-                                var bintersect = aligned.Value.ToCharArray().Intersect(badchars);
-                                if(!bintersect.Any())
+                                var badIntersect = aligned.Value.ToCharArray().Intersect(badchars);
+                                if(!badIntersect.Any())
                                 {
                                     var cintersect = aligned.Value.ToCharArray().Intersect(contains);
                                     if(cintersect.Count() == contains.Length){
@@ -82,8 +82,8 @@ namespace Lib.Wordle
                             var bintersect = aligned.Value.ToCharArray().Intersect(badchars);
                             if(!bintersect.Any())
                             {
-                                var cintersect = aligned.Value.ToCharArray().Intersect(contains);
-                                if(cintersect.Count() == contains.Length){
+                                var containsIntersect = aligned.Value.ToCharArray().Intersect(contains);
+                                if(containsIntersect.Count() == contains.Length){
                                     if(!answers.ContainsKey(aligned.Value))
                                     {
                                         answers.Add(aligned.Value,score);
