@@ -1,5 +1,6 @@
 ﻿using MSTMaze;
 using OBST;
+using Lib.Wordle;
 /*
 MazeGenerator mg = new MazeGenerator();
 var maze = mg.GenerateMaze(true);
@@ -15,4 +16,7 @@ TestRenderGraph.PrintRandomGraph();
 
 */
 
-TestOBST.Test_OBST();
+//TestOBST.Test_OBST();
+
+WordleSolver solver = new WordleSolver();
+solver.Wordle();
