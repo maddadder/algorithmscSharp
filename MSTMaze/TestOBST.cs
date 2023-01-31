@@ -8,8 +8,24 @@ namespace OBST
         public TestOBST(){
             
         }
+        public static void Test_Tiny_OBST()
+        {
+            string sourceFile = "../../../tinydictionary.txt";
+            AnimatedAlgorithm.WeightThreshold = 0;
+            var lines = File.ReadLines(sourceFile);
+            var algorithm = new AnimatedAlgorithm();
 
-        //Visualize online at https://graphonline.ru/en/
+            int i = 0;
+            foreach (var line in lines)
+            {
+                var data = NodeData.FromLine(line);
+                if(algorithm.Add(data))
+                {
+                    i++;
+                }
+            }
+            var root = algorithm.OptimalBst();
+        }
         public static void Test_OBST()
         {
             Console.WriteLine($"Start Time: {DateTime.Now}");

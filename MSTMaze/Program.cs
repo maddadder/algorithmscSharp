@@ -16,7 +16,7 @@ TestRenderGraph.PrintRandomGraph();
 
 */
 
-//TestOBST.Test_OBST();
+TestOBST.Test_Tiny_OBST();
 
-WordleSolver solver = new WordleSolver();
-solver.Wordle();
+//WordleSolver solver = new WordleSolver();
+//solver.Wordle();

@@ -10,6 +10,7 @@ namespace Test.DynamicProgramming
     public class OptimalBinarySearchTreeTest
     {
         [TestMethod]
+        [DataRow(new string[] {"a", "aa", "aah", "aaah"}, new int[] {4, 2, 6, 3}, 26)]
         [DataRow(new string[] {"a", "aa", "aah"}, new int[] {8, 1, 1}, 13)]
         [DataRow(new string[] {"a","aa","aah","aahed","aahing","aahs","aal","aalii","aaliis","aals","aardvark","aardvarks","aardwolf","aardwolves","aargh","aarrgh","aarrghh","aas","aasvogel","aasvogels","ab","aba","abaca","abacas","abaci","aback","abacterial","abacus","abacuses","abaft","abaka","abakas","abalone","abalones","abamp","abampere","abamperes","abamps","abandon","abandoned","abandoner","abandoners","abandoning","abandonment","abandonments","abandons","abapical","abas","abase","abased"}, new int[] {2,8,2,5,5,2,8,3,6,1,1,6,3,2,6,7,4,63,2,9,10,1,60,5,2,7,34,11,31,76,21,6,8,1,81,37,15,6,8,24,12,18,42,8,51,21,8,6,5,7}, 2780)]
         public void OptimalBinarySearchTree_Test(string[] words, int[] weights, int result)

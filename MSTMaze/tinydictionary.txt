@@ -1,0 +1,4 @@
+a,4
+about,2
+after,6
+all,3

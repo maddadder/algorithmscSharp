@@ -14,10 +14,8 @@ namespace Lib.Wordle
             Console.WriteLine($"Start Time: {DateTime.Now}");
             //https://github.com/jackchammons/wordFrequency
             string sourceFile = "../../../dictionary.txt";
-            //string sourceFile = "../../../smalldictionary.txt";
             var lines = File.ReadLines(sourceFile);
             SequenceAligner sq = new SequenceAligner();
-            //Node.Display(bst, 4);
             
             while(true){
                 var word = "panther";
@@ -73,10 +71,8 @@ namespace Lib.Wordle
                 {
                     var data = NodeData.FromLine(line);
                     var attempt = data.Value;
-                    //var cost = bst.Search(attempt);
                     if(attempt.Length == word.Length)
                     {
-                        //Console.WriteLine($"{attempt}");
                         var score = sq.sequenceAlignment(word.ToCharArray(), attempt.ToCharArray(), 4, 5);
                         var aligned = sq.sequenceAlignmentReconstruction(word.ToCharArray(), attempt.ToCharArray(), 4, 5);
                         var badIntersect = aligned.Value.ToCharArray().Intersect(badchars.ToCharArray());
