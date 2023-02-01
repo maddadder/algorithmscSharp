@@ -2,3 +2,10 @@ a,4
 about,2
 after,6
 all,3
+also,2
+an,7
+and,6
+are,3
+as,2
+at,7
+be,6

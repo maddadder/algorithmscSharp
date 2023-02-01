@@ -206,7 +206,7 @@ namespace Lib.BinarySearchTree
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write($"{(weight+cost).ToString("00")}       \n");
             Console.Write($"min_cost: {(weight+min_cost).ToString("00")}       \n");
-            var second = 1000;
+            var second = 10;
             var sleepCount = 2;
             if(cost > 0)
                 sleepCount = 10;
