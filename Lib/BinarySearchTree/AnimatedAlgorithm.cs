@@ -45,12 +45,11 @@ namespace Lib.BinarySearchTree
                     var l_index = i;
                     var r_index = j;
                     // kuths speedup begin from O(n^3) to O(n^2)
-                    /*
                     if(i!=j)
                     {
                         l_index = root[i-1,j-2];
                         r_index = root[i,j-1];
-                    }*/
+                    }
                     // kuths speedup end
 
                     int min_left_r = 0;
