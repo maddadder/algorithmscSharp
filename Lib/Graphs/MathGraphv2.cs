@@ -14,14 +14,15 @@ namespace Lib.Graphs.v2
     }
     public class Vertex<T>
     {
-        public List<Edge<T>> EdgeList;
+        public List<Edge<T>> InEdges;
+        public List<Edge<T>> OutEdges;
         
         public T Component;
 
         public Vertex(T component=default)
         {
-            EdgeList = new List<Edge<T>>();
-            
+            InEdges = new List<Edge<T>>();
+            OutEdges = new List<Edge<T>>();
             Component = component;
         }
     }
@@ -32,10 +33,6 @@ namespace Lib.Graphs.v2
         private string GraphName;
 
         private SortedDictionary<T, Vertex<T>> Vertices;
-        private SortedDictionary<T, T> parent;
-        private SortedDictionary<T, float> ComponentWeights;
-        private SortedDictionary<T, int> Components;
-        private int edgeCount;
 
         public MathGraph(string graphName = "None")
         {
@@ -46,10 +43,6 @@ namespace Lib.Graphs.v2
         {
             GraphName = graphName;
             Vertices = new SortedDictionary<T, Vertex<T>>();
-            ComponentWeights = new SortedDictionary<T, float>();
-            Components = new SortedDictionary<T, int>();
-            parent = new SortedDictionary<T, T>();
-            edgeCount = 0;
         }
         
         public bool ContainsVertex(T vertex)
@@ -66,16 +59,15 @@ namespace Lib.Graphs.v2
             }
 
             Vertices.Add(vertex, new Vertex<T>(vertex));
-            Components.Add(vertex, 1);
             return;
         }
 
-        public void AddEdge(T vertex1, T vertex2, float weight = 1, bool isUndirectedGraph = true)
+        public void AddEdge(T vertex1, T vertex2, float weight = 1)
         {
-            AddEdge(new Vertex<T>(vertex1), new Vertex<T>(vertex2), weight, isUndirectedGraph);
+            AddEdge(new Vertex<T>(vertex1), new Vertex<T>(vertex2), weight);
         }
 
-        public void AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, float weight = 1, bool isUndirectedGraph = true)
+        public void AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, float weight = 1)
         {
             if (!ContainsVertex(vertex1.Component))
             {
@@ -91,9 +83,8 @@ namespace Lib.Graphs.v2
             lEdge.src = vertex1;
             lEdge.dest = vertex2;
             lEdge.EdgeWeight = weight;
-            Vertices[vertex2.Component].EdgeList.Add(lEdge);
-            edgeCount++;
-
+            Vertices[vertex1.Component].OutEdges.Add(lEdge);
+            Vertices[vertex2.Component].InEdges.Add(lEdge);
         }
 
 
@@ -116,7 +107,7 @@ namespace Lib.Graphs.v2
                 foreach (T left in Vertices.Keys)
                 {
                     var min = dist[i-1][left];
-                    foreach (var edge in Vertices[left].EdgeList){
+                    foreach (var edge in Vertices[left].InEdges){
                         min = Math.Min(min, dist[i-1][edge.src.Component] + edge.EdgeWeight);
                     }
                     if(min < dist[i-1][left]){
@@ -137,14 +128,13 @@ namespace Lib.Graphs.v2
         
         public static SortedDictionary<int, float> manageFord(MathGraph<int> mst, string[] lines) 
         {
-            var isUndirectedGraph = false;
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {
                 string[] all_edge = lines[i].Split(' ');
                 int u = int.Parse(all_edge[0]) - 1;
                 int v = int.Parse(all_edge[1]) -1 ;
                 float w = float.Parse(all_edge[2]);
-                mst.AddEdge(u,v,w,isUndirectedGraph);
+                mst.AddEdge(u,v,w);
             }
 
             int source = int.Parse(lines[lines.Length-1]) - 1;
