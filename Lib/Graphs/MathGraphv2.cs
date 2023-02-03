@@ -91,7 +91,6 @@ namespace Lib.Graphs.v2
             lEdge.src = vertex1;
             lEdge.dest = vertex2;
             lEdge.EdgeWeight = weight;
-            Vertices[vertex1.Component].EdgeList.Add(lEdge);
             Vertices[vertex2.Component].EdgeList.Add(lEdge);
             edgeCount++;
 
@@ -133,7 +132,7 @@ namespace Lib.Graphs.v2
                     return dist[i];
                 }
             }
-            return dist[Vertices.Count];
+            return null;
         }
         
         public static SortedDictionary<int, float> manageFord(MathGraph<int> mst, string[] lines) 

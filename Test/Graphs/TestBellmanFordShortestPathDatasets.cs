@@ -67,6 +67,36 @@ namespace Graphs
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
             var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            // Assert
+            Assert.AreEqual(null, bellmanDistA);
+        }
+        [TestMethod]
+        public void TestInBellmanFord3()
+        {
+            string sourceFile = "../../../BellmanFord3.txt";
+            string[] lines = System.IO.File.ReadAllLines(sourceFile);
+            MathGraph<int> graph = new MathGraph<int>();
+            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            // Assert
+            Assert.AreEqual(null, bellmanDistA);
+        }
+        [TestMethod]
+        public void TestInBellmanFord4()
+        {
+            string sourceFile = "../../../BellmanFord4.txt";
+            string[] lines = System.IO.File.ReadAllLines(sourceFile);
+            MathGraph<int> graph = new MathGraph<int>();
+            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            // Assert
+            Assert.AreEqual(null, bellmanDistA);
+        }
+        [TestMethod]
+        public void TestInBellmanFord5()
+        {
+            string sourceFile = "../../../BellmanFord5.txt";
+            string[] lines = System.IO.File.ReadAllLines(sourceFile);
+            MathGraph<int> graph = new MathGraph<int>();
+            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
             var bellmanDistASum = bellmanDistA.Sum(x => x.Value);
             var bellmanDistB = Lib.Graphs.v2.Graph.manageFord(lines);
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
@@ -74,9 +104,9 @@ namespace Graphs
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
         }
         [TestMethod]
-        public void TestInBellmanFord3()
+        public void TestInBellmanFord6()
         {
-            string sourceFile = "../../../BellmanFord3.txt";
+            string sourceFile = "../../../BellmanFord6.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
             var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
