@@ -17,14 +17,13 @@ namespace Lib.Graphs
     {
         public List<Edge<T>> OutEdge;
         public List<Edge<T>> InEdge;
-        public float EdgeWeight;
+        
         public T Component;
 
         public Vertex(T component=default)
         {
             OutEdge = new List<Edge<T>>();
             InEdge = new List<Edge<T>>();
-            EdgeWeight = float.MaxValue;
             Component = component;
         }
     }
@@ -136,8 +135,6 @@ namespace Lib.Graphs
             {
                 AddVertex(vertex2.Component);
             }
-            vertex1.EdgeWeight = weight;
-            vertex2.EdgeWeight = weight;
             
             var lEdge = new Edge<T>();
             lEdge.src = vertex1;
@@ -149,15 +146,12 @@ namespace Lib.Graphs
             rEdge.dest = vertex1;
             rEdge.EdgeWeight = weight;
 
-            Vertices[vertex1.Component].EdgeWeight = weight;
-
             Vertices[vertex1.Component].OutEdge.Add(lEdge);
 
             Vertices[vertex2.Component].InEdge.Add(rEdge);
 
             if(isUndirectedGraph)
             {
-                Vertices[vertex2.Component].EdgeWeight = weight;
                 Vertices[vertex2.Component].OutEdge.Add(lEdge);
                 Vertices[vertex1.Component].InEdge.Add(rEdge);
             }
