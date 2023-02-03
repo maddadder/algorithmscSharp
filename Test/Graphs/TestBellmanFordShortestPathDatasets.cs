@@ -26,6 +26,10 @@ namespace Graphs
             var DijkstraDistA = graphv1.Dijkstra(1);
             var DijkstraDistSum = DijkstraDistA.Sum(x => x.Value);
             Assert.AreEqual(bellmanDistASum, DijkstraDistSum);
+
+            var bellmanDistC = graphv1.BellmanFord(1);
+            var bellmanDistCSum = bellmanDistC.Sum(x => x.Value);
+            Assert.AreEqual(bellmanDistASum, bellmanDistCSum);
         }
         [TestMethod]
         public void TestIn3()
@@ -45,6 +49,10 @@ namespace Graphs
             var DijkstraDistA = graphv1.Dijkstra(1);
             var DijkstraDistSum = DijkstraDistA.Sum(x => x.Value);
             Assert.AreEqual(bellmanDistASum, DijkstraDistSum);
+
+            var bellmanDistC = graphv1.BellmanFord(1);
+            var bellmanDistCSum = bellmanDistC.Sum(x => x.Value);
+            Assert.AreEqual(bellmanDistASum, bellmanDistCSum);
         }
         [TestMethod]
         public void TestIn4()
@@ -64,6 +72,10 @@ namespace Graphs
             var DijkstraDistA = graphv1.Dijkstra(1);
             var DijkstraDistSum = DijkstraDistA.Sum(x => x.Value);
             Assert.AreEqual(bellmanDistASum, DijkstraDistSum);
+
+            var bellmanDistC = graphv1.BellmanFord(1);
+            var bellmanDistCSum = bellmanDistC.Sum(x => x.Value);
+            Assert.AreEqual(bellmanDistASum, bellmanDistCSum);
         }
         [TestMethod]
         public void TestInBellmanFord1()
@@ -77,6 +89,12 @@ namespace Graphs
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
+
+            Lib.Graphs.MathGraph<int> graphv1 = new Lib.Graphs.MathGraph<int>();
+            Lib.Graphs.MathGraph<int>.LoadGraph(graphv1, lines, isUndirectedGraph: false);
+            var bellmanDistC = graphv1.BellmanFord(1);
+            var bellmanDistCSum = bellmanDistC.Sum(x => x.Value);
+            Assert.AreEqual(bellmanDistASum, bellmanDistCSum);
         }
         [TestMethod]
         public void TestInBellmanFord2()
@@ -87,6 +105,11 @@ namespace Graphs
             var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             // Assert
             Assert.AreEqual(null, bellmanDistA);
+
+            Lib.Graphs.MathGraph<int> graphv1 = new Lib.Graphs.MathGraph<int>();
+            Lib.Graphs.MathGraph<int>.LoadGraph(graphv1, lines, isUndirectedGraph: false);
+            var bellmanDistC = graphv1.BellmanFord(1);
+            Assert.AreEqual(null, bellmanDistC);
         }
         [TestMethod]
         public void TestInBellmanFord3()
@@ -97,6 +120,11 @@ namespace Graphs
             var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             // Assert
             Assert.AreEqual(null, bellmanDistA);
+
+            Lib.Graphs.MathGraph<int> graphv1 = new Lib.Graphs.MathGraph<int>();
+            Lib.Graphs.MathGraph<int>.LoadGraph(graphv1, lines, isUndirectedGraph: false);
+            var bellmanDistC = graphv1.BellmanFord(1);
+            Assert.AreEqual(null, bellmanDistC);
         }
         [TestMethod]
         public void TestInBellmanFord4()
@@ -107,6 +135,11 @@ namespace Graphs
             var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             // Assert
             Assert.AreEqual(null, bellmanDistA);
+
+            Lib.Graphs.MathGraph<int> graphv1 = new Lib.Graphs.MathGraph<int>();
+            Lib.Graphs.MathGraph<int>.LoadGraph(graphv1, lines, isUndirectedGraph: false);
+            var bellmanDistC = graphv1.BellmanFord(1);
+            Assert.AreEqual(null, bellmanDistC);
         }
         [TestMethod]
         public void TestInBellmanFord5()
@@ -120,6 +153,12 @@ namespace Graphs
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
+
+            Lib.Graphs.MathGraph<int> graphv1 = new Lib.Graphs.MathGraph<int>();
+            Lib.Graphs.MathGraph<int>.LoadGraph(graphv1, lines, isUndirectedGraph: false);
+            var bellmanDistC = graphv1.BellmanFord(1);
+            var bellmanDistCSum = bellmanDistC.Sum(x => x.Value);
+            Assert.AreEqual(bellmanDistASum, bellmanDistCSum);
         }
         [TestMethod]
         public void TestInBellmanFord6()
@@ -133,6 +172,12 @@ namespace Graphs
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
+
+            Lib.Graphs.MathGraph<int> graphv1 = new Lib.Graphs.MathGraph<int>();
+            Lib.Graphs.MathGraph<int>.LoadGraph(graphv1, lines, isUndirectedGraph: false);
+            var bellmanDistC = graphv1.BellmanFord(1);
+            var bellmanDistCSum = bellmanDistC.Sum(x => x.Value);
+            Assert.AreEqual(bellmanDistASum, bellmanDistCSum);
         }
     }
 }
