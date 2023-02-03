@@ -12,7 +12,9 @@ var lines = MazeGenerator.convertToEdgeList(list);
 //    Console.WriteLine(line);
 //}
 TestRenderGraph.PrintRandomGraph();
-//TestRenderGraph.printMST3AsAdjacencyMatrix(); //https://graphonline.ru/en/
+//TestRenderGraph.printMST3AsAdjacencyMatrix(); 
+//render graphs
+//https://graphonline.ru/en/
 
 */
 
