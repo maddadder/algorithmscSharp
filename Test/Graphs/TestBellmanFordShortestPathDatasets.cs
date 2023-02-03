@@ -20,6 +20,12 @@ namespace Graphs
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
+
+            Lib.Graphs.MathGraph<int> graphv1 = new Lib.Graphs.MathGraph<int>();
+            Lib.Graphs.MathGraph<int>.LoadGraph(graphv1, lines, isUndirectedGraph: false);
+            var DijkstraDistA = graphv1.Dijkstra(1);
+            var DijkstraDistSum = DijkstraDistA.Sum(x => x.Value);
+            Assert.AreEqual(bellmanDistASum, DijkstraDistSum);
         }
         [TestMethod]
         public void TestIn3()
@@ -33,6 +39,12 @@ namespace Graphs
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
+
+            Lib.Graphs.MathGraph<int> graphv1 = new Lib.Graphs.MathGraph<int>();
+            Lib.Graphs.MathGraph<int>.LoadGraph(graphv1, lines, isUndirectedGraph: false);
+            var DijkstraDistA = graphv1.Dijkstra(1);
+            var DijkstraDistSum = DijkstraDistA.Sum(x => x.Value);
+            Assert.AreEqual(bellmanDistASum, DijkstraDistSum);
         }
         [TestMethod]
         public void TestIn4()
@@ -46,6 +58,12 @@ namespace Graphs
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
+
+            Lib.Graphs.MathGraph<int> graphv1 = new Lib.Graphs.MathGraph<int>();
+            Lib.Graphs.MathGraph<int>.LoadGraph(graphv1, lines, isUndirectedGraph: false);
+            var DijkstraDistA = graphv1.Dijkstra(1);
+            var DijkstraDistSum = DijkstraDistA.Sum(x => x.Value);
+            Assert.AreEqual(bellmanDistASum, DijkstraDistSum);
         }
         [TestMethod]
         public void TestInBellmanFord1()

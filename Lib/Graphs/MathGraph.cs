@@ -7,15 +7,23 @@ using Extensions;
 
 namespace Lib.Graphs
 {
+    public class Edge<T>
+    {
+        public Vertex<T> src;
+        public Vertex<T> dest;
+        public float EdgeWeight = int.MaxValue;
+    }
     public class Vertex<T>
     {
-        public List<Vertex<T>> EdgeList;
+        public List<Edge<T>> OutEdge;
+        public List<Edge<T>> InEdge;
         public float EdgeWeight;
         public T Component;
 
         public Vertex(T component=default)
         {
-            EdgeList = new List<Vertex<T>>();
+            OutEdge = new List<Edge<T>>();
+            InEdge = new List<Edge<T>>();
             EdgeWeight = 100000;
             Component = component;
         }
@@ -96,7 +104,7 @@ namespace Lib.Graphs
                 throw new ArgumentException(msg);
             }
 
-            return Vertices[vertex].EdgeList.Count();
+            return Vertices[vertex].OutEdge.Count() + Vertices[vertex].InEdge.Count();
         }
 
         public void AddVertex(T vertex)
@@ -130,11 +138,28 @@ namespace Lib.Graphs
             }
             vertex1.EdgeWeight = weight;
             vertex2.EdgeWeight = weight;
-            Vertices[vertex1.Component].EdgeList.Add(vertex2);
+            
+            var lEdge = new Edge<T>();
+            lEdge.src = vertex1;
+            lEdge.dest = vertex2;
+            lEdge.EdgeWeight = weight;
+
+            var rEdge = new Edge<T>();
+            rEdge.src = vertex2;
+            rEdge.dest = vertex1;
+            rEdge.EdgeWeight = weight;
+
             Vertices[vertex1.Component].EdgeWeight = weight;
-            if(isUndirectedGraph){
-                Vertices[vertex2.Component].EdgeList.Add(vertex1);
+
+            Vertices[vertex1.Component].OutEdge.Add(lEdge);
+
+            Vertices[vertex2.Component].InEdge.Add(rEdge);
+
+            if(isUndirectedGraph)
+            {
                 Vertices[vertex2.Component].EdgeWeight = weight;
+                Vertices[vertex2.Component].OutEdge.Add(lEdge);
+                Vertices[vertex1.Component].InEdge.Add(rEdge);
             }
             edgeCount++;
 
@@ -192,23 +217,6 @@ namespace Lib.Graphs
             return Vertices.ContainsKey(vertex);
         }
 
-        public bool ContainsEdge(Vertex<T> vertex1, Vertex<T> vertex2)
-        {
-            if (!ContainsVertex(vertex1.Component))
-            {
-                string msg = $"Vertex '{vertex1}' is not in the graph";
-                throw new ArgumentException(msg);
-            }
-
-            if (!ContainsVertex(vertex2.Component))
-            {
-                string msg = $"Vertex '{vertex2}' is not in the graph";
-                throw new ArgumentException(msg);
-            }
-
-            return Vertices[vertex1.Component].EdgeList.Contains(vertex2);
-        }
-
         public List<T> FindFirstPath(T vertex1, T vertex2)
         {
             if (!ContainsVertex(vertex1))
@@ -256,15 +264,15 @@ namespace Lib.Graphs
             // If we have already visited the adjacent vertex, ignore it
             // Otherwise, we record it's position and then recurse deeper to it
 
-            foreach (var adj in Vertices[dstVertex].EdgeList)
+            foreach (var adj in Vertices[dstVertex].OutEdge)
             {
-                if (marked[adj.Component])
+                if (marked[adj.dest.Component])
                 {
                     continue;
                 }
 
-                edgeTo[adj.Component] = dstVertex;
-                DepthFirstPathTo(srcVertex, adj.Component, marked, edgeTo);
+                edgeTo[adj.dest.Component] = dstVertex;
+                DepthFirstPathTo(srcVertex, adj.dest.Component, marked, edgeTo);
             }
         }
 
@@ -317,18 +325,36 @@ namespace Lib.Graphs
             while (searchList.Count > 0)
             {
                 T v = searchList.Dequeue();
-                foreach (var adj in Vertices[v].EdgeList)
+                foreach (var adj in Vertices[v].OutEdge)
                 {
-                    if (marked[adj.Component])
+                    if (marked[adj.dest.Component])
                     {
                         continue;
                     }
 
-                    marked[adj.Component] = true;
-                    searchList.Enqueue(adj.Component);
-                    edgeTo[adj.Component] = v;
+                    marked[adj.dest.Component] = true;
+                    searchList.Enqueue(adj.dest.Component);
+                    edgeTo[adj.dest.Component] = v;
 
-                    if (Equal(srcVertex, adj.Component))
+                    if (Equal(srcVertex, adj.dest.Component))
+                    {
+                        Console.WriteLine($"Search completed in {count} steps");
+                        return;
+                    }
+                    count++;
+                }
+                foreach (var adj in Vertices[v].InEdge)
+                {
+                    if (marked[adj.dest.Component])
+                    {
+                        continue;
+                    }
+
+                    marked[adj.dest.Component] = true;
+                    searchList.Enqueue(adj.dest.Component);
+                    edgeTo[adj.dest.Component] = v;
+
+                    if (Equal(srcVertex, adj.dest.Component))
                     {
                         Console.WriteLine($"Search completed in {count} steps");
                         return;
@@ -383,9 +409,9 @@ namespace Lib.Graphs
 
         public IEnumerable<T> EnumAdjacent(T vertex)
         {
-            foreach (var edge in Vertices[vertex].EdgeList)
+            foreach (var edge in Vertices[vertex].OutEdge)
             {
-                yield return edge.Component;
+                yield return edge.dest.Component;
             }
         }
 
@@ -414,14 +440,14 @@ namespace Lib.Graphs
             while (indexNDistance.Count > 0) {
                 left = indexNDistance.Dequeue();
                 isVertexVisited[left] = true;
-                foreach (var right in Vertices[left].EdgeList) {
+                foreach (var right in Vertices[left].OutEdge) {
                     var currentCalculatedDist = ComponentWeights[left] + right.EdgeWeight;
-                    if (isVertexVisited[right.Component] == false && 
-                        ComponentWeights[right.Component].CompareTo(currentCalculatedDist) > 0) 
+                    if (isVertexVisited[right.dest.Component] == false && 
+                        ComponentWeights[right.dest.Component].CompareTo(currentCalculatedDist) > 0) 
                     {
-                        ComponentWeights[right.Component] = currentCalculatedDist;
-                        parent[right.Component] = left;
-                        indexNDistance.Enqueue(right.Component, currentCalculatedDist);
+                        ComponentWeights[right.dest.Component] = currentCalculatedDist;
+                        parent[right.dest.Component] = left;
+                        indexNDistance.Enqueue(right.dest.Component, currentCalculatedDist);
                     }
                 }
             }
@@ -437,13 +463,22 @@ namespace Lib.Graphs
             while (indexNDistance.Count > 0) {
                 left = indexNDistance.Dequeue();
                 isVertexVisited[left] = true;
-                foreach (var right in Vertices[left].EdgeList) {
-                    if (isVertexVisited[right.Component] == false && 
-                        ComponentWeights[right.Component].CompareTo(right.EdgeWeight) > 0) 
+                foreach (var right in Vertices[left].InEdge) {
+                    if (isVertexVisited[right.dest.Component] == false && 
+                        ComponentWeights[right.dest.Component].CompareTo(right.EdgeWeight) > 0) 
                     {
-                        ComponentWeights[right.Component] = right.EdgeWeight;
-                        parent[right.Component] = left;
-                        indexNDistance.Enqueue(right.Component, right.EdgeWeight);
+                        ComponentWeights[right.dest.Component] = right.EdgeWeight;
+                        parent[right.dest.Component] = left;
+                        indexNDistance.Enqueue(right.dest.Component, right.EdgeWeight);
+                    }
+                }
+                foreach (var right in Vertices[left].OutEdge) {
+                    if (isVertexVisited[right.dest.Component] == false && 
+                        ComponentWeights[right.dest.Component].CompareTo(right.EdgeWeight) > 0) 
+                    {
+                        ComponentWeights[right.dest.Component] = right.EdgeWeight;
+                        parent[right.dest.Component] = left;
+                        indexNDistance.Enqueue(right.dest.Component, right.EdgeWeight);
                     }
                 }
             }
@@ -491,9 +526,9 @@ namespace Lib.Graphs
                 {
                     accessibleVertices.Add(currentVertexIndex);
 
-                    var edges = Vertices[currentVertexIndex].EdgeList;
+                    var edges = Vertices[currentVertexIndex].OutEdge;
 
-                    edges.ForEach(v => verticesToVisit.Enqueue(v.Component));
+                    edges.ForEach(v => verticesToVisit.Enqueue(v.dest.Component));
                 }
             }
 
@@ -514,9 +549,9 @@ namespace Lib.Graphs
             foreach (T vertex in Vertices.Keys)
             {
                 Console.Write($"{vertex}: ");
-                foreach (var adj in Vertices[vertex].EdgeList)
+                foreach (var adj in Vertices[vertex].OutEdge)
                 {
-                    Console.Write($"{{{adj.Component}}} ");
+                    Console.Write($"{{{adj.dest.Component}}} ");
                 }
                 Console.WriteLine();
             }
@@ -532,7 +567,7 @@ namespace Lib.Graphs
                 {
                     for(var j = 0;j<len;j++)
                     {
-                        if(graph[i].EdgeList.Select(_ => _.Component).Contains(j))
+                        if(graph[i].OutEdge.Select(_ => _.dest.Component).Contains(j))
                         {
                             Console.Write($"⬜");
                         }
@@ -562,7 +597,7 @@ namespace Lib.Graphs
                 {
                     for(var j = 0;j<len;j++)
                     {
-                        if(graph[i].EdgeList.Select(_ => _.Component).Contains(j))
+                        if(graph[i].OutEdge.Select(_ => _.dest.Component).Contains(j))
                         {
                             if(j == len - 1)
                                 Console.Write($"1");

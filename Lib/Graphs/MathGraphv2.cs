@@ -7,10 +7,11 @@ using Extensions;
 
 namespace Lib.Graphs.v2
 {
-    public class Edge<T>{
+    public class Edge<T>
+    {
         public Vertex<T> src;
         public Vertex<T> dest;
-        public float EdgeWeight = 100000;
+        public float EdgeWeight = int.MaxValue;
     }
     public class Vertex<T>
     {
@@ -131,13 +132,13 @@ namespace Lib.Graphs.v2
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {
                 string[] all_edge = lines[i].Split(' ');
-                int u = int.Parse(all_edge[0]) - 1;
-                int v = int.Parse(all_edge[1]) -1 ;
+                int u = int.Parse(all_edge[0]);
+                int v = int.Parse(all_edge[1]);
                 float w = float.Parse(all_edge[2]);
                 mst.AddEdge(u,v,w);
             }
 
-            int source = int.Parse(lines[lines.Length-1]) - 1;
+            int source = int.Parse(lines[lines.Length-1]);
             return mst.BellmanFord(source);
         }
         
