@@ -11,7 +11,7 @@ namespace Lib.Graphs
     {
         public Vertex<T> src;
         public Vertex<T> dest;
-        public float EdgeWeight = int.MaxValue;
+        public float EdgeWeight = float.MaxValue;
     }
     public class Vertex<T>
     {
@@ -24,7 +24,7 @@ namespace Lib.Graphs
         {
             OutEdge = new List<Edge<T>>();
             InEdge = new List<Edge<T>>();
-            EdgeWeight = 100000;
+            EdgeWeight = float.MaxValue;
             Component = component;
         }
     }
