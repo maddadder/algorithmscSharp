@@ -14,9 +14,9 @@ namespace Graphs
             string sourceFile = "../../../MST1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
-            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             var bellmanDistASum = bellmanDistA.Sum(x => x.Value);
-            var bellmanDistB = Lib.Graphs.v2.Graph.manageFord(lines);
+            var bellmanDistB = Lib.Graphs.v2.Graph.manageBellmanFord(lines);
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
@@ -27,9 +27,9 @@ namespace Graphs
             string sourceFile = "../../../MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
-            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             var bellmanDistASum = bellmanDistA.Sum(x => x.Value);
-            var bellmanDistB = Lib.Graphs.v2.Graph.manageFord(lines);
+            var bellmanDistB = Lib.Graphs.v2.Graph.manageBellmanFord(lines);
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
@@ -40,9 +40,9 @@ namespace Graphs
             string sourceFile = "../../../MST4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
-            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             var bellmanDistASum = bellmanDistA.Sum(x => x.Value);
-            var bellmanDistB = Lib.Graphs.v2.Graph.manageFord(lines);
+            var bellmanDistB = Lib.Graphs.v2.Graph.manageBellmanFord(lines);
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
@@ -53,9 +53,9 @@ namespace Graphs
             string sourceFile = "../../../BellmanFord1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
-            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             var bellmanDistASum = bellmanDistA.Sum(x => x.Value);
-            var bellmanDistB = Lib.Graphs.v2.Graph.manageFord(lines);
+            var bellmanDistB = Lib.Graphs.v2.Graph.manageBellmanFord(lines);
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
@@ -66,7 +66,7 @@ namespace Graphs
             string sourceFile = "../../../BellmanFord2.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
-            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             // Assert
             Assert.AreEqual(null, bellmanDistA);
         }
@@ -76,7 +76,7 @@ namespace Graphs
             string sourceFile = "../../../BellmanFord3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
-            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             // Assert
             Assert.AreEqual(null, bellmanDistA);
         }
@@ -86,7 +86,7 @@ namespace Graphs
             string sourceFile = "../../../BellmanFord4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
-            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             // Assert
             Assert.AreEqual(null, bellmanDistA);
         }
@@ -96,9 +96,9 @@ namespace Graphs
             string sourceFile = "../../../BellmanFord5.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
-            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             var bellmanDistASum = bellmanDistA.Sum(x => x.Value);
-            var bellmanDistB = Lib.Graphs.v2.Graph.manageFord(lines);
+            var bellmanDistB = Lib.Graphs.v2.Graph.manageBellmanFord(lines);
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);
@@ -109,9 +109,9 @@ namespace Graphs
             string sourceFile = "../../../BellmanFord6.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
-            var bellmanDistA = MathGraph<int>.manageFord(graph, lines);
+            var bellmanDistA = MathGraph<int>.manageBellmanFord(graph, lines);
             var bellmanDistASum = bellmanDistA.Sum(x => x.Value);
-            var bellmanDistB = Lib.Graphs.v2.Graph.manageFord(lines);
+            var bellmanDistB = Lib.Graphs.v2.Graph.manageBellmanFord(lines);
             var bellmanDistBSum = bellmanDistB.Sum(x => x);
             // Assert
             Assert.AreEqual(bellmanDistASum, bellmanDistBSum);

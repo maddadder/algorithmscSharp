@@ -126,7 +126,7 @@ namespace Lib.Graphs.v2
             return null;
         }
         
-        public static SortedDictionary<int, float> manageFord(MathGraph<int> mst, string[] lines) 
+        public static SortedDictionary<int, float> manageBellmanFord(MathGraph<int> mst, string[] lines) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {

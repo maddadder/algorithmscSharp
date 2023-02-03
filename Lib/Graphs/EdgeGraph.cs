@@ -81,7 +81,7 @@ namespace Lib.Graphs.v2
             for (int i = 0; i < V; ++i)
                 Console.WriteLine(i + "\t\t" + dist[i]);
         }
-        public static float[] manageFord(string[] lines) 
+        public static float[] manageBellmanFord(string[] lines) 
         {
             string[] line1 = lines[0].Split(' ');
             var V = int.Parse(line1[0]);
