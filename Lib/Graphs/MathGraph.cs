@@ -29,7 +29,7 @@ namespace Lib.Graphs
     }
 
 
-    public class MathGraph<T> where T : IComparable<T>
+    public partial class MathGraph<T> where T : IComparable<T>
     {
         private string GraphName;
 
@@ -422,114 +422,6 @@ namespace Lib.Graphs
                 }
             }
         }
-
-        public SortedDictionary<T, float> Dijkstra(T left)
-        {
-            ComponentWeights = SetAllVertexDistances();
-            parent = SetAllVertexParents();
-            SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
-            ComponentWeights[left] = 0;
-            PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
-            indexNDistance.Enqueue(left, 0);
-            while (indexNDistance.Count > 0) {
-                left = indexNDistance.Dequeue();
-                isVertexVisited[left] = true;
-                foreach (var right in Vertices[left].OutEdge) {
-                    var currentCalculatedDist = ComponentWeights[left] + right.EdgeWeight;
-                    if (isVertexVisited[right.dest.Component] == false && 
-                        ComponentWeights[right.dest.Component].CompareTo(currentCalculatedDist) > 0) 
-                    {
-                        ComponentWeights[right.dest.Component] = currentCalculatedDist;
-                        parent[right.dest.Component] = left;
-                        indexNDistance.Enqueue(right.dest.Component, currentCalculatedDist);
-                    }
-                }
-            }
-            return ComponentWeights;
-        }
-        public SortedDictionary<T, float> prims_mst(T left) {
-            ComponentWeights = SetAllVertexDistances();
-            parent = SetAllVertexParents();
-            SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
-            ComponentWeights[left] = 0;
-            PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
-            indexNDistance.Enqueue(left, 0);
-            while (indexNDistance.Count > 0) {
-                left = indexNDistance.Dequeue();
-                isVertexVisited[left] = true;
-                foreach (var right in Vertices[left].InEdge) {
-                    if (isVertexVisited[right.dest.Component] == false && 
-                        ComponentWeights[right.dest.Component].CompareTo(right.EdgeWeight) > 0) 
-                    {
-                        ComponentWeights[right.dest.Component] = right.EdgeWeight;
-                        parent[right.dest.Component] = left;
-                        indexNDistance.Enqueue(right.dest.Component, right.EdgeWeight);
-                    }
-                }
-                foreach (var right in Vertices[left].OutEdge) {
-                    if (isVertexVisited[right.dest.Component] == false && 
-                        ComponentWeights[right.dest.Component].CompareTo(right.EdgeWeight) > 0) 
-                    {
-                        ComponentWeights[right.dest.Component] = right.EdgeWeight;
-                        parent[right.dest.Component] = left;
-                        indexNDistance.Enqueue(right.dest.Component, right.EdgeWeight);
-                    }
-                }
-            }
-            return ComponentWeights;
-        }
-        public SortedDictionary<T, float> BellmanFord(T src)
-        {
-            SortedDictionary<T, float>[] dist = new SortedDictionary<T, float>[Vertices.Count+1];
-            for(var i = 0;i<Vertices.Count+1;i++)
-            {
-                dist[i] = new SortedDictionary<T, float>();
-            }
-            dist[0][src] = 0;
-            foreach(var v in Vertices){
-                if(v.Key.CompareTo(src) != 0){
-                    dist[0][v.Key] = float.MaxValue;
-                }
-            }
-            for(var i = 1;i<=Vertices.Count;i++)
-            {
-                var stable = true;
-                foreach (T left in Vertices.Keys)
-                {
-                    var min = dist[i-1][left];
-                    foreach (var edge in Vertices[left].InEdge){
-                        min = Math.Min(min, dist[i-1][edge.dest.Component] + edge.EdgeWeight);
-                    }
-                    if(min < dist[i-1][left]){
-                        stable = false;
-                        dist[i][left] = min;
-                    }
-                    else
-                    {
-                        dist[i][left] = dist[i-1][left];
-                    }
-                }
-                if(stable){
-                    return dist[i];
-                }
-            }
-            return null;
-        }
-        
-        public static SortedDictionary<int, float> manageBellmanFord(MathGraph<int> mst, string[] lines) 
-        {
-            string[] line1 = lines[0].Split(' ');
-            for (int i = 1; i <= lines.Length - 2; i++) {
-                string[] all_edge = lines[i].Split(' ');
-                int u = int.Parse(all_edge[0]);
-                int v = int.Parse(all_edge[1]);
-                float w = float.Parse(all_edge[2]);
-                mst.AddEdge(u,v,w, isUndirectedGraph:false);
-            }
-
-            int source = int.Parse(lines[lines.Length-1]);
-            return mst.BellmanFord(source);
-        }
         
         public float print_distances(T source, int limit = 1000, bool? asc = true) {
             float total = 0;
@@ -677,23 +569,7 @@ namespace Lib.Graphs
         {
             return $"Graph {GraphName}: {Vertices.Count} vertices and {edgeCount} edges";
         }
-        public static SortedDictionary<int, Lib.Graphs.Vertex<int>> managePrimsMST(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
-        {
-            string[] line1 = lines[0].Split(' ');
-            for (int i = 1; i <= lines.Length - 2; i++) {
-                string[] all_edge = lines[i].Split(' ');
-                int u = int.Parse(all_edge[0]);
-                int v = int.Parse(all_edge[1]);
-                float w = float.Parse(all_edge[2]);
-                mst.AddEdge(u,v,w,isUndirectedGraph);
-            }
-
-            int source = int.Parse(lines[lines.Length-1]);
-            mst.prims_mst(source);
-            var result = mst.GetVertices();
-            mst.print_distances(source);
-            return result;
-        }
+        
         public static SortedDictionary<int, Lib.Graphs.Vertex<int>> LoadGraph(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
         {
             string[] line1 = lines[0].Split(' ');
@@ -713,19 +589,6 @@ namespace Lib.Graphs
             dynamic b = value2;
             return (a + b);
         }
-        public T CalculateMWISFrom(T start)
-        {
-            var nodes = FindAccessibleVertices(start).ToArray();
-            var results = new T[nodes.Length + 1];
-            results[0] = default;
-            results[1] = nodes[0];
-            for(var i = 2;i<=nodes.Length;i++){
-                var s2 = Add(results[i-2], nodes[i-1]);
-                var s1 = results[i-1];
-                results[i] = s1.CompareTo(s2) > 0 ? s1 : s2;
-            }
-            //CalculateUsedNodeIDs();
-            return results[nodes.Length];
-        }
+        
     }
 }
