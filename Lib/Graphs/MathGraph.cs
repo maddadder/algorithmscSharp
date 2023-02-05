@@ -35,6 +35,7 @@ namespace Lib.Graphs
 
         private SortedDictionary<T, Vertex<T>> Vertices;
         private SortedDictionary<T, T> parent;
+        private SortedDictionary<Tuple<T,T>, float> EdgeList;
         private SortedDictionary<T, float> ComponentWeights;
         private SortedDictionary<T, int> Components;
         private int edgeCount;
@@ -51,6 +52,7 @@ namespace Lib.Graphs
             ComponentWeights = new SortedDictionary<T, float>();
             Components = new SortedDictionary<T, int>();
             parent = new SortedDictionary<T, T>();
+            EdgeList = new SortedDictionary<Tuple<T,T>, float>();
             edgeCount = 0;
         }
         public SortedDictionary<T, float> GetComponentWeights()
@@ -150,11 +152,14 @@ namespace Lib.Graphs
 
             Vertices[vertex2.Component].InEdge.Add(rEdge);
 
+            EdgeList.Add(new Tuple<T, T>(vertex1.Component,vertex2.Component), weight);
             if(isUndirectedGraph)
             {
                 Vertices[vertex2.Component].OutEdge.Add(lEdge);
                 Vertices[vertex1.Component].InEdge.Add(rEdge);
+                EdgeList.Add(new Tuple<T, T>(vertex2.Component,vertex1.Component), weight);
             }
+            
             edgeCount++;
 
             // Union Find algorithm to maintain graph components with each new edge
