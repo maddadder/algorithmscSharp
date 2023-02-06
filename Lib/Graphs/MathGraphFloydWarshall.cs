@@ -11,24 +11,27 @@ namespace Lib.Graphs
 
     public partial class MathGraph<T> where T : IComparable<T>
     {
-        public Dictionary<T,Dictionary<T,float>> FloydWarshal()
+        public Tuple<Dictionary<T,Dictionary<T,T>>,Dictionary<T,Dictionary<T,float>>> FloydWarshal()
         {
-            Dictionary<T,Dictionary<T,Dictionary<T,float>>> dist = 
-                new Dictionary<T, Dictionary<T, Dictionary<T, float>>>();
+            var dist = new Dictionary<T, Dictionary<T, Dictionary<T, float>>>();
+            var next = new Dictionary<T, Dictionary<T, T>>();
             var first = Vertices.First();
             dist[first.Key] = new Dictionary<T, Dictionary<T, float>>();
-            foreach (T v in Vertices.Keys)
+            foreach (var v in Vertices.Keys)
             {
                 dist[first.Key][v] = new Dictionary<T, float>();
-                foreach (T w in Vertices.Keys)
+                next[v] = new Dictionary<T, T>();
+                foreach (var w in Vertices.Keys)
                 {
                     var edge = new Tuple<T,T>(v,w);
                     if(v.CompareTo(w) == 0){
                         dist[first.Key][v][w] = 0;
+                        next[v][w] = w;
                     }
                     else if(EdgeList.ContainsKey(edge))
                     {
                         dist[first.Key][v][w] = EdgeList[edge];
+                        next[v][w] = w;
                     }
                     else
                     {
@@ -37,7 +40,7 @@ namespace Lib.Graphs
                 }
             }
             var previousK = first.Key;
-            foreach (T k in Vertices.Keys)
+            foreach (var k in Vertices.Keys)
             {
                 if(k.CompareTo(first.Key) == 0)
                 {
@@ -45,18 +48,25 @@ namespace Lib.Graphs
                     continue;
                 }
                 dist[k] = new Dictionary<T, Dictionary<T, float>>();
-                foreach (T v in Vertices.Keys)
+                foreach (var v in Vertices.Keys)
                 {
                     dist[k][v] = new Dictionary<T, float>();
-                    foreach (T w in Vertices.Keys)
+                    foreach (var w in Vertices.Keys)
                     {
-                        dist[k][v][w] = Math.Min(dist[previousK][v][w], 
-                            dist[previousK][v][k] + dist[previousK][k][w]);
+                        if(dist[previousK][v][w] > dist[previousK][v][k] + dist[previousK][k][w])
+                        {
+                            dist[k][v][w] = dist[previousK][v][k] + dist[previousK][k][w];
+                            next[v][w] = next[v][k];
+                        }
+                        else
+                        {
+                            dist[k][v][w] = dist[previousK][v][w];
+                        }
                     }
                 }
                 previousK = k;
             }
-            foreach (T v in Vertices.Keys)
+            foreach (var v in Vertices.Keys)
             {
                 if(dist[Vertices.Keys.Last()][v][v] < 0)
                 {
@@ -64,10 +74,12 @@ namespace Lib.Graphs
                     return null;
                 }
             }
-            return dist[Vertices.Keys.Last()];
+            
+            return new Tuple<Dictionary<T, Dictionary<T, T>>, 
+                Dictionary<T, Dictionary<T, float>>>(next, dist[Vertices.Keys.Last()]);;
         }
         
-        public static Dictionary<int,Dictionary<int,float>> manageFloydWarshal(MathGraph<int> mst, string[] lines) 
+        public static Tuple<Dictionary<int,Dictionary<int,int>>, Dictionary<int,Dictionary<int,float>>> manageFloydWarshal(MathGraph<int> mst, string[] lines) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {
@@ -81,7 +93,16 @@ namespace Lib.Graphs
             int source = int.Parse(lines[lines.Length-1]);
             return mst.FloydWarshal();
         }
-        
-        
+        public static List<T> FloydWarshalPath(T u, T v, Dictionary<T,Dictionary<T,T>> next){
+            var path = new List<T>();
+            if(next[u][v] == null)
+                return path;
+            path.Add(u);
+            while(u.CompareTo(v) != 0){
+                u = next[u][v];
+                path.Add(u);
+            }
+            return path;
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.IO;
 namespace Test
 {
     [TestClass]
-    public class TestFindShortestPath
+    public class TestFindShortestPathImdbActorMovie
     {
         [TestMethod]
         public void Test_FindShortestPath()

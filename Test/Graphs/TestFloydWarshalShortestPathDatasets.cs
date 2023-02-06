@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using Lib.Graphs;
 namespace Graphs
 {
     [TestClass]
@@ -13,10 +13,10 @@ namespace Graphs
             string sourceFile = "../../../MST1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
 
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            MathGraph<int> graph = new MathGraph<int>();
+            MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
             var floydWarshalDist = graph.FloydWarshal();
-            var floydWarshalDistSum = floydWarshalDist[1].Sum(x => x.Value);
+            var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(6, floydWarshalDistSum);
         }
         [TestMethod]
@@ -25,10 +25,10 @@ namespace Graphs
             string sourceFile = "../../../MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            MathGraph<int> graph = new MathGraph<int>();
+            MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
             var floydWarshalDist = graph.FloydWarshal();
-            var floydWarshalDistSum = floydWarshalDist[1].Sum(x => x.Value);
+            var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(34, floydWarshalDistSum);
         }
         [TestMethod]
@@ -37,10 +37,10 @@ namespace Graphs
             string sourceFile = "../../../MST4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            MathGraph<int> graph = new MathGraph<int>();
+            MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
             var floydWarshalDist = graph.FloydWarshal();
-            var floydWarshalDistSum = floydWarshalDist[1].Sum(x => x.Value);
+            var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(6, floydWarshalDistSum);
         }
         [TestMethod]
@@ -49,11 +49,17 @@ namespace Graphs
             string sourceFile = "../../../BellmanFord1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            MathGraph<int> graph = new MathGraph<int>();
+            MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
             var floydWarshalDist = graph.FloydWarshal();
-            var floydWarshalDistSum = floydWarshalDist[1].Sum(x => x.Value);
+            var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(5, floydWarshalDistSum);
+            var item1 = graph.GetVertices().Where(x => x.Key == 1).First();
+            var item3 = graph.GetVertices().Where(x => x.Key == 3).First();
+            var pathFrom1To3 = MathGraph<int>.FloydWarshalPath(item1.Key,item3.Key, floydWarshalDist.Item1);
+            foreach(var path in pathFrom1To3){
+                Debug.WriteLine(path);
+            }
         }
         [TestMethod]
         public void TestInBellmanFord2()
@@ -61,8 +67,8 @@ namespace Graphs
             string sourceFile = "../../../BellmanFord2.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            MathGraph<int> graph = new MathGraph<int>();
+            MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
             var floydWarshalDist = graph.FloydWarshal();
             Assert.AreEqual(null, floydWarshalDist);
         }
