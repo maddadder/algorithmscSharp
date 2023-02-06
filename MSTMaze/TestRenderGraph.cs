@@ -11,7 +11,7 @@ namespace MSTMaze
         {
             MathGraph<int> mst = new MathGraph<int>();
             var isUndirectedGraph = false;
-            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
+            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
             MathGraph<int>.renderGraph(graph);
         }
         public static void RenderMaze1(){
@@ -19,7 +19,7 @@ namespace MSTMaze
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>();
             var isUndirectedGraph = false;
-            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
+            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
             MathGraph<int>.renderGraph(graph);
         }
         private static int[] RandomList(int length)
@@ -67,7 +67,7 @@ namespace MSTMaze
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>();
             var isUndirectedGraph = false;
-            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
+            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
             MathGraph<int>.printAdjacencyMatrix(graph);
         }
     }
