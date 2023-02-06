@@ -19,6 +19,7 @@ static void RunAll()
         "visualizeGraph",
         "Test_Tiny_OBST",
         "HuffmanAlgorithmTest",
+        "PrintRandomGraph",
         "Wordle"
     };
     foreach(var mode in modes){
@@ -32,8 +33,10 @@ static void RunTest(string mode){
         var maze = mg.GenerateMaze(true);
     }
     else if(mode == "renderMaze1"){
-        //Visualize online at https://graphonline.ru/en/
-        TestRenderGraph.RenderMaze1(); 
+        TestRenderGraph.RenderMaze1();
+    }
+    else if(mode == "PrintRandomGraph"){
+        TestRenderGraph.PrintRandomGraph();
     }
     else if(mode == "printAdjacencyMatrix"){
         MazeGenerator mg = new MazeGenerator();

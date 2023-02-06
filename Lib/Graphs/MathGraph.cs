@@ -552,12 +552,13 @@ namespace Lib.Graphs
                 {
                     for(var j = 0;j<len;j++)
                     {
-                        if(graph[i].OutEdge.Select(_ => _.Key.dest.Component).Contains(j))
+                        if(graph[i].OutEdge.Select(edge => edge.Key.dest.Component).Contains(j))
                         {
+                            var edge = graph[i].OutEdge.Select(edge => edge.Key).First(x => x.dest.Component == j);
                             if(j == len - 1)
-                                Console.Write($"1");
+                                Console.Write($"{edge.EdgeWeight}");
                             else
-                                Console.Write($"1,");
+                                Console.Write($"{edge.EdgeWeight},");
                         }
                         else
                         {
