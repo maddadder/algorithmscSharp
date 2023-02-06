@@ -20,7 +20,7 @@ namespace Graphs
             // Act
             mst.prims_mst(source);
             var graph = mst.GetVertices();
-            mst.print_distances(source);
+            mst.printComponentWeights(source);
 
             // Assert
             Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
@@ -41,7 +41,7 @@ namespace Graphs
             // Act
             mst.prims_mst(source);
             var graph = mst.GetVertices();
-            mst.print_distances(source);
+            mst.printComponentWeights(source);
             // Assert
             Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }
@@ -60,7 +60,7 @@ namespace Graphs
             // Act
             mst.prims_mst(source);
             var graph = mst.GetVertices();
-            mst.print_distances(source);
+            mst.printComponentWeights(source);
             // Assert
             Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }
@@ -83,7 +83,7 @@ namespace Graphs
             // Act
             mst.prims_mst(source);
             var graph = mst.GetVertices();
-            mst.print_distances(source);
+            mst.printComponentWeights(source);
             // Assert
             Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
             
@@ -117,7 +117,7 @@ namespace Graphs
             // Act
             mst.prims_mst(source);
             var graph = mst.GetVertices();
-            mst.print_distances(source);
+            mst.printComponentWeights(source);
             // Assert
             Assert.AreEqual(expectedCost, graph.Sum(x => mst.GetComponentWeights()[x.Key]));
         }

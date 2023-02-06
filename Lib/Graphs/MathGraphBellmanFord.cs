@@ -32,7 +32,7 @@ namespace Lib.Graphs
                 {
                     var min = dist[i-1][left];
                     foreach (var edge in Vertices[left].InEdge){
-                        min = Math.Min(min, dist[i-1][edge.dest.Component] + edge.EdgeWeight);
+                        min = Math.Min(min, dist[i-1][edge.Key.dest.Component] + edge.Key.EdgeWeight);
                     }
                     if(min < dist[i-1][left]){
                         stable = false;

@@ -52,9 +52,9 @@ namespace Test.Data
             Debug.WriteLine($"{movie1} Sorted Asc");
             graph.prims_mst(movie1);
             var test2 = graph.GetVertices();
-            graph.print_distances(movie1, 100, true);
+            graph.printComponentWeights(movie1, 100, true);
             Debug.WriteLine($"{movie1} Sorted Desc");
-            graph.print_distances(movie1, 100, false);
+            graph.printComponentWeights(movie1, 100, false);
             var components = graph.CountComponents();
             Debug.WriteLine($"Components:{components}");
         }

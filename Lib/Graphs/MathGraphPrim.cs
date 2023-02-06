@@ -11,10 +11,10 @@ namespace Lib.Graphs
 
     public partial class MathGraph<T> where T : IComparable<T>
     {
-        public SortedDictionary<T, float> prims_mst(T left) {
+        public Dictionary<T, float> prims_mst(T left) {
             ComponentWeights = SetAllVertexDistances();
             parent = SetAllVertexParents();
-            SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
+            Dictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
             ComponentWeights[left] = 0;
             PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
             indexNDistance.Enqueue(left, 0);
@@ -22,27 +22,27 @@ namespace Lib.Graphs
                 left = indexNDistance.Dequeue();
                 isVertexVisited[left] = true;
                 foreach (var right in Vertices[left].InEdge) {
-                    if (isVertexVisited[right.dest.Component] == false && 
-                        ComponentWeights[right.dest.Component].CompareTo(right.EdgeWeight) > 0) 
+                    if (isVertexVisited[right.Key.dest.Component] == false && 
+                        ComponentWeights[right.Key.dest.Component].CompareTo(right.Key.EdgeWeight) > 0) 
                     {
-                        ComponentWeights[right.dest.Component] = right.EdgeWeight;
-                        parent[right.dest.Component] = left;
-                        indexNDistance.Enqueue(right.dest.Component, right.EdgeWeight);
+                        ComponentWeights[right.Key.dest.Component] = right.Key.EdgeWeight;
+                        parent[right.Key.dest.Component] = left;
+                        indexNDistance.Enqueue(right.Key.dest.Component, right.Key.EdgeWeight);
                     }
                 }
                 foreach (var right in Vertices[left].OutEdge) {
-                    if (isVertexVisited[right.dest.Component] == false && 
-                        ComponentWeights[right.dest.Component].CompareTo(right.EdgeWeight) > 0) 
+                    if (isVertexVisited[right.Key.dest.Component] == false && 
+                        ComponentWeights[right.Key.dest.Component].CompareTo(right.Key.EdgeWeight) > 0) 
                     {
-                        ComponentWeights[right.dest.Component] = right.EdgeWeight;
-                        parent[right.dest.Component] = left;
-                        indexNDistance.Enqueue(right.dest.Component, right.EdgeWeight);
+                        ComponentWeights[right.Key.dest.Component] = right.Key.EdgeWeight;
+                        parent[right.Key.dest.Component] = left;
+                        indexNDistance.Enqueue(right.Key.dest.Component, right.Key.EdgeWeight);
                     }
                 }
             }
             return ComponentWeights;
         }
-        public static SortedDictionary<int, Lib.Graphs.Vertex<int>> managePrimsMST(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
+        public static Dictionary<int, Lib.Graphs.Vertex<int>> managePrimsMST(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {
@@ -56,7 +56,7 @@ namespace Lib.Graphs
             int source = int.Parse(lines[lines.Length-1]);
             mst.prims_mst(source);
             var result = mst.GetVertices();
-            mst.print_distances(source);
+            mst.printComponentWeights(source);
             return result;
         }
     }

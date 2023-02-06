@@ -93,7 +93,7 @@ namespace Test
 
             // Act
             graph.prims_mst(source);
-            graph.print_distances(source);
+            graph.printComponentWeights(source);
 
             var components = graph.CountComponents();
             Debug.WriteLine($"Components: {components}");

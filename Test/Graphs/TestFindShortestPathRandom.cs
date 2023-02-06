@@ -76,7 +76,7 @@ namespace Test
             var pathDistances = graph.Dijkstra(5);
             var distance = pathDistances.Where(x => x.Key == node2).First().Value;
             Debug.WriteLine($"The distance between {5} and {node2} is {distance}.");
-            graph.print_distances(5);
+            graph.printComponentWeights(5);
 
 
             var source = 5;

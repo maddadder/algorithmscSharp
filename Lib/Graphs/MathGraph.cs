@@ -15,15 +15,15 @@ namespace Lib.Graphs
     }
     public class Vertex<T>
     {
-        public List<Edge<T>> OutEdge;
-        public List<Edge<T>> InEdge;
+        public Dictionary<Edge<T>,float> OutEdge;
+        public Dictionary<Edge<T>,float> InEdge;
         
         public T Component;
 
         public Vertex(T component=default)
         {
-            OutEdge = new List<Edge<T>>();
-            InEdge = new List<Edge<T>>();
+            OutEdge = new Dictionary<Edge<T>,float>();
+            InEdge = new Dictionary<Edge<T>,float>();
             Component = component;
         }
     }
@@ -33,11 +33,11 @@ namespace Lib.Graphs
     {
         private string GraphName;
 
-        private SortedDictionary<T, Vertex<T>> Vertices;
-        private SortedDictionary<T, T> parent;
-        private SortedDictionary<Tuple<T,T>, float> EdgeList;
-        private SortedDictionary<T, float> ComponentWeights;
-        private SortedDictionary<T, int> Components;
+        private Dictionary<T, Vertex<T>> Vertices;
+        private Dictionary<T, T> parent;
+        private Dictionary<Tuple<T,T>, float> EdgeList;
+        private Dictionary<T, float> ComponentWeights;
+        private Dictionary<T, int> Components;
         private int edgeCount;
 
         public MathGraph(string graphName = "None")
@@ -48,14 +48,14 @@ namespace Lib.Graphs
         private void Initialize(string graphName = "None")
         {
             GraphName = graphName;
-            Vertices = new SortedDictionary<T, Vertex<T>>();
-            ComponentWeights = new SortedDictionary<T, float>();
-            Components = new SortedDictionary<T, int>();
-            parent = new SortedDictionary<T, T>();
-            EdgeList = new SortedDictionary<Tuple<T,T>, float>();
+            Vertices = new Dictionary<T, Vertex<T>>();
+            ComponentWeights = new Dictionary<T, float>();
+            Components = new Dictionary<T, int>();
+            parent = new Dictionary<T, T>();
+            EdgeList = new Dictionary<Tuple<T,T>, float>();
             edgeCount = 0;
         }
-        public SortedDictionary<T, float> GetComponentWeights()
+        public Dictionary<T, float> GetComponentWeights()
         {
             return ComponentWeights;
         }
@@ -64,7 +64,7 @@ namespace Lib.Graphs
             return Vertices.Count;
         }
 
-        public SortedDictionary<T, Vertex<T>> GetVertices(){
+        public Dictionary<T, Vertex<T>> GetVertices(){
             return Vertices;
         }
 
@@ -77,7 +77,7 @@ namespace Lib.Graphs
         {
             return Components.Count;
         }
-        public SortedDictionary<T, int> GetComponents()
+        public Dictionary<T, int> GetComponents()
         {
             return Components;
         }
@@ -138,26 +138,36 @@ namespace Lib.Graphs
                 AddVertex(vertex2.Component);
             }
             
-            var lEdge = new Edge<T>();
-            lEdge.src = vertex1;
-            lEdge.dest = vertex2;
-            lEdge.EdgeWeight = weight;
+            var lEdge = new Tuple<T, T>(vertex1.Component,vertex2.Component);
 
-            var rEdge = new Edge<T>();
-            rEdge.src = vertex2;
-            rEdge.dest = vertex1;
-            rEdge.EdgeWeight = weight;
+            if(EdgeList.ContainsKey(lEdge))
+                return;
 
-            Vertices[vertex1.Component].OutEdge.Add(lEdge);
+            EdgeList.Add(lEdge, weight);
 
-            Vertices[vertex2.Component].InEdge.Add(rEdge);
+            var lEdgeWeight = new Edge<T>();
+            lEdgeWeight.src = vertex1;
+            lEdgeWeight.dest = vertex2;
+            lEdgeWeight.EdgeWeight = weight;
 
-            EdgeList.Add(new Tuple<T, T>(vertex1.Component,vertex2.Component), weight);
+            var rEdgeWeight = new Edge<T>();
+            rEdgeWeight.src = vertex2;
+            rEdgeWeight.dest = vertex1;
+            rEdgeWeight.EdgeWeight = weight;
+
+            Vertices[vertex1.Component].OutEdge.Add(lEdgeWeight, weight);
+            Vertices[vertex2.Component].InEdge.Add(rEdgeWeight, weight);
+
+            
             if(isUndirectedGraph)
             {
-                Vertices[vertex2.Component].OutEdge.Add(lEdge);
-                Vertices[vertex1.Component].InEdge.Add(rEdge);
-                EdgeList.Add(new Tuple<T, T>(vertex2.Component,vertex1.Component), weight);
+                var rEdge = new Tuple<T, T>(vertex2.Component,vertex1.Component);
+                if(!EdgeList.ContainsKey(rEdge))
+                {
+                    Vertices[vertex1.Component].InEdge.Add(lEdgeWeight, weight);
+                    Vertices[vertex2.Component].OutEdge.Add(rEdgeWeight, weight);
+                    EdgeList.Add(rEdge, weight);
+                }
             }
             
             edgeCount++;
@@ -231,8 +241,8 @@ namespace Lib.Graphs
             }
 
             List<T> firstPath = new List<T>();
-            SortedDictionary<T, bool> marked = ClearAllVertexMarks();
-            SortedDictionary<T, T> edgeTo = new SortedDictionary<T, T>();
+            Dictionary<T, bool> marked = ClearAllVertexMarks();
+            Dictionary<T, T> edgeTo = new Dictionary<T, T>();
             DepthFirstPathTo(vertex1, vertex2, marked, edgeTo);
 
             if (!marked[vertex1])
@@ -254,8 +264,8 @@ namespace Lib.Graphs
 
         private void DepthFirstPathTo(T srcVertex,
                                       T dstVertex,
-                                      SortedDictionary<T, bool> marked,
-                                      SortedDictionary<T, T> edgeTo)
+                                      Dictionary<T, bool> marked,
+                                      Dictionary<T, T> edgeTo)
         {
             marked[dstVertex] = true;
 
@@ -265,13 +275,13 @@ namespace Lib.Graphs
 
             foreach (var adj in Vertices[dstVertex].OutEdge)
             {
-                if (marked[adj.dest.Component])
+                if (marked[adj.Key.dest.Component])
                 {
                     continue;
                 }
 
-                edgeTo[adj.dest.Component] = dstVertex;
-                DepthFirstPathTo(srcVertex, adj.dest.Component, marked, edgeTo);
+                edgeTo[adj.Key.dest.Component] = dstVertex;
+                DepthFirstPathTo(srcVertex, adj.Key.dest.Component, marked, edgeTo);
             }
         }
 
@@ -290,8 +300,8 @@ namespace Lib.Graphs
             }
 
             List<T> shortestPath = new List<T>();
-            SortedDictionary<T, bool> marked = ClearAllVertexMarks();
-            SortedDictionary<T, T> edgeTo = new SortedDictionary<T, T>();
+            Dictionary<T, bool> marked = ClearAllVertexMarks();
+            Dictionary<T, T> edgeTo = new Dictionary<T, T>();
             BreadthFirstPathTo(vertex1, vertex2, marked, edgeTo);
 
             if (!marked[vertex1])
@@ -313,8 +323,8 @@ namespace Lib.Graphs
 
         private void BreadthFirstPathTo(T srcVertex,
                                         T dstVertex,
-                                        SortedDictionary<T, bool> marked,
-                                        SortedDictionary<T, T> edgeTo)
+                                        Dictionary<T, bool> marked,
+                                        Dictionary<T, T> edgeTo)
         {
             Queue<T> searchList = new Queue<T>();
             searchList.Enqueue(dstVertex);
@@ -326,16 +336,16 @@ namespace Lib.Graphs
                 T v = searchList.Dequeue();
                 foreach (var adj in Vertices[v].OutEdge)
                 {
-                    if (marked[adj.dest.Component])
+                    if (marked[adj.Key.dest.Component])
                     {
                         continue;
                     }
 
-                    marked[adj.dest.Component] = true;
-                    searchList.Enqueue(adj.dest.Component);
-                    edgeTo[adj.dest.Component] = v;
+                    marked[adj.Key.dest.Component] = true;
+                    searchList.Enqueue(adj.Key.dest.Component);
+                    edgeTo[adj.Key.dest.Component] = v;
 
-                    if (Equal(srcVertex, adj.dest.Component))
+                    if (Equal(srcVertex, adj.Key.dest.Component))
                     {
                         Console.WriteLine($"Search completed in {count} steps");
                         return;
@@ -344,16 +354,16 @@ namespace Lib.Graphs
                 }
                 foreach (var adj in Vertices[v].InEdge)
                 {
-                    if (marked[adj.dest.Component])
+                    if (marked[adj.Key.dest.Component])
                     {
                         continue;
                     }
 
-                    marked[adj.dest.Component] = true;
-                    searchList.Enqueue(adj.dest.Component);
-                    edgeTo[adj.dest.Component] = v;
+                    marked[adj.Key.dest.Component] = true;
+                    searchList.Enqueue(adj.Key.dest.Component);
+                    edgeTo[adj.Key.dest.Component] = v;
 
-                    if (Equal(srcVertex, adj.dest.Component))
+                    if (Equal(srcVertex, adj.Key.dest.Component))
                     {
                         Console.WriteLine($"Search completed in {count} steps");
                         return;
@@ -364,9 +374,9 @@ namespace Lib.Graphs
             }
         }
 
-        private SortedDictionary<T, bool> ClearAllVertexMarks()
+        private Dictionary<T, bool> ClearAllVertexMarks()
         {
-            SortedDictionary<T, bool> marks = new SortedDictionary<T, bool>();
+            Dictionary<T, bool> marks = new Dictionary<T, bool>();
             foreach (T key in Vertices.Keys)
             {
                 marks[key] = false;
@@ -374,18 +384,18 @@ namespace Lib.Graphs
             return marks;
         }
 
-        private SortedDictionary<T, float> SetAllVertexDistances()
+        private Dictionary<T, float> SetAllVertexDistances()
         {
-            SortedDictionary<T, float> marks = new SortedDictionary<T, float>();
+            Dictionary<T, float> marks = new Dictionary<T, float>();
             foreach (T key in Vertices.Keys)
             {
-                marks[key] = 100000;
+                marks[key] = float.MaxValue;
             }
             return marks;
         }
-        private SortedDictionary<T, T> SetAllVertexParents()
+        private Dictionary<T, T> SetAllVertexParents()
         {
-            SortedDictionary<T, T> marks = new SortedDictionary<T, T>();
+            Dictionary<T, T> marks = new Dictionary<T, T>();
             foreach (T key in Vertices.Keys)
             {
                 marks[key] = default;
@@ -410,7 +420,7 @@ namespace Lib.Graphs
         {
             foreach (var edge in Vertices[vertex].OutEdge)
             {
-                yield return edge.dest.Component;
+                yield return edge.Key.dest.Component;
             }
         }
 
@@ -428,7 +438,7 @@ namespace Lib.Graphs
             }
         }
         
-        public float print_distances(T source, int limit = 1000, bool? asc = true) {
+        public float printComponentWeights(T source, int limit = 1000, bool? asc = true) {
             float total = 0;
             IEnumerable<T> results = null;
             if(asc == true){
@@ -471,7 +481,9 @@ namespace Lib.Graphs
 
                     var edges = Vertices[currentVertexIndex].OutEdge;
 
-                    edges.ForEach(v => verticesToVisit.Enqueue(v.dest.Component));
+                    foreach(var v in edges){
+                        verticesToVisit.Enqueue(v.Key.dest.Component);
+                    }
                 }
             }
 
@@ -494,13 +506,13 @@ namespace Lib.Graphs
                 Console.Write($"{vertex}: ");
                 foreach (var adj in Vertices[vertex].OutEdge)
                 {
-                    Console.Write($"{{{adj.dest.Component}}} ");
+                    Console.Write($"{{{adj.Key.dest.Component}}} ");
                 }
                 Console.WriteLine();
             }
         }
         
-        public static void renderGraph(SortedDictionary<int, Lib.Graphs.Vertex<int>> graph) 
+        public static void renderGraph(Dictionary<int, Lib.Graphs.Vertex<int>> graph) 
         {
             var len = graph.Max(x => x.Key) + 2;
             Console.WriteLine("");
@@ -510,7 +522,7 @@ namespace Lib.Graphs
                 {
                     for(var j = 0;j<len;j++)
                     {
-                        if(graph[i].OutEdge.Select(_ => _.dest.Component).Contains(j))
+                        if(graph[i].OutEdge.Select(_ => _.Key.dest.Component).Contains(j))
                         {
                             Console.Write($"⬜");
                         }
@@ -530,7 +542,7 @@ namespace Lib.Graphs
                 }
             }
         }
-        public static void printAdjacencyMatrix(SortedDictionary<int, Lib.Graphs.Vertex<int>> graph) 
+        public static void printAdjacencyMatrix(Dictionary<int, Lib.Graphs.Vertex<int>> graph) 
         {
             var len = graph.Max(x => x.Key) + 2;
             Console.WriteLine("");
@@ -540,7 +552,7 @@ namespace Lib.Graphs
                 {
                     for(var j = 0;j<len;j++)
                     {
-                        if(graph[i].OutEdge.Select(_ => _.dest.Component).Contains(j))
+                        if(graph[i].OutEdge.Select(_ => _.Key.dest.Component).Contains(j))
                         {
                             if(j == len - 1)
                                 Console.Write($"1");
@@ -575,7 +587,7 @@ namespace Lib.Graphs
             return $"Graph {GraphName}: {Vertices.Count} vertices and {edgeCount} edges";
         }
         
-        public static SortedDictionary<int, Lib.Graphs.Vertex<int>> LoadGraph(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
+        public static Dictionary<int, Lib.Graphs.Vertex<int>> LoadGraph(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {

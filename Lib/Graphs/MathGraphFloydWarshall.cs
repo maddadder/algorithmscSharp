@@ -11,15 +11,15 @@ namespace Lib.Graphs
 
     public partial class MathGraph<T> where T : IComparable<T>
     {
-        public SortedDictionary<T,SortedDictionary<T,float>> FloydWarshal()
+        public Dictionary<T,Dictionary<T,float>> FloydWarshal()
         {
-            SortedDictionary<T,SortedDictionary<T,SortedDictionary<T,float>>> dist = 
-                new SortedDictionary<T, SortedDictionary<T, SortedDictionary<T, float>>>();
+            Dictionary<T,Dictionary<T,Dictionary<T,float>>> dist = 
+                new Dictionary<T, Dictionary<T, Dictionary<T, float>>>();
             var first = Vertices.First();
-            dist[first.Key] = new SortedDictionary<T, SortedDictionary<T, float>>();
+            dist[first.Key] = new Dictionary<T, Dictionary<T, float>>();
             foreach (T v in Vertices.Keys)
             {
-                dist[first.Key][v] = new SortedDictionary<T, float>();
+                dist[first.Key][v] = new Dictionary<T, float>();
                 foreach (T w in Vertices.Keys)
                 {
                     var edge = new Tuple<T,T>(v,w);
@@ -44,10 +44,10 @@ namespace Lib.Graphs
                     previousK = k;
                     continue;
                 }
-                dist[k] = new SortedDictionary<T, SortedDictionary<T, float>>();
+                dist[k] = new Dictionary<T, Dictionary<T, float>>();
                 foreach (T v in Vertices.Keys)
                 {
-                    dist[k][v] = new SortedDictionary<T, float>();
+                    dist[k][v] = new Dictionary<T, float>();
                     foreach (T w in Vertices.Keys)
                     {
                         dist[k][v][w] = Math.Min(dist[previousK][v][w], 
@@ -67,7 +67,7 @@ namespace Lib.Graphs
             return dist[Vertices.Keys.Last()];
         }
         
-        public static SortedDictionary<int,SortedDictionary<int,float>> manageFloydWarshal(MathGraph<int> mst, string[] lines) 
+        public static Dictionary<int,Dictionary<int,float>> manageFloydWarshal(MathGraph<int> mst, string[] lines) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {

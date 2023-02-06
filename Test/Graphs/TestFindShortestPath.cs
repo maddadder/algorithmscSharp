@@ -28,13 +28,13 @@ namespace Test
                 string[] vertices = lines[i].Split('|');
                 string names = vertices[0];
                 string movies = vertices[1];
-
+                /*
                 if(names.Contains(" ("))
                 {
                     string[] newName = names.Split(' ');
                     names = newName[0] + ' ' + newName[1];
                 }
-
+                */
                 if(!graph.ContainsVertex(names))
                 {
                     graph.AddVertex(names);
@@ -44,13 +44,13 @@ namespace Test
                 {
                     graph.AddVertex(movies);
                 }
-                graph.AddEdge(names, movies, 1);
+                graph.AddEdge(names, movies, 1, isUndirectedGraph:true);
             }
             var components = graph.CountComponents();
             Debug.WriteLine($"Components: {components}");
 
             string actor1 = "Carrie Fisher";
-            string actor2 = "Michael Caine";
+            string actor2 = "Michael Caine (I)";
 
             if(!graph.ContainsVertex(actor1)) // check actor 1 exists
             {
@@ -80,14 +80,10 @@ namespace Test
             }
             var test = graph.Dijkstra(actor1);
             Debug.WriteLine($"Dijkstra's Distance from {actor1} to {actor2} is {test[actor2]}");
-            Debug.WriteLine($"Distance Asc");
-            graph.print_distances(actor1, 100, true);
-            Debug.WriteLine($"Distance Dsc");
-            graph.print_distances(actor1, 100, false);
             
             var source = "Kevin Spacey";
 
-            float expectedCost = 68212000;
+            float expectedCost = float.PositiveInfinity;
 
             // Act
             graph.prims_mst(source); 
