@@ -30,15 +30,6 @@ namespace Lib.Graphs
                         indexNDistance.Enqueue(right.Key.dest.Component, right.Key.EdgeWeight);
                     }
                 }
-                foreach (var right in Vertices[left].OutEdge) {
-                    if (isVertexVisited[right.Key.dest.Component] == false && 
-                        ComponentWeights[right.Key.dest.Component].CompareTo(right.Key.EdgeWeight) > 0) 
-                    {
-                        ComponentWeights[right.Key.dest.Component] = right.Key.EdgeWeight;
-                        parent[right.Key.dest.Component] = left;
-                        indexNDistance.Enqueue(right.Key.dest.Component, right.Key.EdgeWeight);
-                    }
-                }
             }
             return ComponentWeights;
         }
