@@ -184,19 +184,31 @@ namespace Lib.Encoding
 
         public void PrintHuffmanTree()
         {
-            PrintRecursive(this.HuffmanTree,0);
+            PrintRecursive(this.HuffmanTree,1);
         }
-        private void PrintRecursive(Node HuffmanTree, int indent)
+        public void PrintRecursive(Node p, int padding)
         {
-
-            if (HuffmanTree != null)
+            if (p != null)
             {
-                // Adding indentation whilst traversing the right sub tree of the huffman tree
-                PrintRecursive(HuffmanTree.Right, indent + 5);
-                // Print the item and its frequency
-                Debug.WriteLine(new string(' ', indent) + HuffmanTree.Character + HuffmanTree.Frequency);
-                // Adding indentation whilst traversing the left sub tree of the huffman tree
-                PrintRecursive(HuffmanTree.Left, indent + 5);
+                if (p.Right != null)
+                {
+                    PrintRecursive(p.Right, padding + 4);
+                }
+                if (padding > 0)
+                {
+                    Console.Write(" ".PadLeft(padding));
+                }
+                if (p.Right != null)
+                {
+                    Console.Write("/\n");
+                    Console.Write(" ".PadLeft(padding));
+                }
+                Console.Write($"{p.Frequency}:{p.Character}\n");
+                if (p.Left != null)
+                {
+                    Console.Write(" ".PadLeft(padding) + "\\\n");
+                    PrintRecursive(p.Left, padding + 4);
+                }
             }
         }
     }
