@@ -1,8 +1,7 @@
-﻿using MSTMaze;
-using Lib.Wordle;
+﻿using Lib.Wordle;
 using Test.Encoding;
-
-var mode = "Test_Tiny_OBST";
+using Lib.MST;
+var mode = "MazeGenerator";
 
 
 RunTest(mode);

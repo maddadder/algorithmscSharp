@@ -1,4 +1,10 @@
-namespace MSTMaze 
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+
+namespace Lib.MST 
 {
     public class MazeGenerator
     {
@@ -134,6 +140,21 @@ namespace MSTMaze
                 }
                 Console.WriteLine("");
             }
+        }
+        public static string renderMazeHtml(int[,] maze, string title = "Generating maze...") {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("<table cellpadding=0 cellspacing=0 style='line-height:1'>");
+            for (var x = 0; x < maze.GetLength(0); x++) {
+                sb.Append("<tr>");
+                for (var y = 0; y < maze.GetLength(1); y++) 
+                {
+                    var cell = ($"{(maze[x,y] == 1 ? "⬜" : "⬛")}");
+                    sb.Append($"<td>{cell}</td>");
+                }
+                sb.Append("</tr>");
+            }
+            sb.Append("</table>");
+            return sb.ToString();
         }
         public static void printAdjacencyMatrix(int[,] maze, string title = "Generating maze...") {
             Console.Clear();

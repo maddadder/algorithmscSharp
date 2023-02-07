@@ -1,0 +1,16 @@
+﻿@page "/mstmaze"
+
+@using Lib.MST
+<PageTitle>MST Maze</PageTitle>
+
+<div>Click refresh to generate a new maze</div>
+<div>&#160;</div>
+<div>@((MarkupString)GenerateMaze())</div>
+@code {
+    public string GenerateMaze()
+    {
+        MazeGenerator mg = new MazeGenerator();
+        int[,] maze = mg.GenerateMaze(false);
+        return MazeGenerator.renderMazeHtml(maze);
+    }
+}
