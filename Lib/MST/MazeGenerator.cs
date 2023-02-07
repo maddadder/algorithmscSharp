@@ -8,6 +8,13 @@ namespace Lib.MST
 {
     public class MazeGenerator
     {
+        public MazeGenerator(){
+
+        }
+        public MazeGenerator(int height, int width)
+        {
+            _cells = new int[height,width];
+        }
         private readonly Random _rnd = new();
         // NOTE: cells grid dimensions must be odd, odd (will give size 1 border around maze)
         private readonly int[,] _cells = new int[41,41]; // All maze cells default to wall (false), not path (true)
@@ -20,7 +27,7 @@ namespace Lib.MST
                 return $"{X}, {Y}";
             }
         }
-
+        
         public int[,] GenerateMaze(bool render) {
             if(render)
                 Console.Clear();
