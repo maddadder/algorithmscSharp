@@ -13,7 +13,7 @@ namespace Lib.Wordle
         {
             Console.WriteLine($"Start Time: {DateTime.Now}");
             //https://github.com/jackchammons/wordFrequency
-            string sourceFile = "../../../dictionary.txt";
+            string sourceFile = "../../../../Data/dictionary.txt";
             var lines = File.ReadLines(sourceFile);
             SequenceAligner sq = new SequenceAligner();
             

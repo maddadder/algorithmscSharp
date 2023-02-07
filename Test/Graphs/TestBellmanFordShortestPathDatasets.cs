@@ -10,7 +10,7 @@ namespace Graphs
         [TestMethod]
         public void TestIn1()
         {
-            string sourceFile = "../../../MST1.txt";
+            string sourceFile = "../../../../Data/MST1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
 
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
@@ -22,7 +22,7 @@ namespace Graphs
         [TestMethod]
         public void TestIn3()
         {
-            string sourceFile = "../../../MST3.txt";
+            string sourceFile = "../../../../Data/MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
@@ -34,7 +34,7 @@ namespace Graphs
         [TestMethod]
         public void TestIn4()
         {
-            string sourceFile = "../../../MST4.txt";
+            string sourceFile = "../../../../Data/MST4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
@@ -45,7 +45,7 @@ namespace Graphs
         [TestMethod]
         public void TestInBellmanFord1()
         {
-            string sourceFile = "../../../BellmanFord1.txt";
+            string sourceFile = "../../../../Data/BellmanFord1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
@@ -56,7 +56,7 @@ namespace Graphs
         [TestMethod]
         public void TestInBellmanFord2()
         {
-            string sourceFile = "../../../BellmanFord2.txt";
+            string sourceFile = "../../../../Data/BellmanFord2.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
@@ -66,7 +66,7 @@ namespace Graphs
         [TestMethod]
         public void TestInBellmanFord3()
         {
-            string sourceFile = "../../../BellmanFord3.txt";
+            string sourceFile = "../../../../Data/BellmanFord3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
@@ -76,7 +76,7 @@ namespace Graphs
         [TestMethod]
         public void TestInBellmanFord4()
         {
-            string sourceFile = "../../../BellmanFord4.txt";
+            string sourceFile = "../../../../Data/BellmanFord4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
@@ -86,7 +86,7 @@ namespace Graphs
         [TestMethod]
         public void TestInBellmanFord5()
         {
-            string sourceFile = "../../../BellmanFord5.txt";
+            string sourceFile = "../../../../Data/BellmanFord5.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
@@ -97,7 +97,7 @@ namespace Graphs
         [TestMethod]
         public void TestInBellmanFord6()
         {
-            string sourceFile = "../../../BellmanFord6.txt";
+            string sourceFile = "../../../../Data/BellmanFord6.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);

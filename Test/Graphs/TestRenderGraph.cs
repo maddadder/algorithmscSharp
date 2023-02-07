@@ -1,6 +1,9 @@
 using Lib.Graphs;
-namespace MSTMaze 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Graphs 
 {
+    [TestClass]
     public class TestRenderGraph
     {
         public TestRenderGraph(){
@@ -14,8 +17,10 @@ namespace MSTMaze
             Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
             MathGraph<int>.renderGraph(graph);
         }
-        public static void RenderMaze1(){
-            string sourceFile = "../../../Maze1.txt";
+        [TestMethod]
+        public void RenderMaze1()
+        {
+            string sourceFile = "../../../../Data/Maze1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>();
             var isUndirectedGraph = false;
@@ -30,8 +35,8 @@ namespace MSTMaze
                     .OrderBy(i => i.Item1)
                     .Select(i => i.Item2).ToArray();
         }
-
-        public static void PrintRandomGraph()
+        [TestMethod]
+        public void PrintRandomGraph()
         {
             for(var k = 0;k<2000;k++)
             {
@@ -61,9 +66,10 @@ namespace MSTMaze
             }
         }
         //Visualize online at https://graphonline.ru/en/
-        public static void printMST3AsAdjacencyMatrix()
+        [TestMethod]
+        public void printMST3AsAdjacencyMatrix()
         {
-            string sourceFile = "../../../MST3.txt";
+            string sourceFile = "../../../../Data/MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>();
             var isUndirectedGraph = false;

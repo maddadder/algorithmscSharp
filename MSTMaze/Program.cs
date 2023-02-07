@@ -1,5 +1,4 @@
 ﻿using MSTMaze;
-using OBST;
 using Lib.Wordle;
 using Test.Encoding;
 
@@ -32,11 +31,14 @@ static void RunTest(string mode){
         MazeGenerator mg = new MazeGenerator();
         var maze = mg.GenerateMaze(true);
     }
-    else if(mode == "renderMaze1"){
-        TestRenderGraph.RenderMaze1();
+    else if(mode == "renderMaze1")
+    {
+        Graphs.TestRenderGraph test = new Graphs.TestRenderGraph();
+        test.RenderMaze1();
     }
     else if(mode == "PrintRandomGraph"){
-        TestRenderGraph.PrintRandomGraph();
+        Graphs.TestRenderGraph test = new Graphs.TestRenderGraph();
+        test.PrintRandomGraph();
     }
     else if(mode == "printAdjacencyMatrix"){
         MazeGenerator mg = new MazeGenerator();
@@ -54,10 +56,12 @@ static void RunTest(string mode){
     }
     else if(mode == "visualizeGraph"){
         //Visualize online at https://graphonline.ru/en/
-        TestRenderGraph.printMST3AsAdjacencyMatrix(); 
+        Graphs.TestRenderGraph test = new Graphs.TestRenderGraph();
+        test.printMST3AsAdjacencyMatrix(); 
     }
     else if(mode == "Test_Tiny_OBST"){
-        TestOBST.Test_Tiny_OBST();
+        Test.DynamicProgramming.OptimalBinarySearchTreeTest test = new Test.DynamicProgramming.OptimalBinarySearchTreeTest();
+        test.Test_Tiny_OBST();
     }
     else if(mode == "HuffmanAlgorithmTest"){
         HuffmanAlgorithmTest huffmanAlgorithmTest = new HuffmanAlgorithmTest();

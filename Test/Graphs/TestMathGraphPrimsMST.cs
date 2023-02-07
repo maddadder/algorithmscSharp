@@ -125,7 +125,7 @@ namespace Graphs
         [TestMethod]
         public void Test_Simple()
         {
-            string sourceFile = "../../../MST1.txt";
+            string sourceFile = "../../../../Data/MST1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>();
             
@@ -140,7 +140,7 @@ namespace Graphs
         [TestMethod]
         public void TestIn2()
         {
-            string sourceFile = "../../../MST2.txt";
+            string sourceFile = "../../../../Data/MST2.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>();
             
@@ -155,7 +155,7 @@ namespace Graphs
         [TestMethod]
         public void TestIn3()
         {
-            string sourceFile = "../../../MST3.txt";
+            string sourceFile = "../../../../Data/MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>();
             
@@ -170,7 +170,7 @@ namespace Graphs
         [TestMethod]
         public void TestIn4()
         {
-            string sourceFile = "../../../MST4.txt";
+            string sourceFile = "../../../../Data/MST4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>();
 

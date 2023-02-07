@@ -12,7 +12,7 @@ namespace Test
         public void Test_FindShortestPath()
         {
             //1. Load the movie database from the IMDB file into a graph object
-            string sourceFile = "../../../imdb.top250.txt";
+            string sourceFile = "../../../../Data/imdb.top250.txt";
             if(!File.Exists(sourceFile))
             {
                 Debug.WriteLine($"'{sourceFile}' cannot be found.");

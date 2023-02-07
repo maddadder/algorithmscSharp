@@ -13,7 +13,7 @@ namespace Graphs
             //https://www.cs.utah.edu/~lifeifei/SpatialDataset.htm
             //California Road Network's Edges (Edge ID, Start Node ID, End Node ID, L2 Distance)
             //https://www.cs.utah.edu/~lifeifei/research/tpq/cal.cedge
-            string sourceFile = "../../../MST5.txt";
+            string sourceFile = "../../../../Data/MST5.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> graph = new MathGraph<int>();
 

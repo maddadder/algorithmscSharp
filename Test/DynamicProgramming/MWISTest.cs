@@ -84,7 +84,7 @@ namespace Test.DynamicProgramming
         [TestMethod]
         public void CalculateMaximumWeightedIndependentSet_CourseraAssignment()
         {
-            string sourceFile = "../../../mwis.txt";
+            string sourceFile = "../../../../Data/mwis.txt";
 
             Graph graph = new Graph(sourceFile);
 

@@ -10,7 +10,7 @@ namespace Graphs
         [TestMethod]
         public void TestIn1()
         {
-            string sourceFile = "../../../MST1.txt";
+            string sourceFile = "../../../../Data/MST1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
 
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
@@ -22,7 +22,7 @@ namespace Graphs
         [TestMethod]
         public void TestIn3()
         {
-            string sourceFile = "../../../MST3.txt";
+            string sourceFile = "../../../../Data/MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
@@ -34,7 +34,7 @@ namespace Graphs
         [TestMethod]
         public void TestIn4()
         {
-            string sourceFile = "../../../MST4.txt";
+            string sourceFile = "../../../../Data/MST4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
