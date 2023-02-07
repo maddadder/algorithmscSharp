@@ -3,3 +3,4 @@ bin
 obj
 Test/ChatGPT/bellmanFord.htm
 BlazorApp/appsettings.calculator.json
+BlazorHosted/Server/appsettings.calculator.json

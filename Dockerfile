@@ -4,9 +4,9 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 as base
 COPY ./ /opt/blazorapp
 WORKDIR /opt/blazorapp
 
-RUN ["dotnet","publish","./BlazorApp/BlazorApp.csproj","-o","./outputs" ]
+RUN ["dotnet","publish","./BlazorHosted/Server/BlazorHosted.Server.csproj","-o","./outputs" ]
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 as run
 COPY --from=base /opt/blazorapp/outputs /opt/blazorapp/outputs
 WORKDIR /opt/blazorapp/outputs
-ENTRYPOINT ["dotnet", "BlazorApp.dll"]
+ENTRYPOINT ["dotnet", "BlazorHosted.Server.dll"]
