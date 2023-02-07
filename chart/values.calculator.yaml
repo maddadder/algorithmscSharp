@@ -1,0 +1,6 @@
+environment: calculator
+
+nameOverride: "calculator-calculator"
+fullnameOverride: "calculator-calculator"
+
+dnsName: calculator.leenet.link

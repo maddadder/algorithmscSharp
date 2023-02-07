@@ -2,3 +2,4 @@
 bin
 obj
 Test/ChatGPT/bellmanFord.htm
+BlazorApp/appsettings.calculator.json

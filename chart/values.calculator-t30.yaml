@@ -1,0 +1,13 @@
+environment: calculator-t30
+
+nameOverride: "calculator-calculator"
+fullnameOverride: "calculator-calculator"
+
+dnsName: calculator.leenet.link
+
+image:
+  repository: 192.168.1.151:32000/calculator
+
+gatewayNamespace: default
+gateway: default/leenet-gateway
+appNamespace: default
