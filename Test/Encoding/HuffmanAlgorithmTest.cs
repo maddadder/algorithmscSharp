@@ -37,6 +37,29 @@ namespace Test.Encoding
             Debug.WriteLine(decoded);
             Assert.AreEqual(input,decoded);
         }
+        public void Render_HuffmanAlgorithm()
+        {
+            var input = "abcdefghhiijjkk";
+            Huffman h = new Huffman(input);
+            
+            // Printing the huffman tree
+            h.PrintHuffmanTree();
 
+            // Encoding
+            string bits = h.Encode(input);
+
+            Console.WriteLine("Your currently encoded message is: ");
+            Console.WriteLine(bits);
+
+            Console.WriteLine("Number of bits in encoded message: ");
+            Console.WriteLine(bits.Length);
+
+            // Decoding
+            Console.Write("Decoding ");
+            Console.Write(bits);
+            Console.Write(" yields the message: ");
+            var decoded = h.Decode(bits);
+            Console.WriteLine(decoded);
+        }
     }
 }

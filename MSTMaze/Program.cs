@@ -61,7 +61,7 @@ static void RunTest(string mode){
     }
     else if(mode == "HuffmanAlgorithmTest"){
         HuffmanAlgorithmTest huffmanAlgorithmTest = new HuffmanAlgorithmTest();
-        huffmanAlgorithmTest.HuffmanAlgorithm_Test();
+        huffmanAlgorithmTest.Render_HuffmanAlgorithm();
     }
     else if(mode == "Wordle"){
         WordleSolver solver = new WordleSolver();
