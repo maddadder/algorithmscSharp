@@ -12,9 +12,8 @@ namespace Graphs
 
         public static void RenderLines(string[] lines)
         {
-            MathGraph<int> mst = new MathGraph<int>();
-            var isUndirectedGraph = false;
-            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
+            MathGraph<int> mst = new MathGraph<int>(true);
+            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines);
             MathGraph<int>.renderGraph(graph);
         }
         [TestMethod]
@@ -22,9 +21,8 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/Maze1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> mst = new MathGraph<int>();
-            var isUndirectedGraph = false;
-            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
+            MathGraph<int> mst = new MathGraph<int>(true);
+            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines);
             MathGraph<int>.renderGraph(graph);
         }
         private static int[] RandomList(int length)
@@ -42,7 +40,7 @@ namespace Graphs
             {
                 var inputX = RandomList((int)Math.Pow(10,1) * 3).ToArray();
                 Random rand = new Random();
-                MathGraph<int> graph = new MathGraph<int>();
+                MathGraph<int> graph = new MathGraph<int>(false);
 
                 for (int i = 0; i < inputX.Length-1; i++)
                 {
@@ -58,7 +56,7 @@ namespace Graphs
                     {
                         graph.AddVertex(nodeB);
                     }
-                    graph.AddEdge(nodeA, nodeB, 1, true);
+                    graph.AddEdge(nodeA, nodeB, 1);
                 }
                 var vertices = graph.GetVertices();
                 Console.SetCursorPosition(0, 0);
@@ -71,9 +69,8 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> mst = new MathGraph<int>();
-            var isUndirectedGraph = false;
-            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines, isUndirectedGraph);
+            MathGraph<int> mst = new MathGraph<int>(true);
+            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines);
             MathGraph<int>.printAdjacencyMatrix(graph);
         }
     }

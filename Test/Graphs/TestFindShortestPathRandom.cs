@@ -22,7 +22,7 @@ namespace Test
         {
             var inputX = RandomList((int)Math.Pow(10,1)).OrderBy(x => x).ToArray();
             Random rand = new Random();
-            MathGraph<int> graph = new MathGraph<int>();
+            MathGraph<int> graph = new MathGraph<int>(false);
 
             for (int i = 0; i < inputX.Length-1; i++)
             {

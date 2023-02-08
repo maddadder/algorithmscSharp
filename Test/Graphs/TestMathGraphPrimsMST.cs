@@ -9,7 +9,7 @@ namespace Graphs
         [TestMethod]
         public void FindMinimumSpanningTreeTotalCost_TwoNodes_ReturnsCost()
         {
-            MathGraph<int> mst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>(false);
             
             mst.AddEdge(0,1,4);
             int source = 0;
@@ -31,7 +31,7 @@ namespace Graphs
         {
             // Arrange
             
-            MathGraph<int> mst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>(false);
             mst.AddEdge(0,1,4);
             mst.AddEdge(1,2,4);
             int source = 0;
@@ -50,7 +50,7 @@ namespace Graphs
         public void FindMinimumSpanningTreeTotalCost_ThreeNodesDifferentEdgeLength_ReturnsCost()
         {
             // Arrange
-            MathGraph<int> mst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>(false);
             mst.AddEdge(0,1,4);
             mst.AddEdge(1,2,3);
             int source = 0;
@@ -69,7 +69,7 @@ namespace Graphs
         public void FindMinimumSpanningTreeTotalCost_FourNodesDifferentEdgeLength_ReturnsCost()
         {
             // Arrange
-            MathGraph<int> mst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>(false);
 
             mst.AddEdge(0,1,4);
             mst.AddEdge(1,3,1);
@@ -93,7 +93,7 @@ namespace Graphs
         public void FindMinimumSpanningTreeTotalCost_ComplexTree_ReturnsCost()
         {
             // Arrange
-            MathGraph<int> mst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>(false);
             mst.AddEdge(7,6,1);
             mst.AddEdge(8,2,2);
             mst.AddEdge(6,5,2);
@@ -127,7 +127,7 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/MST1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> mst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>(false);
             
             var expectedCost = 5;
 
@@ -142,7 +142,7 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/MST2.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> mst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>(false);
             
             var expectedCost = -3612829;
 
@@ -157,7 +157,7 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> mst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>(false);
             
             var expectedCost = 14;
 
@@ -172,7 +172,7 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/MST4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> mst = new MathGraph<int>();
+            MathGraph<int> mst = new MathGraph<int>(false);
 
             var expectedCost = 4;
 

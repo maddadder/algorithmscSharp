@@ -13,8 +13,8 @@ namespace Graphs
             string sourceFile = "../../../../Data/MST1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
 
-            MathGraph<int> graph = new MathGraph<int>();
-            MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            MathGraph<int> graph = new MathGraph<int>(true);
+            MathGraph<int>.LoadGraph(graph, lines);
             var floydWarshalDist = graph.FloydWarshal();
             var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(6, floydWarshalDistSum);
@@ -25,8 +25,8 @@ namespace Graphs
             string sourceFile = "../../../../Data/MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            MathGraph<int> graph = new MathGraph<int>();
-            MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            MathGraph<int> graph = new MathGraph<int>(true);
+            MathGraph<int>.LoadGraph(graph, lines);
             var floydWarshalDist = graph.FloydWarshal();
             var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(34, floydWarshalDistSum);
@@ -37,8 +37,8 @@ namespace Graphs
             string sourceFile = "../../../../Data/MST4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            MathGraph<int> graph = new MathGraph<int>();
-            MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            MathGraph<int> graph = new MathGraph<int>(true);
+            MathGraph<int>.LoadGraph(graph, lines);
             var floydWarshalDist = graph.FloydWarshal();
             var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(6, floydWarshalDistSum);
@@ -49,8 +49,8 @@ namespace Graphs
             string sourceFile = "../../../../Data/BellmanFord1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            MathGraph<int> graph = new MathGraph<int>();
-            MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            MathGraph<int> graph = new MathGraph<int>(true);
+            MathGraph<int>.LoadGraph(graph, lines);
             var floydWarshalDist = graph.FloydWarshal();
             var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(5, floydWarshalDistSum);
@@ -67,8 +67,8 @@ namespace Graphs
             string sourceFile = "../../../../Data/BellmanFord2.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            MathGraph<int> graph = new MathGraph<int>();
-            MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            MathGraph<int> graph = new MathGraph<int>(true);
+            MathGraph<int>.LoadGraph(graph, lines);
             var floydWarshalDist = graph.FloydWarshal();
             Assert.AreEqual(null, floydWarshalDist);
         }

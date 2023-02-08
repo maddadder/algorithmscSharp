@@ -41,7 +41,7 @@ namespace Lib.Graphs
                 int u = int.Parse(all_edge[0]);
                 int v = int.Parse(all_edge[1]);
                 float w = float.Parse(all_edge[2]);
-                mst.AddEdge(u,v,w,isUndirectedGraph);
+                mst.AddEdge(u,v,w);
             }
 
             int source = int.Parse(lines[lines.Length-1]);

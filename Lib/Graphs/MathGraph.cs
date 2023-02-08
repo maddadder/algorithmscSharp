@@ -37,10 +37,12 @@ namespace Lib.Graphs
         private Dictionary<Tuple<T,T>, float> EdgeList;
         private Dictionary<T, float> ComponentWeights;
         private Dictionary<T, int> Components;
+        private bool IsDirected {get;set;} = false;
         private int edgeCount;
 
-        public MathGraph(string graphName = "None")
+        public MathGraph(bool isDirected, string graphName = "None")
         {
+            IsDirected = isDirected;
             Initialize(graphName);
         }
 
@@ -120,12 +122,12 @@ namespace Lib.Graphs
             return;
         }
 
-        public void AddEdge(T vertex1, T vertex2, float weight = 1, bool isUndirectedGraph = true)
+        public void AddEdge(T vertex1, T vertex2, float weight = 1)
         {
-            AddEdge(new Vertex<T>(vertex1), new Vertex<T>(vertex2), weight, isUndirectedGraph);
+            AddEdge(new Vertex<T>(vertex1), new Vertex<T>(vertex2), weight);
         }
 
-        public void AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, float weight = 1, bool isUndirectedGraph = true)
+        public void AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, float weight = 1)
         {
             if (!ContainsVertex(vertex1.Component))
             {
@@ -158,7 +160,7 @@ namespace Lib.Graphs
             Vertices[vertex2.Component].InEdge.Add(rEdgeWeight, weight);
 
             
-            if(isUndirectedGraph)
+            if(!IsDirected)
             {
                 var rEdge = new Tuple<T, T>(vertex2.Component,vertex1.Component);
                 if(!EdgeList.ContainsKey(rEdge))
@@ -587,7 +589,7 @@ namespace Lib.Graphs
             return $"Graph {GraphName}: {Vertices.Count} vertices and {edgeCount} edges";
         }
         
-        public static Dictionary<int, Lib.Graphs.Vertex<int>> LoadGraph(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
+        public static Dictionary<int, Lib.Graphs.Vertex<int>> LoadGraph(MathGraph<int> mst, string[] lines) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {
@@ -595,7 +597,7 @@ namespace Lib.Graphs
                 int u = int.Parse(all_edge[0]);
                 int v = int.Parse(all_edge[1]);
                 float w = float.Parse(all_edge[2]);
-                mst.AddEdge(u,v,w,isUndirectedGraph);
+                mst.AddEdge(u,v,w);
             }
 
             return mst.GetVertices();

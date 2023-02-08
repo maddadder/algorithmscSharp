@@ -14,7 +14,7 @@ namespace Test
         [TestMethod]
         public void Test_FindShortestPathIp()
         {
-            MathGraph<string> graph = new MathGraph<string>();
+            MathGraph<string> graph = new MathGraph<string>(false);
             List<Tuple<IPAddress,IPAddress>> googleRoute = new List<Tuple<IPAddress, IPAddress>>();
             List<Tuple<IPAddress,IPAddress>> bingRoute = new List<Tuple<IPAddress, IPAddress>>();
             List<Tuple<IPAddress,IPAddress>> ntpRoute = new List<Tuple<IPAddress, IPAddress>>();

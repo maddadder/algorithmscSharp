@@ -17,7 +17,7 @@ namespace Test.Data
 
             string ratingSourceFile = "../../../../Data/ml-latest-small/ratings.csv";
             var ratings = MovieLens.ImportRatingsCsvData(ratingSourceFile);
-            MathGraph<string> graph = new MathGraph<string>();
+            MathGraph<string> graph = new MathGraph<string>(false);
             var joined = from movie in movies
                          join rating in ratings on movie.MovieId equals rating.MovieId
                          select new {

@@ -13,8 +13,8 @@ namespace Graphs
             string sourceFile = "../../../../Data/MST1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
 
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var bellmanDist = graph.BellmanFord(1);
             var bellmanDistSum = bellmanDist.Sum(x => x.Value);
             Assert.AreEqual(6, bellmanDistSum);
@@ -25,8 +25,8 @@ namespace Graphs
             string sourceFile = "../../../../Data/MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var bellmanDist = graph.BellmanFord(1);
             var bellmanDistSum = bellmanDist.Sum(x => x.Value);
             Assert.AreEqual(34, bellmanDistSum);
@@ -36,8 +36,8 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/MST4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var bellmanDist = graph.BellmanFord(1);
             var bellmanDistSum = bellmanDist.Sum(x => x.Value);
             Assert.AreEqual(6, bellmanDistSum);
@@ -47,8 +47,8 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/BellmanFord1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var bellmanDist = graph.BellmanFord(1);
             var bellmanDistSum = bellmanDist.Sum(x => x.Value);
             Assert.AreEqual(5, bellmanDistSum);
@@ -61,8 +61,8 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/BellmanFord2.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var bellmanDist = graph.BellmanFord(1);
             Assert.AreEqual(null, bellmanDist);
         }
@@ -71,8 +71,8 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/BellmanFord3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var bellmanDist = graph.BellmanFord(1);
             Assert.AreEqual(null, bellmanDist);
         }
@@ -81,8 +81,8 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/BellmanFord4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var bellmanDist = graph.BellmanFord(1);
             Assert.AreEqual(null, bellmanDist);
         }
@@ -91,8 +91,8 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/BellmanFord5.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var bellmanDist = graph.BellmanFord(1);
             var bellmanDistSum = bellmanDist.Sum(x => x.Value);
             Assert.AreEqual(-1344, bellmanDistSum);
@@ -102,8 +102,8 @@ namespace Graphs
         {
             string sourceFile = "../../../../Data/BellmanFord6.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var bellmanDist = graph.BellmanFord(1);
             var bellmanDistSum = bellmanDist.Sum(x => x.Value);
             Assert.AreEqual(296435, bellmanDistSum);

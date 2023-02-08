@@ -4,8 +4,8 @@ using Lib.MST;
 var mode = "MazeGenerator";
 
 
-RunTest(mode);
-//RunAll();
+//RunTest(mode);
+RunAll();
 
 static void RunAll()
 {

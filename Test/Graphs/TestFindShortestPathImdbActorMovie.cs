@@ -21,7 +21,7 @@ namespace Test
 
             string[] lines = File.ReadAllLines(sourceFile);
             var random = new Random(); 
-            MathGraph<string> graph = new MathGraph<string>();
+            MathGraph<string> graph = new MathGraph<string>(false);
 
             for (int i = 0; i < lines.Length; i++)
             {
@@ -44,7 +44,7 @@ namespace Test
                 {
                     graph.AddVertex(movies);
                 }
-                graph.AddEdge(names, movies, 1, isUndirectedGraph:true);
+                graph.AddEdge(names, movies, 1);
             }
             var components = graph.CountComponents();
             Debug.WriteLine($"Components: {components}");

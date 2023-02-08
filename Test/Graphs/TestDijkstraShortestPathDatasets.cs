@@ -13,8 +13,8 @@ namespace Graphs
             string sourceFile = "../../../../Data/MST1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
 
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var dijkstraDist = graph.Dijkstra(1);
             var dijkstraDistSum = dijkstraDist.Sum(x => x.Value);
             Assert.AreEqual(6, dijkstraDistSum);
@@ -25,8 +25,8 @@ namespace Graphs
             string sourceFile = "../../../../Data/MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var dijkstraDist = graph.Dijkstra(1);
             var dijkstraDistSum = dijkstraDist.Sum(x => x.Value);
             Assert.AreEqual(34, dijkstraDistSum);
@@ -37,8 +37,8 @@ namespace Graphs
             string sourceFile = "../../../../Data/MST4.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>();
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines, isUndirectedGraph: false);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
             var dijkstraDist = graph.Dijkstra(1);
             var dijkstraDistSum = dijkstraDist.Sum(x => x.Value);
             Assert.AreEqual(6, dijkstraDistSum);

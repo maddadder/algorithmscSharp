@@ -15,7 +15,7 @@ namespace Graphs
             //https://www.cs.utah.edu/~lifeifei/research/tpq/cal.cedge
             string sourceFile = "../../../../Data/MST5.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
-            MathGraph<int> graph = new MathGraph<int>();
+            MathGraph<int> graph = new MathGraph<int>(false);
 
             float expectedCost = 307.6319f;
 
