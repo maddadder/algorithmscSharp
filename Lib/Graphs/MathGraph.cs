@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
-using Extensions;
+using QuikGraph.Graphviz;
 
 namespace Lib.Graphs
 {
@@ -601,6 +600,36 @@ namespace Lib.Graphs
 
             return mst.GetVertices();
         }
+
+        public static string ConvertToGraphViz(string[] lines)
+        {
+            QuikGraph.AdjacencyGraph<int, QuikGraph.TaggedEdge<int, float>> _graph = 
+                new QuikGraph.AdjacencyGraph<int, QuikGraph.TaggedEdge<int,float>>();
+
+            string[] line1 = lines[0].Split(' ');
+            for (int i = 1; i <= lines.Length - 2; i++) {
+                string[] all_edge = lines[i].Split(' ');
+                int u = int.Parse(all_edge[0]);
+                int v = int.Parse(all_edge[1]);
+                float w = float.Parse(all_edge[2]);
+                var edge = new QuikGraph.TaggedEdge<int,float>(u, v, w);
+                
+                _graph.AddVerticesAndEdge(edge);
+            }
+
+            //graph.
+            var graphviz = new GraphvizAlgorithm<int, QuikGraph.TaggedEdge<int, float>>(_graph);
+            graphviz.FormatEdge += OnFormatEdge;
+            // Render
+            return graphviz.Generate();
+        }
+        private static void OnFormatEdge(object obj, 
+            FormatEdgeEventArgs<int, QuikGraph.TaggedEdge<int, float>> e)
+        { 
+            e.EdgeFormat.Label = new QuikGraph.Graphviz.Dot.GraphvizEdgeLabel();
+            e.EdgeFormat.Label.Value = e.Edge.Tag.ToString();
+        }
+
         T Add(T value1, T value2)
         {           
             dynamic a = value1;

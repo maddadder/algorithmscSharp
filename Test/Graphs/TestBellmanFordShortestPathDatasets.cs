@@ -52,6 +52,9 @@ namespace Graphs
             var bellmanDist = graph.BellmanFord(1);
             var bellmanDistSum = bellmanDist.Sum(x => x.Value);
             Assert.AreEqual(5, bellmanDistSum);
+
+            var graphviz = Lib.Graphs.MathGraph<int>.ConvertToGraphViz(lines);
+            Debug.WriteLine(graphviz);
         }
         [TestMethod]
         public void TestInBellmanFord2()

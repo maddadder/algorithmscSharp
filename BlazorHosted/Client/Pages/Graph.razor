@@ -1,0 +1,37 @@
+﻿@page "/graph"
+@inject IJSRuntime JsRuntime
+
+
+<PageTitle>Graph</PageTitle>
+
+<h1>Load Graphs</h1>
+<InputTextArea rows="5" class="form-control" @bind-Value="GraphText" placeholder="insert graph here" />
+<div><button class="btn btn-primary" onclick="@LoagGraph">Load</button></div>
+<div @ref="_renderTo"></div>
+
+@code {
+    private ElementReference _renderTo; 
+    private string GraphText 
+= @"5 8
+1 2 2
+1 5 3
+2 4 -2
+3 1 1
+4 1 4
+4 3 1
+4 5 2
+5 3 -1
+1";
+    private async Task LoagGraph()
+    {
+        var diagramModule = await JsRuntime
+            .InvokeAsync<IJSObjectReference>("import", "/diagrams.js");
+
+            string[] lines = GraphText.Split("\n");
+
+            var diagram = Lib.Graphs.MathGraph<int>.ConvertToGraphViz(lines);
+
+
+        await diagramModule.InvokeVoidAsync("renderDot", diagram, _renderTo);
+    }
+}
