@@ -5,12 +5,26 @@
 <PageTitle>Graph</PageTitle>
 
 <h1>Load Graphs</h1>
+
 <InputTextArea rows="5" class="form-control" @bind-Value="GraphText" placeholder="insert graph here" />
-<div><button class="btn btn-primary" onclick="@LoagGraph">Load</button></div>
+ <dl>
+  <dt>Nodes</dt>
+  <dd> <input type="number" class="form-control" style="max-width:100px;"
+        @bind="NodeCount" @bind:event="oninput" step="1" min="1" max="12" /></dd>
+  <dt>Edges</dt>
+  <dd><input type="number" class="form-control" style="max-width:100px;"
+        @bind="EdgeCount" @bind:event="oninput" step="1" min="@NodeCount" /></dd>
+</dl>
+<div>
+    <button class="btn btn-primary" onclick="@LoagGraph">Load</button>
+    <button class="btn btn-primary" onclick="@GenerateGraph">Generate</button>
+</div>
 <div @ref="_renderTo"></div>
 
 @code {
     private ElementReference _renderTo; 
+    private int NodeCount = 5;
+    private int EdgeCount = 8;
     private string GraphText 
 = @"5 8
 1 2 2
@@ -34,5 +48,33 @@
 
 
         await diagramModule.InvokeVoidAsync("renderDot", diagram, _renderTo);
+    }
+    private async Task GenerateGraph()
+    {
+        var diagramModule = await JsRuntime
+            .InvokeAsync<IJSObjectReference>("import", "/diagrams.js");
+
+            if(NodeCount >= EdgeCount-1){
+                NodeCount = EdgeCount - 2;
+            }
+            Lib.Graphs.MathGraph<int> graph = GenerateRandomGraph(NodeCount, EdgeCount);
+            var diagram = graph.GenerateDot();
+
+
+        await diagramModule.InvokeVoidAsync("renderDot", diagram, _renderTo);
+    }
+    public Lib.Graphs.MathGraph<int> GenerateRandomGraph(int Nodes, int Edges){
+        var connectedGraph = float.PositiveInfinity;
+        Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+        while(connectedGraph == float.PositiveInfinity){
+            graph = new Lib.Graphs.MathGraph<int>(true);
+            graph.GenerateGraph(Nodes, Edges, graph);
+            var bellmanDist = graph.BellmanFord(0);
+            if(bellmanDist != null){
+                connectedGraph = bellmanDist.Sum(x => x.Value);
+            }
+        }
+        GraphText = graph.GenerateAdjacentList();
+        return graph;
     }
 }

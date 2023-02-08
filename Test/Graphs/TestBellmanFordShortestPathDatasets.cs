@@ -6,6 +6,19 @@ namespace Graphs
     [TestClass]
     public class TestBellmanFordShortestPathDatasets
     {
+        [TestMethod]
+        public void TestInRandom()
+        {
+            var connectedGraph = float.PositiveInfinity;
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            while(connectedGraph == float.PositiveInfinity){
+                graph = new Lib.Graphs.MathGraph<int>(true);
+                graph.GenerateGraph(5, 8, graph);
+                var bellmanDist = graph.BellmanFord(1);
+                connectedGraph = bellmanDist.Sum(x => x.Value);
+            }
+            Assert.AreNotEqual(float.PositiveInfinity, connectedGraph);
+        }
         
         [TestMethod]
         public void TestIn1()

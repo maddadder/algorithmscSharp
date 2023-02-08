@@ -608,7 +608,60 @@ namespace Lib.Graphs
             dynamic b = value2;
             return (a + b);
         }
-        
+
+        public void GenerateGraph(int Nodes, int Edges, MathGraph<int> graph)
+        {
+            if (Edges < Nodes - 1) throw new Exception("Too few edges");
+            if (Edges > Nodes * (Nodes - 1)) throw new Exception("Too many edges");
+            var random = new Random();
+
+            float[,] adjacencyMatrix = new float[Nodes, Nodes];
+
+            // Gives every cell a value of zero
+            for (int y = 0; y < Nodes; y++)
+            {
+                for (int x = 0; x < Nodes; x++)
+                {
+                    adjacencyMatrix[x, y] = 0;
+                }
+            }
+
+            int placedEdges = 0;
+
+            for (int i = 1; i < Nodes; i++)
+            {
+                // produce edge between rnd(0, amountofnodes) to new node
+                int fromVertex = random.Next(0, i);
+                int weight = random.Next(-3, 10);
+
+                adjacencyMatrix[i, fromVertex] = weight;
+                placedEdges++;
+            }
+
+            while (placedEdges < Edges)
+            {
+                int fromVertex = random.Next(0, Nodes);
+                int weight = random.Next(1, 10);
+
+                int targetVertex = random.Next(0, Nodes);
+                while (targetVertex == fromVertex || adjacencyMatrix[targetVertex, fromVertex] != 0) //|| adjacencyMatrix[fromVertex, targetVertex] != 0)// tredje condition tar bort parallella kanter
+                {
+                    fromVertex = random.Next(0, Nodes);
+                    targetVertex = random.Next(0, Nodes);
+                }
+
+                adjacencyMatrix[targetVertex, fromVertex] = weight;
+                placedEdges++;
+            }
+
+            for (var i = 0; i < adjacencyMatrix.GetLength(0); i++) {
+                var array=new Dictionary<int,float>();
+                for (var j = 0; j < adjacencyMatrix.GetLength(1); j++) {
+                    if(adjacencyMatrix[i,j] != 0)
+                        graph.AddEdge(i, j, adjacencyMatrix[i,j]);
+                }
+            }
+        }
         public string GenerateDot()
         {
             var _verticesIds = new Dictionary<T,int>();
@@ -639,6 +692,17 @@ namespace Lib.Graphs
             }
 
             Output.Write("}");
+            return Output.ToString();
+        }
+        public string GenerateAdjacentList()
+        {
+            var Output = new System.IO.StringWriter();
+            
+            Output.Write($"{this.Vertices.Count} {this.EdgeList.Count}\n");
+            foreach(var edge in this.EdgeList){
+                Output.Write($"{edge.Key.Item1} {edge.Key.Item2} {edge.Value}\n");
+            }
+            Output.Write($"{this.Vertices.First().Key}");
             return Output.ToString();
         }
     }
