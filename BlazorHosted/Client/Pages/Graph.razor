@@ -28,8 +28,9 @@
             .InvokeAsync<IJSObjectReference>("import", "/diagrams.js");
 
             string[] lines = GraphText.Split("\n");
-
-            var diagram = Lib.Graphs.MathGraph<int>.ConvertToGraphViz(lines);
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
+            var diagram = graph.GenerateDot();
 
 
         await diagramModule.InvokeVoidAsync("renderDot", diagram, _renderTo);

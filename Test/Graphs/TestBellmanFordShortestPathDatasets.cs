@@ -53,7 +53,7 @@ namespace Graphs
             var bellmanDistSum = bellmanDist.Sum(x => x.Value);
             Assert.AreEqual(5, bellmanDistSum);
 
-            var graphviz = Lib.Graphs.MathGraph<int>.ConvertToGraphViz(lines);
+            var graphviz = graph.GenerateDot();
             Debug.WriteLine(graphviz);
         }
         [TestMethod]

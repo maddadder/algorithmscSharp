@@ -6,8 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="QuikGraph" Version="2.5.0" />
-    <PackageReference Include="QuikGraph.Graphviz" Version="2.5.0" />
     
   </ItemGroup>
 

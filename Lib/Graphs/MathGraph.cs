@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using QuikGraph.Graphviz;
 
 namespace Lib.Graphs
 {
@@ -603,35 +602,6 @@ namespace Lib.Graphs
             return mst.GetVertices();
         }
 
-        public static string ConvertToGraphViz(string[] lines)
-        {
-            QuikGraph.AdjacencyGraph<int, QuikGraph.TaggedEdge<int, float>> _graph = 
-                new QuikGraph.AdjacencyGraph<int, QuikGraph.TaggedEdge<int,float>>();
-
-            string[] line1 = lines[0].Split(' ');
-            for (int i = 1; i <= lines.Length - 2; i++) {
-                string[] all_edge = lines[i].Split(' ');
-                int u = int.Parse(all_edge[0]);
-                int v = int.Parse(all_edge[1]);
-                float w = float.Parse(all_edge[2]);
-                var edge = new QuikGraph.TaggedEdge<int,float>(u, v, w);
-                
-                _graph.AddVerticesAndEdge(edge);
-            }
-
-            //graph.
-            var graphviz = new GraphvizAlgorithm<int, QuikGraph.TaggedEdge<int, float>>(_graph);
-            graphviz.FormatEdge += OnFormatEdge;
-            // Render
-            return graphviz.Generate();
-        }
-        private static void OnFormatEdge(object obj, 
-            FormatEdgeEventArgs<int, QuikGraph.TaggedEdge<int, float>> e)
-        { 
-            e.EdgeFormat.Label = new QuikGraph.Graphviz.Dot.GraphvizEdgeLabel();
-            e.EdgeFormat.Label.Value = e.Edge.Tag.ToString();
-        }
-
         T Add(T value1, T value2)
         {           
             dynamic a = value1;
@@ -639,5 +609,37 @@ namespace Lib.Graphs
             return (a + b);
         }
         
+        public string GenerateDot()
+        {
+            var _verticesIds = new Dictionary<T,int>();
+            var Output = new System.IO.StringWriter();
+            // Build vertex id map
+            int i = 0;
+            var vertices = new HashSet<T>(Vertices.Count);
+            foreach (var vertex in this.Vertices)
+            {
+                _verticesIds.Add(vertex.Key, i++);
+            }
+
+            var edges = new HashSet<Edge<T>>(this.EdgeList.Count);
+
+            Output.Write(this.IsDirected ? "digraph " : "graph ");
+            Output.Write(this.GraphName);
+            Output.WriteLine(" {");
+
+
+            foreach(var vertex in this.Vertices){
+                Output.Write($"{_verticesIds[vertex.Key]}\n");
+            }
+
+            foreach(var edge in this.EdgeList){
+                Output.Write(this.IsDirected
+                ? $"{_verticesIds[edge.Key.Item1]} -> {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n"
+                : $"{_verticesIds[edge.Key.Item1]} -- {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n");
+            }
+
+            Output.Write("}");
+            return Output.ToString();
+        }
     }
 }
