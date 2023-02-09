@@ -102,7 +102,9 @@
                 await diagramModule.InvokeVoidAsync("renderDot", bellmanFordDotDiagram, _bellmanFordGraphRenderTo);
             }
             else{
-                await diagramModule.InvokeVoidAsync("renderDot", "digraph {}", _bellmanFordGraphRenderTo);
+                OutputGraphText = "";
+                bellmanFordDotDiagram = "digraph {}";
+                await diagramModule.InvokeVoidAsync("renderDot", bellmanFordDotDiagram, _bellmanFordGraphRenderTo);
             }
         }
     }
