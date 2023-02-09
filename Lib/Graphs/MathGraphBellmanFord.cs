@@ -29,16 +29,6 @@ namespace Lib.Graphs
                 predecessor[0][left.Key] = default;
             }
             dist[0][src] = 0;
-            foreach (var edge in Vertices[src].InEdge)
-            {
-                var weight = edge.Key.EdgeWeight;
-                var min = float.MaxValue;
-                if(weight < min)
-                {
-                    min = weight;
-                    predecessor[0][edge.Key.dest.Component] = src;
-                }
-            }
             for(var i = 1;i<=Vertices.Count;i++)
             {
                 var stable = true;

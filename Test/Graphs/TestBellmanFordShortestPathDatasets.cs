@@ -15,7 +15,8 @@ namespace Graphs
                 inputGraph = new Lib.Graphs.MathGraph<int>(true);
                 inputGraph.GenerateGraph(5, 8, inputGraph);
                 var bellmanDist = inputGraph.BellmanFord(1);
-                connectedGraph = bellmanDist.Item1.Sum(x => x.Value);
+                if(bellmanDist != null)
+                    connectedGraph = bellmanDist.Item1.Sum(x => x.Value);
             }
             Assert.AreNotEqual(float.PositiveInfinity, connectedGraph);
             var data = inputGraph.BellmanFord(1);

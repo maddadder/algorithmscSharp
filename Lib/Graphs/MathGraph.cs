@@ -626,50 +626,49 @@ namespace Lib.Graphs
             if (Edges > Nodes * (Nodes - 1)) throw new Exception("Too many edges");
             var random = new Random();
 
-            float[,] adjacencyMatrix = new float[Nodes, Nodes];
-
+            Dictionary<int, Dictionary<int, float>> adjacencyMatrix = new Dictionary<int, Dictionary<int, float>>();
             // Gives every cell a value of zero
-            for (int y = 0; y < Nodes; y++)
+            for (int x = 1; x <= Nodes; x++)
             {
-                for (int x = 0; x < Nodes; x++)
+                adjacencyMatrix[x] = new Dictionary<int, float>();
+                for (int y = 1; y <= Nodes; y++)
                 {
-                    adjacencyMatrix[x, y] = 0;
+                    adjacencyMatrix[x][y] = 0;
                 }
             }
 
             int placedEdges = 0;
 
-            for (int i = 1; i < Nodes; i++)
+            for (int i = 2; i < Nodes; i++)
             {
                 // produce edge between rnd(0, amountofnodes) to new node
-                int fromVertex = random.Next(0, i);
+                int fromVertex = random.Next(1, i);
                 int weight = random.Next(-3, 10);
 
-                adjacencyMatrix[i, fromVertex] = weight;
+                adjacencyMatrix[i][fromVertex] = weight;
                 placedEdges++;
             }
 
             while (placedEdges < Edges)
             {
-                int fromVertex = random.Next(0, Nodes);
-                int weight = random.Next(1, 10);
-
-                int targetVertex = random.Next(0, Nodes);
-                while (targetVertex == fromVertex || adjacencyMatrix[targetVertex, fromVertex] != 0) //|| adjacencyMatrix[fromVertex, targetVertex] != 0)// tredje condition tar bort parallella kanter
+                int fromVertex = random.Next(1, Nodes);
+                int weight = random.Next(-3, 10);
+                int targetVertex = random.Next(1, Nodes);
+                while (targetVertex == fromVertex || adjacencyMatrix[targetVertex][fromVertex] != 0) //|| adjacencyMatrix[fromVertex, targetVertex] != 0)// tredje condition tar bort parallella kanter
                 {
-                    fromVertex = random.Next(0, Nodes);
-                    targetVertex = random.Next(0, Nodes);
+                    fromVertex = random.Next(1, Nodes);
+                    targetVertex = random.Next(1, Nodes);
                 }
 
-                adjacencyMatrix[targetVertex, fromVertex] = weight;
+                adjacencyMatrix[targetVertex][ fromVertex] = weight;
                 placedEdges++;
             }
 
-            for (var i = 0; i < adjacencyMatrix.GetLength(0); i++) {
+            for (var i = 1; i < adjacencyMatrix.Count; i++) {
                 var array=new Dictionary<int,float>();
-                for (var j = 0; j < adjacencyMatrix.GetLength(1); j++) {
-                    if(adjacencyMatrix[i,j] != 0)
-                        graph.AddEdge(i, j, adjacencyMatrix[i,j]);
+                for (var j = 1; j < adjacencyMatrix[i].Count; j++) {
+                    if(adjacencyMatrix[i][j] != 0)
+                        graph.AddEdge(i, j, adjacencyMatrix[i][j]);
                 }
             }
         }
