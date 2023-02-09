@@ -19,12 +19,19 @@
     <button class="btn btn-primary" onclick="@LoagGraph">Load</button>
     <button class="btn btn-primary" onclick="@GenerateGraph">Generate</button>
 </div>
-<div @ref="_renderTo"></div>
-
+<div @ref="_inputGraphRenderTo"></div>
+<div>@((MarkupString)inputDotDiagram)</div>
+<div>
+    <button class="btn btn-primary" onclick="@BellmanFord">compute shortest paths</button>
+</div>
+<div @ref="_bellmanFordGraphRenderTo"></div>
+<div>@((MarkupString)bellmanFordDotDiagram)</div>
 @code {
-    private ElementReference _renderTo; 
+    private ElementReference _inputGraphRenderTo;
+    private ElementReference _bellmanFordGraphRenderTo; 
     private int NodeCount = 5;
     private int EdgeCount = 8;
+    private int StartingVertex = 1;
     private string GraphText 
 = @"5 8
 1 2 2
@@ -36,18 +43,21 @@
 4 5 2
 5 3 -1
 1";
+    private string inputDotDiagram = "";
+    private string bellmanFordDotDiagram = "";
+    private Lib.Graphs.MathGraph<int> inputGraph;
     private async Task LoagGraph()
     {
         var diagramModule = await JsRuntime
             .InvokeAsync<IJSObjectReference>("import", "/diagrams.js");
 
             string[] lines = GraphText.Split("\n");
-            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
-            var diagram = graph.GenerateDot();
+            inputGraph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(inputGraph, lines);
+            inputDotDiagram = inputGraph.GenerateDot();
 
 
-        await diagramModule.InvokeVoidAsync("renderDot", diagram, _renderTo);
+        await diagramModule.InvokeVoidAsync("renderDot", inputDotDiagram, _inputGraphRenderTo);
     }
     private async Task GenerateGraph()
     {
@@ -57,11 +67,11 @@
             if(NodeCount >= EdgeCount-1){
                 NodeCount = EdgeCount - 2;
             }
-            Lib.Graphs.MathGraph<int> graph = GenerateRandomGraph(NodeCount, EdgeCount);
-            var diagram = graph.GenerateDot();
+            inputGraph = GenerateRandomGraph(NodeCount, EdgeCount);
+            inputDotDiagram = inputGraph.GenerateDot();
 
 
-        await diagramModule.InvokeVoidAsync("renderDot", diagram, _renderTo);
+        await diagramModule.InvokeVoidAsync("renderDot", inputDotDiagram, _inputGraphRenderTo);
     }
     public Lib.Graphs.MathGraph<int> GenerateRandomGraph(int Nodes, int Edges){
         var connectedGraph = float.PositiveInfinity;
@@ -69,12 +79,26 @@
         while(connectedGraph == float.PositiveInfinity){
             graph = new Lib.Graphs.MathGraph<int>(true);
             graph.GenerateGraph(Nodes, Edges, graph);
-            var bellmanDist = graph.BellmanFord(0);
+            var bellmanDist = graph.BellmanFord(StartingVertex);
             if(bellmanDist != null){
-                connectedGraph = bellmanDist.Sum(x => x.Value);
+                connectedGraph = bellmanDist.Item1.Sum(x => x.Value);
             }
         }
         GraphText = graph.GenerateAdjacentList();
         return graph;
+    }
+    private async Task BellmanFord()
+    {
+        var diagramModule = await JsRuntime
+            .InvokeAsync<IJSObjectReference>("import", "/diagrams.js");
+
+        var data = inputGraph.BellmanFord(StartingVertex);
+        if(data!=null)
+        {
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, data);
+            bellmanFordDotDiagram = graph.GenerateDot();
+            await diagramModule.InvokeVoidAsync("renderDot", bellmanFordDotDiagram, _bellmanFordGraphRenderTo);
+        }
     }
 }

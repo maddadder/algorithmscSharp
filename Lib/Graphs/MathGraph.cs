@@ -601,6 +601,17 @@ namespace Lib.Graphs
 
             return mst.GetVertices();
         }
+        
+        public static void LoadGraph(MathGraph<T> graph, Tuple<Dictionary<T, float>,Dictionary<T, T>> data) 
+        {
+            foreach(var edge in data.Item2.Reverse().Take(data.Item2.Count-1))
+            {
+                T u = edge.Value;
+                T v = edge.Key;
+                float w = data.Item1[v];
+                graph.AddEdge(u,v,w);
+            }
+        }
 
         T Add(T value1, T value2)
         {           
@@ -664,34 +675,35 @@ namespace Lib.Graphs
         }
         public string GenerateDot()
         {
-            var _verticesIds = new Dictionary<T,int>();
-            var Output = new System.IO.StringWriter();
+            if(this.Vertices.Count == 0)
+                throw new ArgumentException("Vertices.Count == 0");
+            var _verticesIds = new Dictionary<T,T>();
+            var Output = new System.Text.StringBuilder();
             // Build vertex id map
             int i = 0;
             var vertices = new HashSet<T>(Vertices.Count);
             foreach (var vertex in this.Vertices)
             {
-                _verticesIds.Add(vertex.Key, i++);
+                _verticesIds.Add(vertex.Key, vertex.Key);
             }
 
             var edges = new HashSet<Edge<T>>(this.EdgeList.Count);
 
-            Output.Write(this.IsDirected ? "digraph " : "graph ");
-            Output.Write(this.GraphName);
-            Output.WriteLine(" {");
-
+            Output.Append(this.IsDirected ? "digraph " : "graph ");
+            Output.Append(this.GraphName);
+            Output.Append(" {\n");
 
             foreach(var vertex in this.Vertices){
-                Output.Write($"{_verticesIds[vertex.Key]}\n");
+                Output.Append($"{_verticesIds[vertex.Key]}\n");
             }
 
             foreach(var edge in this.EdgeList){
-                Output.Write(this.IsDirected
+                Output.Append(this.IsDirected
                 ? $"{_verticesIds[edge.Key.Item1]} -> {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n"
                 : $"{_verticesIds[edge.Key.Item1]} -- {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n");
             }
 
-            Output.Write("}");
+            Output.Append("}");
             return Output.ToString();
         }
         public string GenerateAdjacentList()

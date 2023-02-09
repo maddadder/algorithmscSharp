@@ -12,17 +12,31 @@ namespace Lib.Graphs
     public partial class MathGraph<T> where T : IComparable<T>
     {
         
-        public SortedDictionary<T, float> BellmanFord(T src)
+        public Tuple<Dictionary<T, float>,Dictionary<T, T>> BellmanFord(T src)
         {
-            SortedDictionary<T, float>[] dist = new SortedDictionary<T, float>[Vertices.Count+1];
+            Dictionary<T, float>[] dist = new Dictionary<T, float>[Vertices.Count+1];
+            Dictionary<T, T>[] predecessor = new Dictionary<T, T>[Vertices.Count+1];
             for(var i = 0;i<Vertices.Count+1;i++)
             {
-                dist[i] = new SortedDictionary<T, float>();
+                dist[i] = new Dictionary<T, float>();
+                predecessor[i] = new Dictionary<T, T>();
+            }
+            
+            
+            foreach(var left in Vertices)
+            {
+                dist[0][left.Key] = float.MaxValue;
+                predecessor[0][left.Key] = default;
             }
             dist[0][src] = 0;
-            foreach(var v in Vertices){
-                if(v.Key.CompareTo(src) != 0){
-                    dist[0][v.Key] = float.MaxValue;
+            foreach (var edge in Vertices[src].InEdge)
+            {
+                var weight = edge.Key.EdgeWeight;
+                var min = float.MaxValue;
+                if(weight < min)
+                {
+                    min = weight;
+                    predecessor[0][edge.Key.dest.Component] = src;
                 }
             }
             for(var i = 1;i<=Vertices.Count;i++)
@@ -31,26 +45,35 @@ namespace Lib.Graphs
                 foreach (T left in Vertices.Keys)
                 {
                     var min = dist[i-1][left];
-                    foreach (var edge in Vertices[left].InEdge){
-                        min = Math.Min(min, dist[i-1][edge.Key.dest.Component] + edge.Key.EdgeWeight);
+                    T _edge = default;
+                    foreach (var edge in Vertices[left].InEdge)
+                    {
+                        var weight = dist[i-1][edge.Key.dest.Component] + edge.Key.EdgeWeight;
+                        if(weight < min)
+                        {
+                            min = weight;
+                            _edge = edge.Key.dest.Component;
+                        }
                     }
                     if(min < dist[i-1][left]){
                         stable = false;
                         dist[i][left] = min;
+                        predecessor[i][left] = _edge;
                     }
                     else
                     {
                         dist[i][left] = dist[i-1][left];
+                        predecessor[i][left] = predecessor[i-1][left];
                     }
                 }
                 if(stable){
-                    return dist[i];
+                    return new Tuple<Dictionary<T, float>, Dictionary<T, T>>(dist[i],predecessor[i]);
                 }
             }
             return null;
         }
         
-        public static SortedDictionary<int, float> manageBellmanFord(MathGraph<int> mst, string[] lines) 
+        public static Tuple<Dictionary<int, float>,Dictionary<int, int>> manageBellmanFord(MathGraph<int> mst, string[] lines) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {
