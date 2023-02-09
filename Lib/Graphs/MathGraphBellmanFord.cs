@@ -12,14 +12,14 @@ namespace Lib.Graphs
     public partial class MathGraph<T> where T : IComparable<T>
     {
         
-        public Tuple<SortedDictionary<T, float>,SortedDictionary<T, T>> BellmanFord(T src)
+        public Tuple<SortedDictionary<T, float>,SortedDictionary<T, Edge<T>>> BellmanFord(T src)
         {
             SortedDictionary<T, float>[] dist = new SortedDictionary<T, float>[Vertices.Count+1];
-            SortedDictionary<T, T>[] predecessor = new SortedDictionary<T, T>[Vertices.Count+1];
+            SortedDictionary<T, Edge<T>>[] predecessor = new SortedDictionary<T, Edge<T>>[Vertices.Count+1];
             for(var i = 0;i<Vertices.Count+1;i++)
             {
                 dist[i] = new SortedDictionary<T, float>();
-                predecessor[i] = new SortedDictionary<T, T>();
+                predecessor[i] = new SortedDictionary<T, Edge<T>>();
             }
             
             
@@ -35,14 +35,14 @@ namespace Lib.Graphs
                 foreach (T left in Vertices.Keys)
                 {
                     var min = dist[i-1][left];
-                    T _edge = default;
+                    Edge<T> _edge = default;
                     foreach (var edge in Vertices[left].InEdge)
                     {
                         var weight = dist[i-1][edge.Key.dest.Component] + edge.Key.EdgeWeight;
                         if(weight < min)
                         {
                             min = weight;
-                            _edge = edge.Key.dest.Component;
+                            _edge = edge.Key;
                         }
                     }
                     if(min < dist[i-1][left]){
@@ -57,13 +57,13 @@ namespace Lib.Graphs
                     }
                 }
                 if(stable){
-                    return new Tuple<SortedDictionary<T, float>, SortedDictionary<T, T>>(dist[i],predecessor[i]);
+                    return new Tuple<SortedDictionary<T, float>, SortedDictionary<T, Edge<T>>>(dist[i],predecessor[i]);
                 }
             }
             return null;
         }
         
-        public static Tuple<SortedDictionary<int, float>,SortedDictionary<int, int>> manageBellmanFord(MathGraph<int> mst, string[] lines) 
+        public static Tuple<SortedDictionary<int, float>,SortedDictionary<int, Edge<int>>> manageBellmanFord(MathGraph<int> mst, string[] lines) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {

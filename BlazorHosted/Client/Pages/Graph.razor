@@ -98,7 +98,7 @@
         if(data!=null)
         {
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
-            Lib.Graphs.MathGraph<int>.LoadGraph(graph, data);
+            Lib.Graphs.MathGraph<int>.LoadGraph(graph, data.Item2, data.Item1);
             bellmanFordDotDiagram = graph.GenerateDot();
             OutputGraphText = graph.GenerateAdjacentList();
             await diagramModule.InvokeVoidAsync("renderDot", bellmanFordDotDiagram, _bellmanFordGraphRenderTo);

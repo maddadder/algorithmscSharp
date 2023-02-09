@@ -34,6 +34,7 @@ namespace Lib.Graphs
         private SortedDictionary<T, Vertex<T>> Vertices;
         private SortedDictionary<T, T> parent;
         private SortedDictionary<Tuple<T,T>, float> EdgeList;
+        private SortedDictionary<Tuple<T,T>, float> DistanceList;
         private SortedDictionary<T, float> ComponentWeights;
         private SortedDictionary<T, int> Components;
         private bool IsDirected {get;set;} = false;
@@ -53,6 +54,7 @@ namespace Lib.Graphs
             Components = new SortedDictionary<T, int>();
             parent = new SortedDictionary<T, T>();
             EdgeList = new SortedDictionary<Tuple<T,T>, float>();
+            DistanceList = new SortedDictionary<Tuple<T,T>, float>();
             edgeCount = 0;
         }
         public SortedDictionary<T, float> GetComponentWeights()
@@ -121,12 +123,12 @@ namespace Lib.Graphs
             return;
         }
 
-        public void AddEdge(T vertex1, T vertex2, float weight = 1)
+        public void AddEdge(T vertex1, T vertex2, float weight = 1, float? distance = null)
         {
-            AddEdge(new Vertex<T>(vertex1), new Vertex<T>(vertex2), weight);
+            AddEdge(new Vertex<T>(vertex1), new Vertex<T>(vertex2), weight, distance);
         }
 
-        public void AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, float weight = 1)
+        public void AddEdge(Vertex<T> vertex1, Vertex<T> vertex2, float weight = 1, float? distance = null)
         {
             if (!ContainsVertex(vertex1.Component))
             {
@@ -144,6 +146,9 @@ namespace Lib.Graphs
                 return;
 
             EdgeList.Add(lEdge, weight);
+            if(distance!=null){
+                DistanceList.Add(lEdge, distance.Value);
+            }
 
             var lEdgeWeight = new Edge<T>();
             lEdgeWeight.src = vertex1;
@@ -167,6 +172,9 @@ namespace Lib.Graphs
                     Vertices[vertex1.Component].InEdge.Add(lEdgeWeight, weight);
                     Vertices[vertex2.Component].OutEdge.Add(rEdgeWeight, weight);
                     EdgeList.Add(rEdge, weight);
+                    if(distance!=null){
+                        DistanceList.Add(rEdge, distance.Value);
+                    }
                 }
             }
             
@@ -602,14 +610,17 @@ namespace Lib.Graphs
             return mst.GetVertices();
         }
         
-        public static void LoadGraph(MathGraph<T> graph, Tuple<SortedDictionary<T, float>,SortedDictionary<T, T>> data) 
+        public static void LoadGraph(MathGraph<T> graph, SortedDictionary<T, Edge<T>> edges, SortedDictionary<T, float> distances) 
         {
-            foreach(var edge in data.Item2.Reverse().Take(data.Item2.Count-1))
+            foreach(var edge in edges)
             {
-                T u = edge.Value;
+                if(edge.Value == null)
+                    continue;
+                T u = edge.Value.dest.Component;
                 T v = edge.Key;
-                float w = data.Item1[v];
-                graph.AddEdge(u,v,w);
+                float w = edge.Value.EdgeWeight;
+                float distance = distances[v];
+                graph.AddEdge(u,v,w,distance);
             }
         }
 
@@ -696,10 +707,21 @@ namespace Lib.Graphs
                 Output.Append($"{_verticesIds[vertex.Key]}\n");
             }
 
-            foreach(var edge in this.EdgeList){
-                Output.Append(this.IsDirected
-                ? $"{_verticesIds[edge.Key.Item1]} -> {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n"
-                : $"{_verticesIds[edge.Key.Item1]} -- {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n");
+            if(this.DistanceList.Any())
+            {
+                foreach(var edge in this.EdgeList.Zip(DistanceList)){
+                    Output.Append(this.IsDirected
+                    ? $"{_verticesIds[edge.First.Key.Item1]} -> {_verticesIds[edge.First.Key.Item2]} [label=\"{edge.First.Value} ({edge.Second.Value})\"];\n"
+                    : $"{_verticesIds[edge.First.Key.Item1]} -- {_verticesIds[edge.First.Key.Item2]} [label=\"{edge.First.Value} ({edge.Second.Value})\"];\n");
+                }
+            }
+            else
+            {
+                foreach(var edge in this.EdgeList){
+                    Output.Append(this.IsDirected
+                    ? $"{_verticesIds[edge.Key.Item1]} -> {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n"
+                    : $"{_verticesIds[edge.Key.Item1]} -- {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n");
+                }
             }
 
             Output.Append("}");
