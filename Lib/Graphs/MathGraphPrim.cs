@@ -11,10 +11,10 @@ namespace Lib.Graphs
 
     public partial class MathGraph<T> where T : IComparable<T>
     {
-        public Dictionary<T, float> prims_mst(T left) {
+        public SortedDictionary<T, float> prims_mst(T left) {
             ComponentWeights = SetAllVertexDistances();
             parent = SetAllVertexParents();
-            Dictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
+            SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
             ComponentWeights[left] = 0;
             PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
             indexNDistance.Enqueue(left, 0);
@@ -33,7 +33,7 @@ namespace Lib.Graphs
             }
             return ComponentWeights;
         }
-        public static Dictionary<int, Lib.Graphs.Vertex<int>> managePrimsMST(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
+        public static SortedDictionary<int, Lib.Graphs.Vertex<int>> managePrimsMST(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {

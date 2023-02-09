@@ -26,6 +26,7 @@
 </div>
 <div @ref="_bellmanFordGraphRenderTo"></div>
 <div>@((MarkupString)bellmanFordDotDiagram)</div>
+<InputTextArea rows="5" class="form-control" @bind-Value="OutputGraphText" placeholder="output graph" />
 @code {
     private ElementReference _inputGraphRenderTo;
     private ElementReference _bellmanFordGraphRenderTo; 
@@ -43,6 +44,7 @@
 4 5 2
 5 3 -1
 1";
+    private string OutputGraphText = "";
     private string inputDotDiagram = "";
     private string bellmanFordDotDiagram = "";
     private Lib.Graphs.MathGraph<int> inputGraph;
@@ -98,6 +100,7 @@
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, data);
             bellmanFordDotDiagram = graph.GenerateDot();
+            OutputGraphText = graph.GenerateAdjacentList();
             await diagramModule.InvokeVoidAsync("renderDot", bellmanFordDotDiagram, _bellmanFordGraphRenderTo);
         }
     }

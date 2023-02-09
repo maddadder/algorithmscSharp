@@ -13,7 +13,7 @@ namespace Graphs
         public static void RenderLines(string[] lines)
         {
             MathGraph<int> mst = new MathGraph<int>(true);
-            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines);
+            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines);
             MathGraph<int>.renderGraph(graph);
         }
         [TestMethod]
@@ -22,7 +22,7 @@ namespace Graphs
             string sourceFile = "../../../../Data/Maze1.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>(true);
-            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines);
+            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines);
             MathGraph<int>.renderGraph(graph);
         }
         private static int[] RandomList(int length)
@@ -70,7 +70,7 @@ namespace Graphs
             string sourceFile = "../../../../Data/MST3.txt";
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             MathGraph<int> mst = new MathGraph<int>(true);
-            Dictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines);
+            SortedDictionary<int, Lib.Graphs.Vertex<int>> graph = MathGraph<int>.LoadGraph(mst, lines);
             MathGraph<int>.printAdjacencyMatrix(graph);
         }
     }
