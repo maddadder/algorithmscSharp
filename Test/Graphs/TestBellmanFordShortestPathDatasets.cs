@@ -76,7 +76,7 @@ namespace Graphs
 
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, bellmanDist);
-            var bellmanDist2 = graph.BellmanFord(0);
+            var bellmanDist2 = graph.BellmanFord(1);
             var bellmanDist2Sum = bellmanDist2.Item1.Sum(x => x.Value);
             Assert.AreEqual(11, bellmanDist2Sum);
             var graphviz2 = graph.GenerateDot();
