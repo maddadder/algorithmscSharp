@@ -1,13 +1,17 @@
 ﻿@page "/graph"
+@page "/bellmanford"
 @inject IJSRuntime JsRuntime
 
 
-<PageTitle>Graph</PageTitle>
+<PageTitle>Bellman Ford</PageTitle>
 
-<h1>Load Graphs</h1>
-
+<div>For more information about the Bellman-Ford algorithm, click <a href="https://leenet.link/posts/bellman-ford-algorithm">here</a></div>
+<div>&#160;</div>
+<dl>
+<dt>Load Graphs</dt>
+<dd>
 <InputTextArea rows="5" class="form-control" @bind-Value="GraphText" placeholder="insert graph here" />
- <dl>
+ </dd>
   <dt>Nodes</dt>
   <dd> <input type="number" class="form-control" style="max-width:100px;"
         @bind="NodeCount" @bind:event="oninput" step="1" min="3" max="50" /></dd>
@@ -19,18 +23,41 @@
     <button class="btn btn-primary" onclick="@LoagGraph">Load</button>
     <button class="btn btn-primary" onclick="@GenerateGraph">Generate</button>
 </div>
-<div @ref="_inputGraphRenderTo"></div>
+<table>
+    <tr>
+        <td style="widht:10px;">
+            &#160;
+        </td>
+        <td>
+            <div @ref="_inputGraphRenderTo"></div>
+        </td>
+    </tr>
+</table>
+
+
+<div>&#160;</div>
  <dl>
   <dt>Starting Vertex</dt>
   <dd><input type="number" class="form-control" style="max-width:100px;"
         @bind="StartingVertex" @bind:event="oninput" step="1" min="1" max="@NodeCount" /></dd>
 </dl>
 <div>
-    <button class="btn btn-primary" onclick="@BellmanFord">compute shortest paths</button>
+    <button class="btn btn-primary" onclick="@ComputeBellmanFord" disabled="@(inputGraph==null)">compute bellman-ford</button>
 </div>
-<div @ref="_bellmanFordGraphRenderTo"></div>
+<table>
+    <tr>
+        <td style="widht:10px;">
+            &#160;
+        </td>
+        <td>
+            <div @ref="_bellmanFordGraphRenderTo"></div>
+        </td>
+    </tr>
+</table>
+
 <InputTextArea rows="5" class="form-control" @bind-Value="OutputGraphText" placeholder="output graph" />
-@code {
+@code 
+{
     private ElementReference _inputGraphRenderTo;
     private ElementReference _bellmanFordGraphRenderTo; 
     private int NodeCount = 5;
@@ -84,7 +111,7 @@
         GraphText = graph.GenerateAdjacentList();
         return graph;
     }
-    private async Task BellmanFord()
+    private async Task ComputeBellmanFord()
     {
         var diagramModule = await JsRuntime
             .InvokeAsync<IJSObjectReference>("import", "/diagrams.js");
@@ -94,18 +121,23 @@
         {
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, distances_edges.Item2, distances_edges.Item1);
-            var distances_edges2 = graph.BellmanFord(1);
-            if(distances_edges2 != null)
+            if(graph.GetVertices().Count > 0)
             {
                 bellmanFordDotDiagram = graph.GenerateDot();
                 OutputGraphText = graph.GenerateAdjacentList();
                 await diagramModule.InvokeVoidAsync("renderDot", bellmanFordDotDiagram, _bellmanFordGraphRenderTo);
             }
             else{
-                OutputGraphText = "";
+                OutputGraphText = $"There is no path from starting vertex {StartingVertex}";
                 bellmanFordDotDiagram = "digraph {}";
                 await diagramModule.InvokeVoidAsync("renderDot", bellmanFordDotDiagram, _bellmanFordGraphRenderTo);
             }
+        }
+        else
+        {
+                OutputGraphText = "contains negative cycles";
+                bellmanFordDotDiagram = "digraph {}";
+                await diagramModule.InvokeVoidAsync("renderDot", bellmanFordDotDiagram, _bellmanFordGraphRenderTo);
         }
     }
 }

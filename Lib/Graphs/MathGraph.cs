@@ -676,7 +676,6 @@ namespace Lib.Graphs
             }
 
             for (var i = 1; i < adjacencyMatrix.Count; i++) {
-                var array=new SortedDictionary<int,float>();
                 for (var j = 1; j < adjacencyMatrix[i].Count; j++) {
                     if(adjacencyMatrix[i][j] != 0)
                         graph.AddEdge(i, j, adjacencyMatrix[i][j]);
