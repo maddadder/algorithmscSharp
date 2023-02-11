@@ -86,7 +86,7 @@
     private async Task LoagGraph()
     {
         var diagramModule = await JsRuntime
-            .InvokeAsync<IJSObjectReference>("import", "/diagrams.js");
+            .InvokeAsync<IJSObjectReference>("import", "/diagrams.js?version=0.2");
 
             string[] lines = GraphText.Split("\n");
             inputGraph = new Lib.Graphs.MathGraph<int>(true);
@@ -99,7 +99,7 @@
     private async Task GenerateGraph()
     {
         var diagramModule = await JsRuntime
-            .InvokeAsync<IJSObjectReference>("import", "/diagrams.js");
+            .InvokeAsync<IJSObjectReference>("import", "/diagrams.js?version=0.2");
 
             if(EdgeCount <= NodeCount){
                 EdgeCount = NodeCount;
@@ -119,7 +119,7 @@
     private async Task ComputeBellmanFord()
     {
         var diagramModule = await JsRuntime
-            .InvokeAsync<IJSObjectReference>("import", "/diagrams.js");
+            .InvokeAsync<IJSObjectReference>("import", "/diagrams.js?version=0.2");
 
         var distances_edges = inputGraph.BellmanFord(StartingVertex);
         if(distances_edges!=null)
