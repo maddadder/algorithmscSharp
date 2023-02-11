@@ -15,7 +15,7 @@ namespace Graphs
 
             MathGraph<int> graph = new MathGraph<int>(true);
             MathGraph<int>.LoadGraph(graph, lines);
-            var floydWarshalDist = graph.FloydWarshal();
+            var floydWarshalDist = graph.FloydWarshall();
             var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(6, floydWarshalDistSum);
         }
@@ -27,7 +27,7 @@ namespace Graphs
             
             MathGraph<int> graph = new MathGraph<int>(true);
             MathGraph<int>.LoadGraph(graph, lines);
-            var floydWarshalDist = graph.FloydWarshal();
+            var floydWarshalDist = graph.FloydWarshall();
             var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(34, floydWarshalDistSum);
         }
@@ -39,7 +39,7 @@ namespace Graphs
             
             MathGraph<int> graph = new MathGraph<int>(true);
             MathGraph<int>.LoadGraph(graph, lines);
-            var floydWarshalDist = graph.FloydWarshal();
+            var floydWarshalDist = graph.FloydWarshall();
             var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(6, floydWarshalDistSum);
         }
@@ -51,15 +51,16 @@ namespace Graphs
             
             MathGraph<int> graph = new MathGraph<int>(true);
             MathGraph<int>.LoadGraph(graph, lines);
-            var floydWarshalDist = graph.FloydWarshal();
+            var floydWarshalDist = graph.FloydWarshall();
             var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(5, floydWarshalDistSum);
-            var item1 = graph.GetVertices().Where(x => x.Key == 1).First();
-            var item3 = graph.GetVertices().Where(x => x.Key == 3).First();
-            var pathFrom1To3 = MathGraph<int>.FloydWarshalPath(item1.Key,item3.Key, floydWarshalDist.Item1);
-            foreach(var path in pathFrom1To3){
-                Debug.WriteLine(path);
+            var graphs = MathGraph<int>.LoadFloydWarshalPaths(graph, floydWarshalDist.Item1, floydWarshalDist.Item2);
+            foreach(var _graph in graphs.Values)
+            {
+                var graphviz2 = _graph.GenerateDot();
+                Debug.WriteLine(graphviz2);
             }
+            
         }
         [TestMethod]
         public void TestInBellmanFord2()
@@ -69,7 +70,7 @@ namespace Graphs
             
             MathGraph<int> graph = new MathGraph<int>(true);
             MathGraph<int>.LoadGraph(graph, lines);
-            var floydWarshalDist = graph.FloydWarshal();
+            var floydWarshalDist = graph.FloydWarshall();
             Assert.AreEqual(null, floydWarshalDist);
         }
         [TestMethod]

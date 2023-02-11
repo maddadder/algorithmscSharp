@@ -10,6 +10,16 @@ namespace Lib.Graphs
         public Vertex<T> src;
         public Vertex<T> dest;
         public float EdgeWeight = float.MaxValue;
+        public Edge()
+        {
+
+        }
+        public Edge(Vertex<T> src, Vertex<T> dest, float weight)
+        {
+            this.src = src;
+            this.dest = dest;
+            this.EdgeWeight = weight;
+        }
     }
     public class Vertex<T>
     {
@@ -610,7 +620,7 @@ namespace Lib.Graphs
             return mst.GetVertices();
         }
         
-        public static void LoadGraph(MathGraph<T> graph, SortedDictionary<T, Edge<T>> edges, SortedDictionary<T, float> distances) 
+        public static void LoadGraphReverse(MathGraph<T> graph, SortedDictionary<T, Edge<T>> edges, SortedDictionary<T, float> distances) 
         {
             foreach(var edge in edges)
             {
@@ -623,6 +633,7 @@ namespace Lib.Graphs
                 graph.AddEdge(u,v,w,distance);
             }
         }
+        
 
         T Add(T value1, T value2)
         {           

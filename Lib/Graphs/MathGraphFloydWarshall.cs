@@ -11,7 +11,7 @@ namespace Lib.Graphs
 
     public partial class MathGraph<T> where T : IComparable<T>
     {
-        public Tuple<SortedDictionary<T,SortedDictionary<T,T>>,SortedDictionary<T,SortedDictionary<T,float>>> FloydWarshal()
+        public Tuple<SortedDictionary<T,SortedDictionary<T,T>>,SortedDictionary<T,SortedDictionary<T,float>>> FloydWarshall()
         {
             var dist = new SortedDictionary<T, SortedDictionary<T, SortedDictionary<T, float>>>();
             var next = new SortedDictionary<T, SortedDictionary<T, T>>();
@@ -91,7 +91,7 @@ namespace Lib.Graphs
             }
 
             int source = int.Parse(lines[lines.Length-1]);
-            return mst.FloydWarshal();
+            return mst.FloydWarshall();
         }
         public static List<T> FloydWarshalPath(T u, T v, SortedDictionary<T,SortedDictionary<T,T>> next){
             var path = new List<T>();
@@ -103,6 +103,35 @@ namespace Lib.Graphs
                 path.Add(u);
             }
             return path;
+        }
+        public static Dictionary<T, MathGraph<T>> LoadFloydWarshalPaths(MathGraph<T> graph, SortedDictionary<T,SortedDictionary<T,T>> next, SortedDictionary<T,SortedDictionary<T,float>> distances) 
+        {
+            Dictionary<T, MathGraph<T>> graphs = new Dictionary<T, MathGraph<T>>(next.Count);
+            foreach(var u in graph.GetVertices().Keys)
+            {
+                graphs[u] = new MathGraph<T>(true);
+                foreach(var v in graph.GetVertices().Keys)
+                {
+                    if(u.CompareTo(v) != 0)
+                    {
+                        if(!next[u].ContainsKey(v))
+                            continue;
+                        var u2 = u;
+                        while(u2.CompareTo(v) != 0)
+                        {
+                            Tuple<T,T> edge = new Tuple<T, T>(u2,v);
+                            if(graph.EdgeList.ContainsKey(edge))
+                            {
+                                float w = graph.EdgeList[edge];
+                                float distance = distances[u2][v];
+                                graphs[u].AddEdge(u2,v,w,distance);
+                            }
+                            u2 = next[u2][v];
+                        }
+                    }
+                }
+            }
+            return graphs;
         }
     }
 }
