@@ -123,6 +123,12 @@
         if(distances_edges!=null)
         {
             int count = 0;
+            var fullGraph = Lib.Graphs.MathGraph<int>.LoadFloydWarshalGraph(inputGraph, distances_edges.Item1, distances_edges.Item2);
+            if(fullGraph.GetVertices().Count == 0)
+                return;
+            solvedDotDiagram = fullGraph.GenerateDot();
+            await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, memberRef[count]);
+            count += 1;
             var graphs = Lib.Graphs.MathGraph<int>.LoadFloydWarshalPaths(inputGraph, distances_edges.Item1, distances_edges.Item2);
             foreach(var graph in graphs.Values)
             {
@@ -132,6 +138,7 @@
                 await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, memberRef[count]);
                 count += 1;
             }
+            
         }
         else
         {

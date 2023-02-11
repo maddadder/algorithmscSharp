@@ -134,5 +134,32 @@ namespace Lib.Graphs
             }
             return graphs;
         }
+        public static MathGraph<T> LoadFloydWarshalGraph(MathGraph<T> graph, SortedDictionary<T,SortedDictionary<T,T>> next, SortedDictionary<T,SortedDictionary<T,float>> distances) 
+        {
+            MathGraph<T> result = new MathGraph<T>(true);
+            foreach(var u in graph.GetVertices().Keys)
+            {
+                foreach(var v in graph.GetVertices().Keys)
+                {
+                    if(u.CompareTo(v) != 0)
+                    {
+                        var list = FloydWarshalPath(u,v,next);
+                        for (var node = list.First; node != null; node = node.Next)
+                        {
+                            if(node.Next == null)
+                                continue;
+                            Tuple<T,T> edge = new Tuple<T, T>(node.Value,node.Next.Value);
+                            float w = graph.EdgeList[edge];
+                            var distance = distances[node.Value][node.Next.Value];
+                            if(w == distance)
+                            {
+                                result.AddEdge(node.Value,node.Next.Value,w);
+                            }
+                        }
+                    }
+                }
+            }
+            return result;
+        }
     }
 }
