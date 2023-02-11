@@ -93,14 +93,14 @@ namespace Lib.Graphs
             int source = int.Parse(lines[lines.Length-1]);
             return mst.FloydWarshall();
         }
-        public static List<T> FloydWarshalPath(T u, T v, SortedDictionary<T,SortedDictionary<T,T>> next){
-            var path = new List<T>();
-            if(next[u][v] == null)
+        public static LinkedList<T> FloydWarshalPath(T u, T v, SortedDictionary<T,SortedDictionary<T,T>> next){
+            var path = new LinkedList<T>();
+            if(!next[u].ContainsKey(v))
                 return path;
-            path.Add(u);
+            path.AddFirst(u);
             while(u.CompareTo(v) != 0){
                 u = next[u][v];
-                path.Add(u);
+                path.AddLast(u);
             }
             return path;
         }
@@ -114,19 +114,18 @@ namespace Lib.Graphs
                 {
                     if(u.CompareTo(v) != 0)
                     {
-                        if(!next[u].ContainsKey(v))
-                            continue;
-                        var u2 = u;
-                        while(u2.CompareTo(v) != 0)
+                        var list = FloydWarshalPath(u,v,next);
+                        for (var node = list.First; node != null; node = node.Next)
                         {
-                            Tuple<T,T> edge = new Tuple<T, T>(u2,v);
-                            if(graph.EdgeList.ContainsKey(edge))
+                            if(node.Next == null)
+                                continue;
+                            Tuple<T,T> edge = new Tuple<T, T>(node.Value,node.Next.Value);
+                            float w = graph.EdgeList[edge];
+                            var distance = distances[node.Value][node.Next.Value];
+                            if(w == distance)
                             {
-                                float w = graph.EdgeList[edge];
-                                float distance = distances[u2][v];
-                                graphs[u].AddEdge(u2,v,w,distance);
+                                graphs[u].AddEdge(node.Value,node.Next.Value,w);
                             }
-                            u2 = next[u2][v];
                         }
                     }
                 }
