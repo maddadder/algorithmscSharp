@@ -115,6 +115,7 @@ namespace Lib.Graphs
                     if(u.CompareTo(v) != 0)
                     {
                         var list = FloydWarshalPath(u,v,next);
+                        var sum = 0f;
                         for (var node = list.First; node != null; node = node.Next)
                         {
                             if(node.Next == null)
@@ -122,9 +123,10 @@ namespace Lib.Graphs
                             Tuple<T,T> edge = new Tuple<T, T>(node.Value,node.Next.Value);
                             float w = graph.EdgeList[edge];
                             var distance = distances[node.Value][node.Next.Value];
+                            sum+=distance;
                             if(w == distance)
                             {
-                                graphs[u].AddEdge(node.Value,node.Next.Value,w);
+                                graphs[u].AddEdge(node.Value,node.Next.Value,w, sum);
                             }
                         }
                     }
