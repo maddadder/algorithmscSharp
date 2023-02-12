@@ -57,8 +57,10 @@ namespace Graphs
             var graphs = MathGraph<int>.LoadFloydWarshalPaths(graph, floydWarshalDist.Item1, floydWarshalDist.Item2);
             foreach(var _graph in graphs.Values)
             {
-                var graphviz2 = _graph.GenerateDot();
-                Debug.WriteLine(graphviz2);
+                if(_graph.GetVertices().Any()){
+                    var graphviz2 = _graph.GenerateDot();
+                    Debug.WriteLine(graphviz2);
+                }
             }
             
         }

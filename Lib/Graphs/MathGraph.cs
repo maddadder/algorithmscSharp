@@ -41,12 +41,12 @@ namespace Lib.Graphs
     {
         private string GraphName;
 
-        private SortedDictionary<T, Vertex<T>> Vertices;
-        private SortedDictionary<T, T> parent;
-        private SortedDictionary<Tuple<T,T>, float> EdgeList;
-        private SortedDictionary<Tuple<T,T>, float> DistanceList;
-        private SortedDictionary<T, float> ComponentWeights;
-        private SortedDictionary<T, int> Components;
+        private Dictionary<T, Vertex<T>> Vertices;
+        private Dictionary<T, T> parent;
+        private Dictionary<Tuple<T,T>, float> EdgeList;
+        private Dictionary<Tuple<T,T>, float> DistanceList;
+        private Dictionary<T, float> ComponentWeights;
+        private Dictionary<T, int> Components;
         private bool IsDirected {get;set;} = false;
         private int edgeCount;
 
@@ -59,15 +59,15 @@ namespace Lib.Graphs
         private void Initialize(string graphName = "None")
         {
             GraphName = graphName;
-            Vertices = new SortedDictionary<T, Vertex<T>>();
-            ComponentWeights = new SortedDictionary<T, float>();
-            Components = new SortedDictionary<T, int>();
-            parent = new SortedDictionary<T, T>();
-            EdgeList = new SortedDictionary<Tuple<T,T>, float>();
-            DistanceList = new SortedDictionary<Tuple<T,T>, float>();
+            Vertices = new Dictionary<T, Vertex<T>>();
+            ComponentWeights = new Dictionary<T, float>();
+            Components = new Dictionary<T, int>();
+            parent = new Dictionary<T, T>();
+            EdgeList = new Dictionary<Tuple<T,T>, float>();
+            DistanceList = new Dictionary<Tuple<T,T>, float>();
             edgeCount = 0;
         }
-        public SortedDictionary<T, float> GetComponentWeights()
+        public Dictionary<T, float> GetComponentWeights()
         {
             return ComponentWeights;
         }
@@ -76,7 +76,7 @@ namespace Lib.Graphs
             return Vertices.Count;
         }
 
-        public SortedDictionary<T, Vertex<T>> GetVertices(){
+        public Dictionary<T, Vertex<T>> GetVertices(){
             return Vertices;
         }
 
@@ -89,7 +89,7 @@ namespace Lib.Graphs
         {
             return Components.Count;
         }
-        public SortedDictionary<T, int> GetComponents()
+        public Dictionary<T, int> GetComponents()
         {
             return Components;
         }
@@ -259,8 +259,8 @@ namespace Lib.Graphs
             }
 
             List<T> firstPath = new List<T>();
-            SortedDictionary<T, bool> marked = ClearAllVertexMarks();
-            SortedDictionary<T, T> edgeTo = new SortedDictionary<T, T>();
+            Dictionary<T, bool> marked = ClearAllVertexMarks();
+            Dictionary<T, T> edgeTo = new Dictionary<T, T>();
             DepthFirstPathTo(vertex1, vertex2, marked, edgeTo);
 
             if (!marked[vertex1])
@@ -282,8 +282,8 @@ namespace Lib.Graphs
 
         private void DepthFirstPathTo(T srcVertex,
                                       T dstVertex,
-                                      SortedDictionary<T, bool> marked,
-                                      SortedDictionary<T, T> edgeTo)
+                                      Dictionary<T, bool> marked,
+                                      Dictionary<T, T> edgeTo)
         {
             marked[dstVertex] = true;
 
@@ -318,8 +318,8 @@ namespace Lib.Graphs
             }
 
             List<T> shortestPath = new List<T>();
-            SortedDictionary<T, bool> marked = ClearAllVertexMarks();
-            SortedDictionary<T, T> edgeTo = new SortedDictionary<T, T>();
+            Dictionary<T, bool> marked = ClearAllVertexMarks();
+            Dictionary<T, T> edgeTo = new Dictionary<T, T>();
             BreadthFirstPathTo(vertex1, vertex2, marked, edgeTo);
 
             if (!marked[vertex1])
@@ -341,8 +341,8 @@ namespace Lib.Graphs
 
         private void BreadthFirstPathTo(T srcVertex,
                                         T dstVertex,
-                                        SortedDictionary<T, bool> marked,
-                                        SortedDictionary<T, T> edgeTo)
+                                        Dictionary<T, bool> marked,
+                                        Dictionary<T, T> edgeTo)
         {
             Queue<T> searchList = new Queue<T>();
             searchList.Enqueue(dstVertex);
@@ -392,9 +392,9 @@ namespace Lib.Graphs
             }
         }
 
-        private SortedDictionary<T, bool> ClearAllVertexMarks()
+        private Dictionary<T, bool> ClearAllVertexMarks()
         {
-            SortedDictionary<T, bool> marks = new SortedDictionary<T, bool>();
+            Dictionary<T, bool> marks = new Dictionary<T, bool>();
             foreach (T key in Vertices.Keys)
             {
                 marks[key] = false;
@@ -402,18 +402,18 @@ namespace Lib.Graphs
             return marks;
         }
 
-        private SortedDictionary<T, float> SetAllVertexDistances()
+        private Dictionary<T, float> SetAllVertexDistances()
         {
-            SortedDictionary<T, float> marks = new SortedDictionary<T, float>();
+            Dictionary<T, float> marks = new Dictionary<T, float>();
             foreach (T key in Vertices.Keys)
             {
                 marks[key] = float.MaxValue;
             }
             return marks;
         }
-        private SortedDictionary<T, T> SetAllVertexParents()
+        private Dictionary<T, T> SetAllVertexParents()
         {
-            SortedDictionary<T, T> marks = new SortedDictionary<T, T>();
+            Dictionary<T, T> marks = new Dictionary<T, T>();
             foreach (T key in Vertices.Keys)
             {
                 marks[key] = default;
@@ -530,7 +530,7 @@ namespace Lib.Graphs
             }
         }
         
-        public static void renderGraph(SortedDictionary<int, Lib.Graphs.Vertex<int>> graph) 
+        public static void renderGraph(Dictionary<int, Lib.Graphs.Vertex<int>> graph) 
         {
             var len = graph.Max(x => x.Key) + 2;
             Console.WriteLine("");
@@ -560,7 +560,7 @@ namespace Lib.Graphs
                 }
             }
         }
-        public static void printAdjacencyMatrix(SortedDictionary<int, Lib.Graphs.Vertex<int>> graph) 
+        public static void printAdjacencyMatrix(Dictionary<int, Lib.Graphs.Vertex<int>> graph) 
         {
             var len = graph.Max(x => x.Key) + 2;
             Console.WriteLine("");
@@ -606,7 +606,7 @@ namespace Lib.Graphs
             return $"Graph {GraphName}: {Vertices.Count} vertices and {edgeCount} edges";
         }
         
-        public static SortedDictionary<int, Lib.Graphs.Vertex<int>> LoadGraph(MathGraph<int> mst, string[] lines) 
+        public static Dictionary<int, Lib.Graphs.Vertex<int>> LoadGraph(MathGraph<int> mst, string[] lines) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {
@@ -620,7 +620,7 @@ namespace Lib.Graphs
             return mst.GetVertices();
         }
         
-        public static void LoadGraphReverse(MathGraph<T> graph, SortedDictionary<T, Edge<T>> edges, SortedDictionary<T, float> distances) 
+        public static void LoadGraphReverse(MathGraph<T> graph, Dictionary<T, Edge<T>> edges, Dictionary<T, float> distances) 
         {
             foreach(var edge in edges)
             {
@@ -648,11 +648,11 @@ namespace Lib.Graphs
             if (Edges > Nodes * (Nodes - 1)) throw new Exception("Too many edges");
             var random = new Random();
 
-            SortedDictionary<int, SortedDictionary<int, float>> adjacencyMatrix = new SortedDictionary<int, SortedDictionary<int, float>>();
+            Dictionary<int, Dictionary<int, float>> adjacencyMatrix = new Dictionary<int, Dictionary<int, float>>();
             // Gives every cell a value of zero
             for (int x = 1; x <= Nodes; x++)
             {
-                adjacencyMatrix[x] = new SortedDictionary<int, float>();
+                adjacencyMatrix[x] = new Dictionary<int, float>();
                 for (int y = 1; y <= Nodes; y++)
                 {
                     adjacencyMatrix[x][y] = 0;
@@ -697,7 +697,7 @@ namespace Lib.Graphs
         {
             if(this.Vertices.Count == 0)
                 throw new ArgumentException("Vertices.Count == 0");
-            var _verticesIds = new SortedDictionary<T,T>();
+            var _verticesIds = new Dictionary<T,T>();
             var Output = new System.Text.StringBuilder();
             // Build vertex id map
             int i = 0;
@@ -712,9 +712,21 @@ namespace Lib.Graphs
             Output.Append(this.IsDirected ? "digraph " : "graph ");
             Output.Append(this.GraphName);
             Output.Append(" {\n");
-
-            foreach(var vertex in this.Vertices){
-                Output.Append($"{_verticesIds[vertex.Key]}\n");
+            if(!this.Vertices.Any()){
+                Output.Append(" }");
+                return Output.ToString();
+            }
+            var first = this.Vertices.First().Key;
+            foreach(var vertex in this.Vertices)
+            {
+                if(vertex.Key.CompareTo(first)==0)
+                {
+                    Output.Append($"{_verticesIds[vertex.Key]} [color = red]\n");
+                }
+                else{
+                    Output.Append($"{_verticesIds[vertex.Key]}\n");
+                }
+                
             }
 
             if(this.DistanceList.Any())

@@ -11,11 +11,11 @@ namespace Lib.Graphs
 
     public partial class MathGraph<T> where T : IComparable<T>
     {
-        public SortedDictionary<T, float> Dijkstra(T src)
+        public Dictionary<T, float> Dijkstra(T src)
         {
             ComponentWeights = SetAllVertexDistances();
             parent = SetAllVertexParents();
-            SortedDictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
+            Dictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
             ComponentWeights[src] = 0;
             PriorityQueue<T,float> indexNDistance = new PriorityQueue<T,float>();
             indexNDistance.Enqueue(src, 0);
