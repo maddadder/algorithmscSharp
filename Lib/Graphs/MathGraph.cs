@@ -729,20 +729,18 @@ namespace Lib.Graphs
                 
             }
 
-            if(this.DistanceList.Any())
+            
+            foreach(var edge in this.EdgeList)
             {
-                foreach(var edge in this.EdgeList.Zip(DistanceList)){
-                    Output.Append(this.IsDirected
-                    ? $"{_verticesIds[edge.First.Key.Item1]} -> {_verticesIds[edge.First.Key.Item2]} [label=\"{edge.First.Value} ({edge.Second.Value})\"];\n"
-                    : $"{_verticesIds[edge.First.Key.Item1]} -- {_verticesIds[edge.First.Key.Item2]} [label=\"{edge.First.Value} ({edge.Second.Value})\"];\n");
+                var directed = this.IsDirected ? "->" : "--";
+                if(this.DistanceList.ContainsKey(edge.Key))
+                {
+                    var distance = DistanceList[edge.Key];
+                    Output.Append($"{_verticesIds[edge.Key.Item1]} {directed} {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value} ({distance})\"]\n");
                 }
-            }
-            else
-            {
-                foreach(var edge in this.EdgeList){
-                    Output.Append(this.IsDirected
-                    ? $"{_verticesIds[edge.Key.Item1]} -> {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n"
-                    : $"{_verticesIds[edge.Key.Item1]} -- {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n");
+                else
+                {
+                    Output.Append($"{_verticesIds[edge.Key.Item1]} {directed} {_verticesIds[edge.Key.Item2]} [label=\"{edge.Value}\"];\n");
                 }
             }
 
