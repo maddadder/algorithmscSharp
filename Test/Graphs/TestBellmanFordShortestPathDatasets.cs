@@ -21,7 +21,7 @@ namespace Graphs
             Assert.AreNotEqual(float.PositiveInfinity, connectedGraph);
             var data = inputGraph.BellmanFord(1);
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
-            Lib.Graphs.MathGraph<int>.LoadGraphReverse(graph, data.Item2, data.Item1);
+            Lib.Graphs.MathGraph<int>.LoadBellmanFordDistances(graph, data.Item2, data.Item1);
             var diagram = graph.GenerateDot();
         }
         
@@ -75,12 +75,29 @@ namespace Graphs
             Debug.WriteLine(graphviz);
 
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
-            Lib.Graphs.MathGraph<int>.LoadGraphReverse(graph, bellmanDist.Item2, bellmanDist.Item1);
+            Lib.Graphs.MathGraph<int>.LoadBellmanFordDistances(graph, bellmanDist.Item2, bellmanDist.Item1);
             var bellmanDist2 = graph.BellmanFord(1);
             var bellmanDist2Sum = bellmanDist2.Item1.Sum(x => x.Value);
             Assert.AreEqual(5, bellmanDist2Sum);
             var graphviz2 = graph.GenerateDot();
             Debug.WriteLine(graphviz2);
+
+            var graphs = Lib.Graphs.MathGraph<int>.LoadBellmanFordPathsFromGraph(graph);
+            foreach(var _graph in graphs.Values)
+            {
+                if(_graph.GetVertices().Any()){
+                    graphviz2 = _graph.GenerateDot();
+                    Debug.WriteLine(graphviz2);
+                }
+            }
+            graphs = Lib.Graphs.MathGraph<int>.LoadJohnsonPathsFromGraph(graph);
+            foreach(var _graph in graphs.Values)
+            {
+                if(_graph.GetVertices().Any()){
+                    graphviz2 = _graph.GenerateDot();
+                    Debug.WriteLine(graphviz2);
+                }
+            }
             
         }
         [TestMethod]

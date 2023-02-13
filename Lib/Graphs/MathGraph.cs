@@ -132,7 +132,36 @@ namespace Lib.Graphs
             Components.Add(vertex, 1);
             return;
         }
-
+        public void RemoveVertex(T u)
+        {
+            var vertex = this.Vertices[u];
+            var removeList = new List<Edge<T>>();
+            foreach(var edge in vertex.OutEdge)
+            {
+                removeList.Add(edge.Key);
+            }
+            
+            foreach(var edge in removeList)
+            {
+                this.EdgeList.Remove(new Tuple<T, T>(edge.src.Component, edge.dest.Component));
+                vertex.OutEdge.Remove(edge);
+                var inEdgeRemoveList = new List<Edge<T>>();
+            }
+            this.Vertices.Remove(u);
+            foreach(var node in this.Vertices)
+            {
+                var inEdgeRemoveList = node.Value.InEdge
+                    .Where(x => x.Key.dest.Component.CompareTo(u) == 0)
+                    .Select(x => x.Key).ToList();
+                foreach(var row in inEdgeRemoveList){
+                    node.Value.InEdge.Remove(row);
+                }
+            }
+            if(!IsDirected)
+            {
+                throw new NotSupportedException();
+            }
+        }
         public void AddEdge(T vertex1, T vertex2, float weight = 1, float? distance = null)
         {
             AddEdge(new Vertex<T>(vertex1), new Vertex<T>(vertex2), weight, distance);
@@ -619,21 +648,6 @@ namespace Lib.Graphs
 
             return mst.GetVertices();
         }
-        
-        public static void LoadGraphReverse(MathGraph<T> graph, Dictionary<T, Edge<T>> edges, Dictionary<T, float> distances) 
-        {
-            foreach(var edge in edges)
-            {
-                if(edge.Value == null)
-                    continue;
-                T u = edge.Value.dest.Component;
-                T v = edge.Key;
-                float w = edge.Value.EdgeWeight;
-                float distance = distances[v];
-                graph.AddEdge(u,v,w,distance);
-            }
-        }
-        
 
         T Add(T value1, T value2)
         {           

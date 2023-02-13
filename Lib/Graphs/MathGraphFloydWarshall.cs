@@ -104,56 +104,7 @@ namespace Lib.Graphs
             }
             return path;
         }
-        public static SortedDictionary<T, MathGraph<T>> LoadFloydWarshalPaths(MathGraph<T> graph, Dictionary<T,Dictionary<T,T>> next, Dictionary<T,Dictionary<T,float>> distances) 
-        {
-            SortedDictionary<T, MathGraph<T>> graphs = new SortedDictionary<T, MathGraph<T>>();
-            var range = next.Keys.OrderBy(x => x).ToList();
-            foreach(var u in range)
-            {
-                graphs[u] = new MathGraph<T>(true);
-                graphs[u].AddVertex(u);
-                foreach(var v in range)
-                {
-                    if(u.CompareTo(v) != 0)
-                    {
-                        var start = u;
-                        var end = v;
-                        var list = FloydWarshalPath(start,end, next);
-                        var sum = 0f;
-                        for (var node = list.First; node != null; node = node.Next)
-                        {
-                            if(node.Next == null)
-                                continue;
-                            Tuple<T,T> edge = new Tuple<T, T>(node.Value,node.Next.Value);
-                            float w = graph.EdgeList[edge];
-                            var distance = distances[node.Value][node.Next.Value];
-                            sum+=distance;
-                            if(w == distance)
-                            {
-                                graphs[u].AddEdge(node.Value,node.Next.Value,w, sum);
-                            }
-                        }
-                        start = v;
-                        end = u;
-                        list = FloydWarshalPath(start,end, next);
-                        for (var node = list.First; node != null; node = node.Next)
-                        {
-                            if(node.Next == null)
-                                continue;
-                            Tuple<T,T> edge = new Tuple<T, T>(node.Value,node.Next.Value);
-                            float w = graph.EdgeList[edge];
-                            var distance = distances[node.Value][node.Next.Value];
-                            sum+=distance;
-                            if(w == distance)
-                            {
-                                graphs[u].AddEdge(node.Value,node.Next.Value,w, sum);
-                            }
-                        }
-                    }
-                }
-            }
-            return graphs;
-        }
+        
         public static MathGraph<T> LoadFloydWarshalGraph(MathGraph<T> graph, Dictionary<T,Dictionary<T,T>> next, Dictionary<T,Dictionary<T,float>> distances) 
         {
             MathGraph<T> result = new MathGraph<T>(true);

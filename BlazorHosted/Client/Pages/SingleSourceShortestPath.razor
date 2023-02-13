@@ -1,10 +1,10 @@
-﻿@page "/floydwarshall"
+﻿@page "/singlesourceshortestpath"
 @inject IJSRuntime JsRuntime
 
 
-<PageTitle>Floyd-Warshall</PageTitle>
+<PageTitle>Single Source Shortest Path</PageTitle>
 
-<div>For more information about the Floyd-Warshall algorithm, click <a href="https://leenet.link/posts/floyd-warshall-algorithm">here</a></div>
+<div>For more information about the Bellman-Ford algorithm, click <a href="https://leenet.link/posts/bellman-ford-algorithm">here</a></div>
 <div>&#160;</div>
 <dl>
 <dt>Load Graph</dt>
@@ -18,7 +18,7 @@
 </dd>
   <dt>Nodes</dt>
   <dd> <input type="number" class="form-control" style="max-width:100px;"
-        @bind="NodeCount" @bind:event="oninput" step="1" min="3" max="@MaxGraphs" /></dd>
+        @bind="NodeCount" @bind:event="oninput" step="1" min="3" max="50" /></dd>
   <dt>Edges</dt>
   <dd><input type="number" class="form-control" style="max-width:100px;"
         @bind="EdgeCount" @bind:event="oninput" step="1" min="@(NodeCount)" /></dd>
@@ -29,7 +29,7 @@
 </div>
 <table>
     <tr>
-        <td style="background-color:gray">
+        <td style="background-color:gray;">
             &#160;&#160;&#160;
         </td>
         <td>
@@ -40,8 +40,13 @@
 
 
 <div>&#160;</div>
+ <dl>
+  <dt>Starting Vertex</dt>
+  <dd><input type="number" class="form-control" style="max-width:100px;"
+        @bind="StartingVertex" @bind:event="oninput" step="1" min="1" max="@NodeCount" /></dd>
+</dl>
 <div>
-    <button class="btn btn-primary" onclick="@ComputeFloydWarshall" disabled="@(inputGraph==null)">compute floyd-warshall</button>
+    <button class="btn btn-primary" onclick="@ComputeBellmanFord" disabled="@(inputGraph==null)">compute bellman-ford</button>
 </div>
 <table>
     <tr>
@@ -49,24 +54,19 @@
             &#160;&#160;&#160;
         </td>
         <td>
-            @for(var i = 0; i < memberRef.Count(); i++)
-            {
-                var i2 = i; // i2 is required
-                <div id="@i" @ref="memberRef[i2]"></div>
-            }
+            <div @ref="_bellmanFordGraphRenderTo"></div>
         </td>
     </tr>
 </table>
 
-
+<InputTextArea rows="5" class="form-control" @bind-Value="OutputGraphText" placeholder="output graph" />
 @code 
 {
-    private const int MaxGraphs = 50;
     private ElementReference _inputGraphRenderTo;
-    private ElementReference[] memberRef { get; set; } = new ElementReference[MaxGraphs];
-
+    private ElementReference _bellmanFordGraphRenderTo; 
     private int NodeCount = 5;
     private int EdgeCount = 8;
+    private int StartingVertex = 1;
     private string GraphText 
 = @"5 8
 1 2 2
@@ -78,6 +78,7 @@
 4 5 2
 5 3 -1
 1";
+    private string OutputGraphText = "";
     private string inputDotDiagram = "";
     private string solvedDotDiagram = "";
     private Lib.Graphs.MathGraph<int> inputGraph;
@@ -114,40 +115,33 @@
         GraphText = graph.GenerateAdjacentList();
         return graph;
     }
-    private async Task ComputeFloydWarshall()
+    private async Task ComputeBellmanFord()
     {
         var diagramModule = await JsRuntime
             .InvokeAsync<IJSObjectReference>("import", "/diagrams.js?version=0.2");
-        
-        for(var i=0;i<memberRef.Count();i++)
-        {
-            await diagramModule.InvokeVoidAsync("clearDot", memberRef[i]);
-        }
-        var distances_edges = inputGraph.FloydWarshall();
+
+        var distances_edges = inputGraph.BellmanFord(StartingVertex);
         if(distances_edges!=null)
         {
-            int count = 0;
-            var fullGraph = Lib.Graphs.MathGraph<int>.LoadFloydWarshalGraph(inputGraph, distances_edges.Item1, distances_edges.Item2);
-            if(fullGraph.GetVertices().Count == 0)
-                return;
-            solvedDotDiagram = fullGraph.GenerateDot();
-            await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, memberRef[count]);
-            count += 1;
-            var graphs = Lib.Graphs.MathGraph<int>.LoadFloydWarshalPaths(inputGraph, distances_edges.Item1, distances_edges.Item2);
-            foreach(var graph in graphs.Values)
+            Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadBellmanFordDistances(graph, distances_edges.Item2, distances_edges.Item1);
+            if(graph.GetVertices().Count > 0)
             {
-                if(graph.GetVertices().Count == 0)
-                    continue;
                 solvedDotDiagram = graph.GenerateDot();
-                await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, memberRef[count]);
-                count += 1;
+                OutputGraphText = graph.GenerateAdjacentList();
+                await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, _bellmanFordGraphRenderTo);
             }
-            
+            else{
+                OutputGraphText = $"There is no path from starting vertex {StartingVertex}";
+                solvedDotDiagram = "digraph {}";
+                await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, _bellmanFordGraphRenderTo);
+            }
         }
         else
         {
-            solvedDotDiagram = "digraph {}";
-            await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, memberRef[0]);
+                OutputGraphText = "contains negative cycles";
+                solvedDotDiagram = "digraph {}";
+                await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, _bellmanFordGraphRenderTo);
         }
     }
 }

@@ -77,7 +77,42 @@ namespace Lib.Graphs
             int source = int.Parse(lines[lines.Length-1]);
             return mst.BellmanFord(source);
         }
-        
-        
+        public static SortedDictionary<T, MathGraph<T>> LoadBellmanFordPathsFromGraph(MathGraph<T> graph) 
+        {
+            SortedDictionary<T, MathGraph<T>> graphs = new SortedDictionary<T, MathGraph<T>>();
+            var range = graph.GetVertices().Keys.OrderBy(x => x);
+            foreach(var u in range)
+            {
+                graphs[u] = new MathGraph<T>(true);
+                graphs[u].AddVertex(u);
+                var paths = graph.BellmanFord(u);
+                MathGraph<T>.LoadBellmanFordDistances(graphs[u], paths.Item2, paths.Item1);
+            }
+            return graphs;
+        }
+        public static void LoadBellmanFordDistances(MathGraph<T> graph, Dictionary<T, Edge<T>> edges, Dictionary<T, float> distances) 
+        {
+            foreach(var edge in edges)
+            {
+                if(edge.Value == null)
+                    continue;
+                T u = edge.Value.dest.Component;
+                T v = edge.Key;
+                float w = edge.Value.EdgeWeight;
+                float distance = distances[v];
+                graph.AddEdge(u,v,w,distance);
+            }
+        }
+        public static void LoadBellmanFordWeights(MathGraph<T> graph, Dictionary<Tuple<T, T>, float> edgeList, Dictionary<T, float> distances) 
+        {
+            foreach(var edge in edgeList)
+            {
+                T u = edge.Key.Item1;
+                T v = edge.Key.Item2;
+                float w = edge.Value;
+                float distance = edge.Value + distances[u] - distances[v];
+                graph.AddEdge(u,v,distance);
+            }
+        }
     }
 }

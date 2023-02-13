@@ -54,14 +54,6 @@ namespace Graphs
             var floydWarshalDist = graph.FloydWarshall();
             var floydWarshalDistSum = floydWarshalDist.Item2[1].Sum(x => x.Value);
             Assert.AreEqual(5, floydWarshalDistSum);
-            var graphs = MathGraph<int>.LoadFloydWarshalPaths(graph, floydWarshalDist.Item1, floydWarshalDist.Item2);
-            foreach(var _graph in graphs.Values)
-            {
-                if(_graph.GetVertices().Any()){
-                    var graphviz2 = _graph.GenerateDot();
-                    Debug.WriteLine(graphviz2);
-                }
-            }
             
         }
         [TestMethod]
