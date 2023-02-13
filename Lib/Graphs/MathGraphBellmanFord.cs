@@ -103,16 +103,6 @@ namespace Lib.Graphs
                 graph.AddEdge(u,v,w,distance);
             }
         }
-        public static void LoadBellmanFordWeights(MathGraph<T> graph, Dictionary<Tuple<T, T>, float> edgeList, Dictionary<T, float> distances) 
-        {
-            foreach(var edge in edgeList)
-            {
-                T u = edge.Key.Item1;
-                T v = edge.Key.Item2;
-                float w = edge.Value;
-                float distance = edge.Value + distances[u] - distances[v];
-                graph.AddEdge(u,v,distance);
-            }
-        }
+        
     }
 }

@@ -90,7 +90,7 @@ namespace Graphs
                     Debug.WriteLine(graphviz2);
                 }
             }
-            graphs = Lib.Graphs.MathGraph<int>.LoadJohnsonPathsFromGraph(graph);
+            graphs = Lib.Graphs.MathGraph<int>.LoadJohnsonPathsFromGraph(inputGraph);
             foreach(var _graph in graphs.Values)
             {
                 if(_graph.GetVertices().Any()){
