@@ -96,7 +96,7 @@ namespace Lib.Graphs
                     var hu = distances[edge.Key.Item1];
                     var hv = distances[edge.Key.Item2];
                     //A[u][v] - h[u] + h[v]
-                    var rollingSum = minDistance - hu + hv;
+                    var rollingSum = minDistance + hv;
 
                     //reconstruct original weight
                     var originalWeight = modifiedWeight - hu + hv;
