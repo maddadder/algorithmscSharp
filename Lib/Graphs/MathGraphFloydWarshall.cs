@@ -15,38 +15,33 @@ namespace Lib.Graphs
         {
             var dist = new Dictionary<T, Dictionary<T, Dictionary<T, float>>>();
             var next = new Dictionary<T, Dictionary<T, T>>();
-            var first = Vertices.First();
-            dist[first.Key] = new Dictionary<T, Dictionary<T, float>>();
+            T first = default;
+            dist[first] = new Dictionary<T, Dictionary<T, float>>();
             foreach (var v in Vertices.Keys)
             {
-                dist[first.Key][v] = new Dictionary<T, float>();
+                dist[first][v] = new Dictionary<T, float>();
                 next[v] = new Dictionary<T, T>();
                 foreach (var w in Vertices.Keys)
                 {
                     var edge = new Tuple<T,T>(v,w);
                     if(v.CompareTo(w) == 0){
-                        dist[first.Key][v][w] = 0;
+                        dist[first][v][w] = 0;
                         next[v][w] = w;
                     }
                     else if(EdgeList.ContainsKey(edge))
                     {
-                        dist[first.Key][v][w] = EdgeList[edge];
+                        dist[first][v][w] = EdgeList[edge];
                         next[v][w] = w;
                     }
                     else
                     {
-                        dist[first.Key][v][w] = float.MaxValue;
+                        dist[first][v][w] = float.MaxValue;
                     }
                 }
             }
-            var previousK = first.Key;
+            var previousK = first;
             foreach (var k in Vertices.Keys)
             {
-                if(k.CompareTo(first.Key) == 0)
-                {
-                    previousK = k;
-                    continue;
-                }
                 dist[k] = new Dictionary<T, Dictionary<T, float>>();
                 foreach (var v in Vertices.Keys)
                 {
@@ -104,7 +99,36 @@ namespace Lib.Graphs
             }
             return path;
         }
-        
+        public static SortedDictionary<T, MathGraph<T>> LoadFloydWarshalPaths(MathGraph<T> graph, Dictionary<T,Dictionary<T,T>> next, Dictionary<T,Dictionary<T,float>> distances) 
+        {
+            SortedDictionary<T, MathGraph<T>> graphs = new SortedDictionary<T, MathGraph<T>>();
+            foreach(var u in graph.GetVertices().Keys)
+            {
+                graphs[u] = new MathGraph<T>(true);
+                foreach(var v in graph.GetVertices().Keys)
+                {
+                    if(u.CompareTo(v) != 0)
+                    {
+                        var list = FloydWarshalPath(u,v,next);
+                        var sum = 0f;
+                        for (var node = list.First; node != null; node = node.Next)
+                        {
+                            if(node.Next == null)
+                                continue;
+                            Tuple<T,T> edge = new Tuple<T, T>(node.Value,node.Next.Value);
+                            float w = graph.EdgeList[edge];
+                            var distance = distances[node.Value][node.Next.Value];
+                            sum+=distance;
+                            if(w == distance)
+                            {
+                                graphs[u].AddEdge(node.Value,node.Next.Value,w, sum);
+                            }
+                        }
+                    }
+                }
+            }
+            return graphs;
+        }
         public static MathGraph<T> LoadFloydWarshalGraph(MathGraph<T> graph, Dictionary<T,Dictionary<T,T>> next, Dictionary<T,Dictionary<T,float>> distances) 
         {
             MathGraph<T> result = new MathGraph<T>(true);

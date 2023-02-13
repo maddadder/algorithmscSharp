@@ -30,9 +30,12 @@ namespace Graphs
             Debug.WriteLine(inputGraph.GenerateAdjacentList());
             var floyd = inputGraph.FloydWarshall();
             var johnson = inputGraph.JohnsonAlgorithm();
-            foreach(var u in inputGraph.GetVertices().Keys){
+            foreach(var u in inputGraph.GetVertices().Keys)
+            {
+                var bf = inputGraph.BellmanFord(u);
                 foreach(var v in inputGraph.GetVertices().Keys)
                 {
+                    Assert.AreEqual(bf.Item1[v],johnson[u][v]);
                     Assert.AreEqual(floyd.Item2[u][v], johnson[u][v]);
                 }
             }
@@ -47,10 +50,14 @@ namespace Graphs
             Debug.WriteLine(inputGraph.GenerateAdjacentList());
             var floyd = inputGraph.FloydWarshall();
             var johnson = inputGraph.JohnsonAlgorithm();
-            foreach(var u in inputGraph.GetVertices().Keys){
+            foreach(var u in inputGraph.GetVertices().Keys)
+            {
+                var bf = inputGraph.BellmanFord(u);
                 foreach(var v in inputGraph.GetVertices().Keys)
                 {
+                    Assert.AreEqual(bf.Item1[v],johnson[u][v]);
                     Assert.AreEqual(johnson[u][v], floyd.Item2[u][v]);
+                    
                 }
             }
         }
