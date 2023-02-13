@@ -125,11 +125,10 @@
         {
             await diagramModule.InvokeVoidAsync("clearDot", memberRef[i]);
         }
-        var distances_edges = inputGraph.FloydWarshall();
-        if(distances_edges!=null)
+        var graphs = Lib.Graphs.MathGraph<int>.LoadBellmanFordPathsFromGraph(inputGraph);
+        if(graphs!=null)
         {
             int count = 0;
-            var graphs = Lib.Graphs.MathGraph<int>.LoadBellmanFordPathsFromGraph(inputGraph);
             foreach(var graph in graphs.Values)
             {
                 if(graph.GetVertices().Count == 0)
@@ -139,11 +138,6 @@
                 count += 1;
             }
             
-        }
-        else
-        {
-            solvedDotDiagram = "digraph {}";
-            await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, memberRef[0]);
         }
     }
     private async Task SolveViaJohnson()
@@ -155,15 +149,18 @@
         {
             await diagramModule.InvokeVoidAsync("clearDot", memberRef[i]);
         }
-        int count = 0;
         var graphs = Lib.Graphs.MathGraph<int>.LoadJohnsonPathsFromGraph(inputGraph);
-        foreach(var graph in graphs.Values)
+        if(graphs!=null)
         {
-            if(graph.GetVertices().Count == 0)
-                continue;
-            solvedDotDiagram = graph.GenerateDot();
-            await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, memberRef[count]);
-            count += 1;
+            int count = 0;
+            foreach(var graph in graphs.Values)
+            {
+                if(graph.GetVertices().Count == 0)
+                    continue;
+                solvedDotDiagram = graph.GenerateDot();
+                await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, memberRef[count]);
+                count += 1;
+            }
         }
     }
     private async Task SolveViaFloydWarshall()
@@ -190,11 +187,6 @@
                 await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, memberRef[count]);
                 count += 1;
             }
-        }
-        else
-        {
-            solvedDotDiagram = "digraph {}";
-            await diagramModule.InvokeVoidAsync("renderDot", solvedDotDiagram, memberRef[0]);
         }
     }
 }

@@ -24,6 +24,9 @@ namespace Lib.Graphs
                 graphClone.AddEdge(temp, v, 0);
             }
             var bf = graphClone.BellmanFord(temp);
+            //contains negative cycle
+            if(bf == null)
+                return null;
             var distances = bf.Item1;
             var predecessor = bf.Item2;
             MathGraph<T> modifiedWeightsGraph = new MathGraph<T>(true);
@@ -70,6 +73,9 @@ namespace Lib.Graphs
                 graphClone.AddEdge(temp, v, 0);
             }
             var bf = graphClone.BellmanFord(temp);
+            //contains negative cycle
+            if(bf == null)
+                return null;
             var distances = bf.Item1;
             var predecessor = bf.Item2;
             MathGraph<T> modifiedWeightsGraph = new MathGraph<T>(true);

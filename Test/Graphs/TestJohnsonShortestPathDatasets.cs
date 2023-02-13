@@ -68,19 +68,29 @@ namespace Graphs
             string[] lines = System.IO.File.ReadAllLines(sourceFile);
             Lib.Graphs.MathGraph<int> inputGraph = new Lib.Graphs.MathGraph<int>(true);
             Lib.Graphs.MathGraph<int>.LoadGraph(inputGraph, lines);
-
+            var johnson = Lib.Graphs.MathGraph<int>.LoadJohnsonPathsFromGraph(inputGraph);
             var bf = inputGraph.BellmanFord(3);
             var bfSum = bf.Item1.Select(x => x.Value).Sum();
             var dijkstra = inputGraph.Dijkstra(3);
             var dijkstraSum = dijkstra.Select(x => x.Value).Sum();
             Assert.AreEqual(bfSum, dijkstraSum);
-            var johnson = Lib.Graphs.MathGraph<int>.LoadJohnsonPathsFromGraph(inputGraph);
+            
             var jonhsonBF = johnson[1].BellmanFord(3);
             var jonhsonBFSum = jonhsonBF.Item1.Select(x => x.Value).Sum();
             Debug.WriteLine(bfSum);
             Assert.AreEqual(bfSum, jonhsonBFSum);
         }
-        
+        [TestMethod]
+        public void TestBellmanFord2()
+        {
+            string sourceFile = "../../../../Data/BellmanFord2.txt";
+            string[] lines = System.IO.File.ReadAllLines(sourceFile);
+            Lib.Graphs.MathGraph<int> inputGraph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.LoadGraph(inputGraph, lines);
+            var johnson = Lib.Graphs.MathGraph<int>.LoadJohnsonPathsFromGraph(inputGraph);
+            Assert.IsNull(johnson);
+            
+        }
         
     }
 }

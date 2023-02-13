@@ -86,6 +86,8 @@ namespace Lib.Graphs
                 graphs[u] = new MathGraph<T>(true);
                 graphs[u].AddVertex(u);
                 var paths = graph.BellmanFord(u);
+                if(paths == null)
+                    return null;
                 MathGraph<T>.LoadBellmanFordDistances(graphs[u], paths.Item2, paths.Item1);
             }
             return graphs;
