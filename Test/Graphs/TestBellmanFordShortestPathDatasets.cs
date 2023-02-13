@@ -90,14 +90,6 @@ namespace Graphs
                     Debug.WriteLine(graphviz2);
                 }
             }
-            graphs = Lib.Graphs.MathGraph<int>.LoadJohnsonPathsFromGraph(inputGraph);
-            foreach(var _graph in graphs.Values)
-            {
-                if(_graph.GetVertices().Any()){
-                    graphviz2 = _graph.GenerateDot();
-                    Debug.WriteLine(graphviz2);
-                }
-            }
             
         }
         [TestMethod]

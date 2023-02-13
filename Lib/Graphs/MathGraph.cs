@@ -589,10 +589,11 @@ namespace Lib.Graphs
                 }
             }
         }
-        public static void printAdjacencyMatrix(Dictionary<int, Lib.Graphs.Vertex<int>> graph) 
+        public static string printAdjacencyMatrix(Dictionary<int, Lib.Graphs.Vertex<int>> graph) 
         {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
             var len = graph.Max(x => x.Key) + 2;
-            Console.WriteLine("");
+            sb.Append("\n");
             for(var i = 0;i<len;i++)
             {
                 if(graph.ContainsKey(i))
@@ -603,32 +604,34 @@ namespace Lib.Graphs
                         {
                             var edge = graph[i].OutEdge.Select(edge => edge.Key).First(x => x.dest.Component == j);
                             if(j == len - 1)
-                                Console.Write($"{edge.EdgeWeight}");
+                                sb.Append($"{edge.EdgeWeight}");
                             else
-                                Console.Write($"{edge.EdgeWeight},");
+                                sb.Append($"{edge.EdgeWeight},");
                         }
                         else
                         {
                             if(j == len - 1)
-                                Console.Write($"0");
+                                sb.Append($"0");
                             else
-                                Console.Write($"0,");
+                                sb.Append($"0,");
                         }
                     }
-                    Console.WriteLine("");
+                    sb.Append("\n");
                 }
                 else
                 {
                     for(var j = 0;j<len;j++)
                     {
                         if(j == len - 1)
-                            Console.Write($"0");
+                            sb.Append($"0");
                         else
-                            Console.Write($"0,");
+                            sb.Append($"0,");
                     }
-                    Console.WriteLine("");
+                    sb.Append("\n");
                 }
             }
+            Console.WriteLine(sb.ToString());
+            return sb.ToString();
         }
         public override string ToString()
         {
