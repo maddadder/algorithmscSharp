@@ -6,6 +6,34 @@ namespace Graphs
     [TestClass]
     public class TestDijkstraShortestPathDatasets
     {
+        [TestMethod]
+        public void TestRandomGraph()
+        {
+            var inputGraph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.GenerateGraph(inputGraph, 5, 8, 0);
+            var bf = inputGraph.BellmanFord(1);
+            var bfSum = bf.Item1.Select(x => x.Value).Sum();
+            var dijkstra = inputGraph.Dijkstra(1);
+            var dijkstraSum = dijkstra.Select(x => x.Value).Sum();
+            Assert.AreEqual(bfSum, dijkstraSum);
+        }
+
+        [TestMethod]
+        public void TestRandomGraphWithJohnson()
+        {
+            var inputGraph = new Lib.Graphs.MathGraph<int>(true);
+            Lib.Graphs.MathGraph<int>.GenerateGraph(inputGraph, 5, 8, 0);
+            var bf = inputGraph.BellmanFord(1);
+            var bfSum = bf.Item1.Select(x => x.Value).Sum();
+            var dijkstra = inputGraph.Dijkstra(1);
+            var dijkstraSum = dijkstra.Select(x => x.Value).Sum();
+            Assert.AreEqual(bfSum, dijkstraSum);
+            var johnson = Lib.Graphs.MathGraph<int>.LoadJohnsonPathsFromGraph(inputGraph);
+            var jonhsonBF = johnson[1].BellmanFord(1);
+            var jonhsonBFSum = jonhsonBF.Item1.Select(x => x.Value).Sum();
+            Debug.WriteLine(bfSum);
+            Assert.AreEqual(bfSum, jonhsonBFSum);
+        }
         
         [TestMethod]
         public void TestIn1()
@@ -43,6 +71,7 @@ namespace Graphs
             var dijkstraDistSum = dijkstraDist.Sum(x => x.Value);
             Assert.AreEqual(6, dijkstraDistSum);
         }
+
         
     }
 }

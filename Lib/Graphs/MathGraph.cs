@@ -656,7 +656,7 @@ namespace Lib.Graphs
             return (a + b);
         }
 
-        public void GenerateGraph(int Nodes, int Edges, MathGraph<int> graph)
+        public static void GenerateGraph(MathGraph<int> graph, int Nodes, int Edges, int MinWeight)
         {
             if (Edges < Nodes - 1) throw new Exception("Too few edges");
             if (Edges > Nodes * (Nodes - 1)) throw new Exception("Too many edges");
@@ -679,7 +679,7 @@ namespace Lib.Graphs
             {
                 // produce edge between rnd(0, amountofnodes) to new node
                 int fromVertex = random.Next(1, i);
-                int weight = random.Next(-3, 10);
+                int weight = random.Next(MinWeight, 10);
 
                 adjacencyMatrix[i][fromVertex] = weight;
                 placedEdges++;
@@ -688,7 +688,7 @@ namespace Lib.Graphs
             while (placedEdges < Edges)
             {
                 int fromVertex = random.Next(1, Nodes);
-                int weight = random.Next(-3, 10);
+                int weight = random.Next(MinWeight, 10);
                 int targetVertex = random.Next(1, Nodes);
                 while (targetVertex == fromVertex || adjacencyMatrix[targetVertex][fromVertex] != 0) //|| adjacencyMatrix[fromVertex, targetVertex] != 0)// tredje condition tar bort parallella kanter
                 {

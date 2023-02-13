@@ -13,7 +13,7 @@ namespace Graphs
             Lib.Graphs.MathGraph<int> inputGraph = new Lib.Graphs.MathGraph<int>(true);
             while(connectedGraph == float.PositiveInfinity){
                 inputGraph = new Lib.Graphs.MathGraph<int>(true);
-                inputGraph.GenerateGraph(5, 8, inputGraph);
+                Lib.Graphs.MathGraph<int>.GenerateGraph(inputGraph, 5, 8, -3);
                 var bellmanDist = inputGraph.BellmanFord(1);
                 if(bellmanDist != null)
                     connectedGraph = bellmanDist.Item1.Sum(x => x.Value);

@@ -111,7 +111,7 @@
     }
     public Lib.Graphs.MathGraph<int> GenerateRandomGraph(int Nodes, int Edges){
         var graph = new Lib.Graphs.MathGraph<int>(true);
-        graph.GenerateGraph(Nodes, Edges, graph);
+        Lib.Graphs.MathGraph<int>.GenerateGraph(graph, Nodes, Edges, -3);
         GraphText = graph.GenerateAdjacentList();
         return graph;
     }

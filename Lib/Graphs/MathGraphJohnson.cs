@@ -39,28 +39,33 @@ namespace Lib.Graphs
             var bf = graphClone.BellmanFord(temp);
             var distances = bf.Item1;
             var predecessor = bf.Item2;
-            MathGraph<T> bfGraphClone = new MathGraph<T>(true);
-            MathGraph<T>.LoadBellmanFordWeights(bfGraphClone, graphClone.EdgeList, distances);
+            MathGraph<T> modifiedWeightsGraph = new MathGraph<T>(true);
+            MathGraph<T>.LoadBellmanFordWeights(modifiedWeightsGraph, graphClone.EdgeList, distances);
             
-            bfGraphClone.RemoveVertex(temp);
+            modifiedWeightsGraph.RemoveVertex(temp);
             //graphs[default] = bfGraphClone;
             
-            foreach(var u in bfGraphClone.GetVertices().Keys.OrderBy(x => x))
+            foreach(var u in modifiedWeightsGraph.GetVertices().Keys.OrderBy(x => x))
             {
                 graphs[u] = new MathGraph<T>(true);
                 graphs[u].AddVertex(u);
-                var dijkstraWeights = bfGraphClone.Dijkstra(u);
-                foreach(var zipped in bfGraphClone.EdgeList.Zip(graph.EdgeList))
+                var dijkstraWeights = modifiedWeightsGraph.Dijkstra(u);
+                foreach(var edge in modifiedWeightsGraph.EdgeList)
                 {
-                    var edge = zipped.First;
-                    var originalEdge = zipped.Second;
                     var distance = dijkstraWeights[edge.Key.Item2];
-                    var originalWeight = originalEdge.Value;
+                    var originalWeight = edge.Value;
                     var hu = distances[edge.Key.Item1];
                     var hv = distances[edge.Key.Item2];
+
+                    // rolling sum
                     var sum = distance + hv;
-                    if(sum != float.MaxValue){
-                        graphs[u].AddEdge(edge.Key.Item1, edge.Key.Item2, originalWeight, sum);
+
+                    //reconstruct original weight
+                    var weight = originalWeight - hu + hv;
+
+                    if(sum != float.MaxValue)
+                    {
+                        graphs[u].AddEdge(edge.Key.Item1, edge.Key.Item2, weight, sum);
                     }
                 }
             }
