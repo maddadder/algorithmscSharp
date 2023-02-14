@@ -37,7 +37,8 @@ namespace Lib.Graphs
             Dictionary<T, Dictionary<T, float>> A = new Dictionary<T, Dictionary<T, float>>();
             foreach(var v in modifiedWeightsGraph.GetVertices().Keys)
             {
-                A[v] = modifiedWeightsGraph.Dijkstra(v);
+                var dijkstra = modifiedWeightsGraph.Dijkstra(v);
+                A[v] = dijkstra.Item1;
             }
             foreach(var u in modifiedWeightsGraph.GetVertices().Keys){
                 foreach(var v in modifiedWeightsGraph.GetVertices().Keys)
@@ -88,7 +89,8 @@ namespace Lib.Graphs
             {
                 graphs[u] = new MathGraph<T>(true);
                 graphs[u].AddVertex(u);
-                var dijkstraWeights = modifiedWeightsGraph.Dijkstra(u);
+                var dijkstra = modifiedWeightsGraph.Dijkstra(u);;
+                var dijkstraWeights = dijkstra.Item1;
                 foreach(var edge in modifiedWeightsGraph.EdgeList)
                 {
                     var minDistance = dijkstraWeights[edge.Key.Item2];

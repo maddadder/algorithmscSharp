@@ -14,7 +14,8 @@ namespace Graphs
             var bf = inputGraph.BellmanFord(1);
             var bfSum = bf.Item1.Select(x => x.Value).Sum();
             var dijkstra = inputGraph.Dijkstra(1);
-            var dijkstraSum = dijkstra.Select(x => x.Value).Sum();
+            var dijkstraDist = dijkstra.Item1;
+            var dijkstraSum = dijkstraDist.Select(x => x.Value).Sum();
             Assert.AreEqual(bfSum, dijkstraSum);
             var johnson = Lib.Graphs.MathGraph<int>.LoadJohnsonPathsFromGraph(inputGraph);
             var jonhsonBF = johnson[1].BellmanFord(1);
@@ -72,7 +73,8 @@ namespace Graphs
             var bf = inputGraph.BellmanFord(3);
             var bfSum = bf.Item1.Select(x => x.Value).Sum();
             var dijkstra = inputGraph.Dijkstra(3);
-            var dijkstraSum = dijkstra.Select(x => x.Value).Sum();
+            var dijkstraDist = dijkstra.Item1;
+            var dijkstraSum = dijkstraDist.Select(x => x.Value).Sum();
             Assert.AreEqual(bfSum, dijkstraSum);
             
             var jonhsonBF = johnson[1].BellmanFord(3);

@@ -1,9 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Numerics;
-using Extensions;
 
 namespace Lib.Graphs
 {
@@ -11,7 +7,7 @@ namespace Lib.Graphs
 
     public partial class MathGraph<T> where T : IComparable<T>
     {
-        public Dictionary<T, float> Dijkstra(T src)
+        public Tuple<Dictionary<T, float>,Dictionary<T, Tuple<T,float>>> Dijkstra(T src)
         {
             ComponentWeights = SetAllVertexDistances();
             parent = SetAllVertexParents();
@@ -28,12 +24,12 @@ namespace Lib.Graphs
                         ComponentWeights[dest.Key.dest.Component].CompareTo(currentCalculatedDist) > 0) 
                     {
                         ComponentWeights[dest.Key.dest.Component] = currentCalculatedDist;
-                        parent[dest.Key.dest.Component] = src;
+                        parent[dest.Key.dest.Component] = new Tuple<T, float>(src, dest.Key.EdgeWeight);
                         indexNDistance.Enqueue(dest.Key.dest.Component, currentCalculatedDist);
                     }
                 }
             }
-            return ComponentWeights;
+            return new Tuple<Dictionary<T, float>,Dictionary<T, Tuple<T,float>>>(ComponentWeights, parent);
         }
     }
 }

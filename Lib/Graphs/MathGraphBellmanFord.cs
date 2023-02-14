@@ -12,14 +12,14 @@ namespace Lib.Graphs
     public partial class MathGraph<T> where T : IComparable<T>
     {
         
-        public Tuple<Dictionary<T, float>,Dictionary<T, Edge<T>>> BellmanFord(T src)
+        public Tuple<Dictionary<T, float>,Dictionary<T, Tuple<T,float>>> BellmanFord(T src)
         {
             Dictionary<T, float>[] dist = new Dictionary<T, float>[Vertices.Count+1];
-            Dictionary<T, Edge<T>>[] predecessor = new Dictionary<T, Edge<T>>[Vertices.Count+1];
+            Dictionary<T, Tuple<T,float>>[] predecessor = new Dictionary<T, Tuple<T,float>>[Vertices.Count+1];
             for(var i = 0;i<Vertices.Count+1;i++)
             {
                 dist[i] = new Dictionary<T, float>();
-                predecessor[i] = new Dictionary<T, Edge<T>>();
+                predecessor[i] = new Dictionary<T, Tuple<T,float>>();
             }
             
             
@@ -48,7 +48,7 @@ namespace Lib.Graphs
                     if(min < dist[i-1][left]){
                         stable = false;
                         dist[i][left] = min;
-                        predecessor[i][left] = _edge;
+                        predecessor[i][left] = new Tuple<T, float>(_edge.dest.Component, _edge.EdgeWeight);
                     }
                     else
                     {
@@ -57,13 +57,13 @@ namespace Lib.Graphs
                     }
                 }
                 if(stable){
-                    return new Tuple<Dictionary<T, float>, Dictionary<T, Edge<T>>>(dist[i],predecessor[i]);
+                    return new Tuple<Dictionary<T, float>, Dictionary<T, Tuple<T,float>>>(dist[i],predecessor[i]);
                 }
             }
             return null;
         }
         
-        public static Tuple<Dictionary<int, float>,Dictionary<int, Edge<int>>> manageBellmanFord(MathGraph<int> mst, string[] lines) 
+        public static Tuple<Dictionary<int, float>,Dictionary<int, Tuple<int,float>>> manageBellmanFord(MathGraph<int> mst, string[] lines) 
         {
             string[] line1 = lines[0].Split(' ');
             for (int i = 1; i <= lines.Length - 2; i++) {
@@ -92,15 +92,16 @@ namespace Lib.Graphs
             }
             return graphs;
         }
-        public static void LoadBellmanFordDistances(MathGraph<T> graph, Dictionary<T, Edge<T>> edges, Dictionary<T, float> distances) 
+        public static void LoadBellmanFordDistances(MathGraph<T> graph, Dictionary<T, Tuple<T, float>> edges, Dictionary<T, float> distances) 
         {
             foreach(var edge in edges)
             {
-                if(edge.Value == null)
+                
+                if(edge.Value == default)
                     continue;
-                T u = edge.Value.dest.Component;
+                T u = edge.Value.Item1;
                 T v = edge.Key;
-                float w = edge.Value.EdgeWeight;
+                float w = edge.Value.Item2;
                 float distance = distances[v];
                 graph.AddEdge(u,v,w,distance);
             }

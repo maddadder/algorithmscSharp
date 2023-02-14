@@ -14,7 +14,7 @@ namespace Graphs
             var bf = inputGraph.BellmanFord(1);
             var bfSum = bf.Item1.Select(x => x.Value).Sum();
             var dijkstra = inputGraph.Dijkstra(1);
-            var dijkstraSum = dijkstra.Select(x => x.Value).Sum();
+            var dijkstraSum = dijkstra.Item1.Select(x => x.Value).Sum();
             Assert.AreEqual(bfSum, dijkstraSum);
         }
         
@@ -26,7 +26,8 @@ namespace Graphs
 
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
-            var dijkstraDist = graph.Dijkstra(1);
+            var dijkstra = graph.Dijkstra(1);
+            var dijkstraDist = dijkstra.Item1;
             var dijkstraDistSum = dijkstraDist.Sum(x => x.Value);
             Assert.AreEqual(6, dijkstraDistSum);
         }
@@ -38,7 +39,8 @@ namespace Graphs
             
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
-            var dijkstraDist = graph.Dijkstra(1);
+            var dijkstra = graph.Dijkstra(1);
+            var dijkstraDist = dijkstra.Item1;
             var dijkstraDistSum = dijkstraDist.Sum(x => x.Value);
             Assert.AreEqual(34, dijkstraDistSum);
         }
@@ -50,7 +52,8 @@ namespace Graphs
             
             Lib.Graphs.MathGraph<int> graph = new Lib.Graphs.MathGraph<int>(true);
             Lib.Graphs.MathGraph<int>.LoadGraph(graph, lines);
-            var dijkstraDist = graph.Dijkstra(1);
+            var dijkstra = graph.Dijkstra(1);
+            var dijkstraDist = dijkstra.Item1;
             var dijkstraDistSum = dijkstraDist.Sum(x => x.Value);
             Assert.AreEqual(6, dijkstraDistSum);
         }

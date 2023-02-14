@@ -11,7 +11,7 @@ namespace Lib.Graphs
 
     public partial class MathGraph<T> where T : IComparable<T>
     {
-        public Dictionary<T, float> prims_mst(T left) {
+        public Tuple<Dictionary<T, float>,Dictionary<T, Tuple<T,float>>> prims_mst(T left) {
             ComponentWeights = SetAllVertexDistances();
             parent = SetAllVertexParents();
             Dictionary<T, bool> isVertexVisited = ClearAllVertexMarks();
@@ -26,12 +26,12 @@ namespace Lib.Graphs
                         ComponentWeights[right.Key.dest.Component].CompareTo(right.Key.EdgeWeight) > 0) 
                     {
                         ComponentWeights[right.Key.dest.Component] = right.Key.EdgeWeight;
-                        parent[right.Key.dest.Component] = left;
+                        parent[right.Key.dest.Component] = new Tuple<T,float>(left, right.Key.EdgeWeight);
                         indexNDistance.Enqueue(right.Key.dest.Component, right.Key.EdgeWeight);
                     }
                 }
             }
-            return ComponentWeights;
+            return new Tuple<Dictionary<T, float>, Dictionary<T, Tuple<T, float>>>(ComponentWeights, parent);
         }
         public static Dictionary<int, Lib.Graphs.Vertex<int>> managePrimsMST(MathGraph<int> mst, string[] lines, bool isUndirectedGraph = true) 
         {

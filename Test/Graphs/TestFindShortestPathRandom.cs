@@ -73,7 +73,8 @@ namespace Test
             {
                 Debug.WriteLine($"{results[j]} was in {results[j + 1]} with {results[j + 2]}.");
             }
-            var pathDistances = graph.Dijkstra(5);
+            var dijkstra = graph.Dijkstra(5);
+            var pathDistances = dijkstra.Item1;
             var distance = pathDistances.Where(x => x.Key == node2).First().Value;
             Debug.WriteLine($"The distance between {5} and {node2} is {distance}.");
             graph.printComponentWeights(5);

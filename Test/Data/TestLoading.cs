@@ -36,13 +36,14 @@ namespace Test.Data
             }
             
             
-            var test = graph.Dijkstra("Toy Story 3 (2010)");
-            foreach(var t in test.OrderBy(x => x.Value).Take(100))
+            var dijkstra = graph.Dijkstra("Toy Story 3 (2010)");
+            var dijkstraDist = dijkstra.Item1;
+            foreach(var t in dijkstraDist.OrderBy(x => x.Value).Take(100))
             {
                 Debug.WriteLine($"{t.Key},{t.Value}");
             }
             Debug.WriteLine("");
-            foreach(var t in test.OrderByDescending(x => x.Value).Take(100))
+            foreach(var t in dijkstraDist.OrderByDescending(x => x.Value).Take(100))
             {
                 Debug.WriteLine($"{t.Key},{t.Value}");
             }

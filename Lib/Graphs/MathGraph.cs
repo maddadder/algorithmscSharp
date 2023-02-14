@@ -42,7 +42,8 @@ namespace Lib.Graphs
         private string GraphName;
 
         private Dictionary<T, Vertex<T>> Vertices;
-        private Dictionary<T, T> parent;
+        //Key,Previous,OriginalWeight
+        private Dictionary<T, Tuple<T,float>> parent;
         private Dictionary<Tuple<T,T>, float> EdgeList;
         private Dictionary<Tuple<T,T>, float> DistanceList;
         private Dictionary<T, float> ComponentWeights;
@@ -62,7 +63,7 @@ namespace Lib.Graphs
             Vertices = new Dictionary<T, Vertex<T>>();
             ComponentWeights = new Dictionary<T, float>();
             Components = new Dictionary<T, int>();
-            parent = new Dictionary<T, T>();
+            parent = new Dictionary<T, Tuple<T, float>>();
             EdgeList = new Dictionary<Tuple<T,T>, float>();
             DistanceList = new Dictionary<Tuple<T,T>, float>();
             edgeCount = 0;
@@ -93,7 +94,7 @@ namespace Lib.Graphs
         {
             return Components;
         }
-        public T GetParent(T vertex)
+        public Tuple<T,float> GetParent(T vertex)
         {
             return parent[vertex];
         }
@@ -440,9 +441,9 @@ namespace Lib.Graphs
             }
             return marks;
         }
-        private Dictionary<T, T> SetAllVertexParents()
+        private Dictionary<T, Tuple<T, float>> SetAllVertexParents()
         {
-            Dictionary<T, T> marks = new Dictionary<T, T>();
+            Dictionary<T, Tuple<T, float>> marks = new Dictionary<T, Tuple<T, float>>();
             foreach (T key in Vertices.Keys)
             {
                 marks[key] = default;

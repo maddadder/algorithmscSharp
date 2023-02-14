@@ -78,8 +78,9 @@ namespace Test
             {
                 Debug.WriteLine($"{results[j]} was in {results[j + 1]} with {results[j + 2]}.");
             }
-            var test = graph.Dijkstra(actor1);
-            Debug.WriteLine($"Dijkstra's Distance from {actor1} to {actor2} is {test[actor2]}");
+            var dijkstra = graph.Dijkstra(actor1);
+            var distances = dijkstra.Item1;
+            Debug.WriteLine($"Dijkstra's Distance from {actor1} to {actor2} is {distances[actor2]}");
         }
     }
 }
