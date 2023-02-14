@@ -11,7 +11,7 @@ namespace Lib.Graphs
 
     public partial class MathGraph<T> where T : IComparable<T>
     {
-        public Dictionary<T, Dictionary<T, float>> JohnsonAlgorithm()
+        public Tuple<Dictionary<T,Dictionary<T,float>>, Dictionary<T,Dictionary<T,Tuple<T,float>>>> JohnsonAlgorithm()
         {
             SortedDictionary<T, MathGraph<T>> graphs = new SortedDictionary<T, MathGraph<T>>();
             T temp = default;
@@ -35,18 +35,21 @@ namespace Lib.Graphs
             modifiedWeightsGraph.RemoveVertex(temp);
             //graphs[default] = bfGraphClone;
             Dictionary<T, Dictionary<T, float>> A = new Dictionary<T, Dictionary<T, float>>();
+            var next = new Dictionary<T,Dictionary<T, Tuple<T, float>>>();
             foreach(var v in modifiedWeightsGraph.GetVertices().Keys)
             {
                 var dijkstra = modifiedWeightsGraph.Dijkstra(v);
                 A[v] = dijkstra.Item1;
+                next[v] = dijkstra.Item2;
             }
-            foreach(var u in modifiedWeightsGraph.GetVertices().Keys){
+            foreach(var u in modifiedWeightsGraph.GetVertices().Keys)
+            {
                 foreach(var v in modifiedWeightsGraph.GetVertices().Keys)
                 {
                     A[u][v] = A[u][v] - distances[u] + distances[v];
                 }
             }
-            return A;
+            return new Tuple<Dictionary<T, Dictionary<T, float>>, Dictionary<T, Dictionary<T, Tuple<T, float>>>>(A,next);
         }
         public static void LoadBellmanFordWeights(MathGraph<T> graph, Dictionary<Tuple<T, T>, float> edgeList, Dictionary<T, float> distances) 
         {
@@ -77,36 +80,38 @@ namespace Lib.Graphs
             //contains negative cycle
             if(bf == null)
                 return null;
-            var distances = bf.Item1;
+            var bfDistances = bf.Item1;
             var predecessor = bf.Item2;
             MathGraph<T> modifiedWeightsGraph = new MathGraph<T>(true);
-            MathGraph<T>.LoadBellmanFordWeights(modifiedWeightsGraph, graphClone.EdgeList, distances);
+            MathGraph<T>.LoadBellmanFordWeights(modifiedWeightsGraph, graphClone.EdgeList, bfDistances);
             
             modifiedWeightsGraph.RemoveVertex(temp);
             //graphs[default] = bfGraphClone;
             
-            foreach(var u in modifiedWeightsGraph.GetVertices().Keys.OrderBy(x => x))
+            foreach(var vertex in modifiedWeightsGraph.GetVertices().Keys.OrderBy(x => x))
             {
-                graphs[u] = new MathGraph<T>(true);
-                graphs[u].AddVertex(u);
-                var dijkstra = modifiedWeightsGraph.Dijkstra(u);;
+                graphs[vertex] = new MathGraph<T>(true);
+                graphs[vertex].AddVertex(vertex);
+                var dijkstra = modifiedWeightsGraph.Dijkstra(vertex);
                 var dijkstraWeights = dijkstra.Item1;
-                foreach(var edge in modifiedWeightsGraph.EdgeList)
+                var dijkstraPrevious = dijkstra.Item2;
+                foreach(var edge in dijkstraPrevious)
                 {
-                    var minDistance = dijkstraWeights[edge.Key.Item2];
-                    var modifiedWeight = edge.Value;
-                    var hu = distances[edge.Key.Item1];
-                    var hv = distances[edge.Key.Item2];
-                    //A[u][v] - h[u] + h[v]
-                    var rollingSum = minDistance + hv;
+                    if(edge.Value == null)
+                        continue;
+                    var dijkstrDistance = dijkstraWeights[edge.Key];
+                    var modifiedWeight = edge.Value.Item2;
+                    var u = edge.Value.Item1;
+                    var v = edge.Key;
+                    var hu = bfDistances[u];
+                    var hv = bfDistances[v];
+
+                    var rollingSum = dijkstrDistance + hv;
 
                     //reconstruct original weight
                     var originalWeight = modifiedWeight - hu + hv;
 
-                    if(rollingSum != float.MaxValue)
-                    {
-                        graphs[u].AddEdge(edge.Key.Item1, edge.Key.Item2, originalWeight, rollingSum);
-                    }
+                    graphs[vertex].AddEdge(edge.Value.Item1, edge.Key, originalWeight, rollingSum);
                 }
             }
 
