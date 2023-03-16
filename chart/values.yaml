@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: neon-registry.d95f-98d9-33df-f8a6.neoncluster.io/leenet/calculator
+  repository: neon-registry.b4c5-2917-0fd3-88a5.neoncluster.io/leenet/calculator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
