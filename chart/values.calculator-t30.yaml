@@ -9,5 +9,5 @@ image:
   repository: 192.168.1.151:32000/calculator
 
 gatewayNamespace: default
-gateway: default/leenet-gateway
+gateway: istio-system/leenet-gateway
 appNamespace: default

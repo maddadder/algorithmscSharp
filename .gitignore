@@ -4,3 +4,6 @@ obj
 Test/ChatGPT/bellmanFord.htm
 BlazorApp/appsettings.calculator.json
 BlazorHosted/Server/appsettings.calculator.json
+Data/txData.json
+Test/Data/Address.cs
+Test/Transactions/TestTransactions.cs

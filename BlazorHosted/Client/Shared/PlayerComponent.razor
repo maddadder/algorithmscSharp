@@ -1,0 +1,178 @@
+@using Lib.MechanismDesign
+@using XuMath
+<table class="table">
+    <tr>
+        <td></td><td>P2: Defect</td><td>P2: Cooperate</td>
+    </tr>
+    <tr>
+        <td>P1: Defect</td>
+        <td>
+            P1:<InputNumber class="cost" @bind-Value="p1tl" style="width:75px" />, P2:<InputNumber class="cost" @bind-Value="@p2tl" style="width:75px" />
+        </td>
+        <td>
+            P1:<InputNumber class="cost" @bind-Value="@p1tr" style="width:75px" />, P2:<InputNumber class="cost" @bind-Value="@p2tr" style="width:75px" />
+        </td>
+    </tr>
+    <tr>
+        <td>P1: Cooperate</td>
+        <td>
+            P1:<InputNumber class="cost" @bind-Value="@p1bl" style="width:75px" />, P2:<InputNumber class="cost" @bind-Value="@p2bl" style="width:75px" />
+        </td>
+        <td>
+            P1:<InputNumber class="cost" @bind-Value="@p1br" style="width:75px" />, P2:<InputNumber class="cost" @bind-Value="@p2br" style="width:75px" />
+        </td>
+    </tr>
+</table>
+<div>
+    <button class="btn btn-primary" @onclick="Go">Find Nash</button>
+</div>
+<ul>
+    @foreach (var row in g_output)
+    {
+        <li>
+            @row
+        </li>
+    }
+</ul>
+@code {
+    private double _p1tl = 3;
+
+    [Parameter]
+    public double p1tl
+    {
+        get => _p1tl;
+        set
+        {
+            if (_p1tl == value ) return;
+            _p1tl = value;
+            p1tlChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<double> p1tlChanged { get; set; }  
+    private double _p1tr = 0;
+    [Parameter]
+    public double p1tr
+    {
+        get => _p1tr;
+        set
+        {
+            if (_p1tr == value ) return;
+            _p1tr = value;
+            p1trChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<double> p1trChanged { get; set; }  
+    private double _p1bl = 5;
+    [Parameter]
+    public double p1bl
+    {
+        get => _p1bl;
+        set
+        {
+            if (_p1bl == value ) return;
+            _p1bl = value;
+            p1blChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<double> p1blChanged { get; set; }  
+    private double _p1br = 1;
+    [Parameter]
+    public double p1br
+    {
+        get => _p1br;
+        set
+        {
+            if (_p1br == value ) return;
+            _p1br = value;
+            p1brChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<double> p1brChanged { get; set; }  
+    private double _p2tl = 3;
+    [Parameter]
+    public double p2tl
+    {
+        get => _p2tl;
+        set
+        {
+            if (_p2tl == value ) return;
+            _p2tl = value;
+            p2tlChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<double> p2tlChanged { get; set; }  
+    private double _p2tr = 5;
+    [Parameter]
+    public double p2tr
+    {
+        get => _p2tr;
+        set
+        {
+            if (_p2tr == value ) return;
+            _p2tr = value;
+            p2trChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<double> p2trChanged { get; set; }  
+    private double _p2bl = 0;
+    [Parameter]
+    public double p2bl
+    {
+        get => _p2bl;
+        set
+        {
+            if (_p2bl == value ) return;
+            _p2bl = value;
+            p2blChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<double> p2blChanged { get; set; }  
+    private double _p2br = 1;
+    [Parameter]
+    public double p2br
+    {
+        get => _p2br;
+        set
+        {
+            if (_p2br == value ) return;
+            _p2br = value;
+            p2brChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<double> p2brChanged { get; set; }  
+    List<string> g_output = new List<string>();
+
+    private void Go()
+    {
+        g_output = RunGame();
+    }
+    private List<string> RunGame()
+    {
+        List<string> output = new List<string>();
+        MatrixR P1columns = new MatrixR(new double[,]{{ _p1tl, _p1tr, },
+                                                        {  _p1bl, _p1br, }});
+        MatrixR P2rows = new MatrixR(new double[,]{{ _p2tl, _p2tr, },
+                                                    {  _p2bl, _p2br, }});
+        var test = NashEq.FindNashEq(P1columns, P2rows);
+        foreach (var tuple in test)
+        {
+            output.Add($"Nash equilibrium found!");
+            output.Add($"P1: Position {tuple.Item1}");
+            output.Add($"P2: Position {tuple.Item2}");
+            output.Add($"Score {tuple.Item3}");
+        }
+        return output;
+    }
+    
+    protected override async Task OnInitializedAsync() {
+       
+    }
+}

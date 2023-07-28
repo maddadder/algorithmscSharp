@@ -3,7 +3,7 @@ version: '2'
 services:
 
   calculator:
-      image: neon-registry.b4c5-2917-0fd3-88a5.neoncluster.io/leenet/calculator:1.11.97
+      image: 192.168.1.151:32000/calculator:1.11.99
       build:
           context: ./
           dockerfile: ./Dockerfile
