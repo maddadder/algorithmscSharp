@@ -1,11 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lib.TicTacToe;
 public class AIPlayer
 {
     Random random = new Random();
+    int maxDepth;
 
+    public AIPlayer(int maxDepth)
+    {
+        this.maxDepth = maxDepth;
+    }
     public (int Row, int Col) GetRandomMove(TicTacToeGame game)
     {
         List<(int Row, int Col)> availableMoves = new List<(int, int)>();
@@ -32,106 +38,119 @@ public class AIPlayer
         }
     }
 
-    public (int Row, int Col) GetBestMove(TicTacToeGame game, int maxDepth)
+    public (int Row, int Col) GetBestMove(TicTacToeGame game)
     {
         int bestScore = int.MinValue;
         (int Row, int Col) bestMove = (-1, -1);
 
-        for (int depth = 1; depth <= maxDepth; depth++)
+        for (int row = 0; row < game.Board.GetLength(0); row++)
         {
-            for (int row = 0; row < game.Board.GetLength(0); row++)
+            for (int col = 0; col < game.Board.GetLength(1); col++)
             {
-                for (int col = 0; col < game.Board.GetLength(1); col++)
+                if (game.Board[row, col] == Player.None)
                 {
-                    if (game.Board[row, col] == Player.None)
-                    {
-                        game.MakeMove(row, col);
-                        int score = Minimax(game, 0, false, int.MinValue, int.MaxValue, depth);
-                        game.Board[row, col] = Player.None; // Undo the move
+                    game.Board[row, col] = Player.O;
+                    int score = Minimax(game, 0, false);
+                    game.Board[row, col] = Player.None;
 
-                        if (score > bestScore)
-                        {
-                            bestScore = score;
-                            bestMove = (row, col);
-                        }
+                    if (score > bestScore)
+                    {
+                        bestScore = score;
+                        bestMove = (row, col);
                     }
                 }
             }
         }
 
-        if (bestMove == (-1, -1))
-        {
-            bestMove = GetRandomMove(game);
-        }
         return bestMove;
     }
 
-    private int Minimax(TicTacToeGame game, int depth, bool isMaximizing, int alpha, int beta, int maxDepth)
+
+    private int Minimax(TicTacToeGame game, int depth, bool isMaximizing)
     {
-        // Terminal node evaluation
-        if (depth == maxDepth || game.HasWin(Player.X) || game.HasWin(Player.O) || game.IsDraw())
+        Player currentPlayer = isMaximizing ? Player.O : Player.X;
+
+        if (game.HasWin(Player.O)) // AI wins
         {
-            return EvaluateBoard(game);
+            return 100 - depth; // Adjust the scoring as needed
+        }
+        if (game.HasWin(Player.X)) // Human wins
+        {
+            return depth - 100; // Adjust the scoring as needed
+        }
+        if (game.IsDraw()) // Draw
+        {
+            return 0;
         }
 
-        if (isMaximizing)
+        if (depth >= maxDepth) // Depth limit reached, return evaluation score
         {
-            int bestScore = int.MinValue;
-            for (int row = 0; row < game.Board.GetLength(0); row++)
+            return EvaluateBoard(game, Player.O); // Use AI as the currentPlayer
+        }
+
+        int bestScore = isMaximizing ? int.MinValue : int.MaxValue;
+
+        for (int row = 0; row < game.Board.GetLength(0); row++)
+        {
+            for (int col = 0; col < game.Board.GetLength(1); col++)
             {
-                for (int col = 0; col < game.Board.GetLength(1); col++)
+                if (game.Board[row, col] == Player.None)
                 {
-                    if (game.Board[row, col] == Player.None)
+                    game.Board[row, col] = currentPlayer;
+                    int score = Minimax(game, depth + 1, !isMaximizing);
+                    game.Board[row, col] = Player.None;
+
+                    if (isMaximizing)
                     {
-                        game.MakeMove(row, col);
-                        int score = Minimax(game, depth + 1, true, alpha, beta, maxDepth);
-                        game.Board[row, col] = Player.None; // Undo the move
                         bestScore = Math.Max(bestScore, score);
-                        alpha = Math.Max(alpha, bestScore);
-                        if (beta <= alpha)
-                            break; // Beta pruning
                     }
-                }
-            }
-            return bestScore;
-        }
-        else
-        {
-            int bestScore = int.MaxValue;
-            for (int row = 0; row < game.Board.GetLength(0); row++)
-            {
-                for (int col = 0; col < game.Board.GetLength(1); col++)
-                {
-                    if (game.Board[row, col] == Player.None)
+                    else
                     {
-                        game.MakeMove(row, col);
-                        int score = Minimax(game, depth + 1, true, alpha, beta, maxDepth);
-                        game.Board[row, col] = Player.None; // Undo the move
                         bestScore = Math.Min(bestScore, score);
-                        beta = Math.Min(beta, bestScore);
-                        if (beta <= alpha)
-                            break; // Alpha pruning
                     }
                 }
             }
-            return bestScore;
         }
+
+        return bestScore;
     }
 
-    private int EvaluateBoard(TicTacToeGame game)
+    private int EvaluateBoard(TicTacToeGame game, Player currentPlayer)
     {
-        if (game.HasWin(Player.O))
+        int score = 0;
+
+        // Evaluate rows, columns, and diagonals
+        for (int i = 0; i < game.boardSize; i++)
         {
-            return 10; // AI wins
+            score += EvaluateLine(game.GetRow(i), currentPlayer);
+            score += EvaluateLine(game.GetColumn(i), currentPlayer);
         }
-        else if (game.HasWin(Player.X))
+        score += EvaluateLine(game.GetDiagonal1(), currentPlayer);
+        score += EvaluateLine(game.GetDiagonal2(), currentPlayer);
+
+        return score;
+    }
+
+    private int EvaluateLine(Player[] line, Player currentPlayer)
+    {
+        int aiCount = line.Count(cell => cell == Player.O);
+        int opponentCount = line.Count(cell => cell == Player.X);
+        int emptyCount = line.Count(cell => cell == Player.None);
+
+        int lineScore = 0;
+
+        if (aiCount == 2 && emptyCount == 1)
         {
-            return -10; // Player wins
+            lineScore += 10; // Favor AI's winning positions
         }
-        else
+        else if (opponentCount == 2 && emptyCount == 1)
         {
-            return 0; // Draw or neutral position
+            lineScore -= 10; // Favor blocking opponent's winning positions
         }
+
+        // Add more pattern scoring as needed
+
+        return lineScore;
     }
 
 

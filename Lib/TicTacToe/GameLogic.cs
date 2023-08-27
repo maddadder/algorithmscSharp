@@ -110,4 +110,43 @@ public class TicTacToeGame
         return !HasWin(Player.X) && !HasWin(Player.O);
     }
 
+    public Player[] GetRow(int rowIndex)
+    {
+        Player[] row = new Player[boardSize];
+        for (int col = 0; col < boardSize; col++)
+        {
+            row[col] = Board[rowIndex, col];
+        }
+        return row;
+    }
+
+    public Player[] GetColumn(int colIndex)
+    {
+        Player[] column = new Player[boardSize];
+        for (int row = 0; row < boardSize; row++)
+        {
+            column[row] = Board[row, colIndex];
+        }
+        return column;
+    }
+
+    public Player[] GetDiagonal1()
+    {
+        Player[] diagonal = new Player[boardSize];
+        for (int i = 0; i < boardSize; i++)
+        {
+            diagonal[i] = Board[i, i];
+        }
+        return diagonal;
+    }
+
+    public Player[] GetDiagonal2()
+    {
+        Player[] diagonal = new Player[boardSize];
+        for (int i = 0; i < boardSize; i++)
+        {
+            diagonal[i] = Board[i, boardSize - 1 - i];
+        }
+        return diagonal;
+    }
 }

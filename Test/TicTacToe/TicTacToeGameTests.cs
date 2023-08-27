@@ -13,12 +13,12 @@ namespace Test
         {
             // Arrange
             var game = new TicTacToeGame(4);
-            var aiPlayer = new AIPlayer();
+            var aiPlayer = new AIPlayer(5);
 
             // Act
             while (!game.HasWin(Player.X) && !game.HasWin(Player.O) && !game.IsDraw())
             {
-                var (aiRow, aiCol) = aiPlayer.GetBestMove(game, 7);
+                var (aiRow, aiCol) = aiPlayer.GetBestMove(game);
                 game.MakeMoveAI(aiRow, aiCol);
             }
 
@@ -45,7 +45,7 @@ namespace Test
             // Arrange
             var game = new TicTacToeGame(4);
             game.MakeMove(0, 0); // Make a move to ensure the cell (0, 0) is not empty
-            var aiPlayer = new AIPlayer();
+            var aiPlayer = new AIPlayer(5);
 
             // Act
             var randomMove = aiPlayer.GetRandomMove(game);
