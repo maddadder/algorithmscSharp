@@ -1,3 +1,6 @@
+
+namespace Lib.TicTacToe;
+
 public enum Player { None, X, O }
 
 public class TicTacToeGame

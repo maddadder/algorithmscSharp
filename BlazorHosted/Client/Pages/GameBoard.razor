@@ -1,5 +1,7 @@
 @page "/tictactoe"
 
+@using Lib.TicTacToe;
+
 <style>
     .board {
         --board-size: 3; /* Default board size */
@@ -31,6 +33,7 @@
 @code {
 
     private const int boardSize = 3;
+    private const int aimaxDepth = 5;
     private string response = string.Empty;
     private TicTacToeGame game = new TicTacToeGame(boardSize);
     private AIPlayer aiPlayer = new AIPlayer();
@@ -56,7 +59,7 @@
             if (!CheckForGameEnd())
             {
                 // AI's turn
-                var (aiRow, aiCol) = aiPlayer.GetBestMove(game, 15);
+                var (aiRow, aiCol) = aiPlayer.GetBestMove(game, aimaxDepth);
                 game.MakeMoveAI(aiRow, aiCol);
                 CheckForGameEnd();
             }

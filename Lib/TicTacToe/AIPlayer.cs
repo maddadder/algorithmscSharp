@@ -1,7 +1,11 @@
-// AIPlayer.cs
+using System;
+using System.Collections.Generic;
 
+namespace Lib.TicTacToe;
 public class AIPlayer
 {
+    Random random = new Random();
+
     public (int Row, int Col) GetRandomMove(TicTacToeGame game)
     {
         List<(int Row, int Col)> availableMoves = new List<(int, int)>();
@@ -19,7 +23,6 @@ public class AIPlayer
 
         if (availableMoves.Count > 0)
         {
-            Random random = new Random();
             int randomIndex = random.Next(availableMoves.Count);
             return availableMoves[randomIndex];
         }
@@ -56,6 +59,10 @@ public class AIPlayer
             }
         }
 
+        if (bestMove == (-1, -1))
+        {
+            bestMove = GetRandomMove(game);
+        }
         return bestMove;
     }
 
@@ -77,7 +84,7 @@ public class AIPlayer
                     if (game.Board[row, col] == Player.None)
                     {
                         game.MakeMove(row, col);
-                        int score = Minimax(game, depth + 1, false, alpha, beta, maxDepth);
+                        int score = Minimax(game, depth + 1, true, alpha, beta, maxDepth);
                         game.Board[row, col] = Player.None; // Undo the move
                         bestScore = Math.Max(bestScore, score);
                         alpha = Math.Max(alpha, bestScore);
