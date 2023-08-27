@@ -1,0 +1,69 @@
+@page "/tictactoe"
+
+<div class="board">
+    @for (int row = 0; row < 3; row++)
+    {
+        <div class="row">
+            @for (int col = 0; col < 3; col++)
+            {
+                var localRow = row; // Create a local variable to preserve scope
+                var localCol = col; // Create a local variable to preserve scope
+                <div class="cell" @onclick="() => CellClicked(localRow, localCol)">
+                    <div class="cell-content">
+                        @GetCellContent(row, col)
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+<div>@response</div>
+@code {
+
+    private string response = string.Empty;
+    private TicTacToeGame game = new TicTacToeGame();
+    private AIPlayer aiPlayer = new AIPlayer();
+
+    private void CellClicked(int row, int col)
+    {
+        if (game.CurrentPlayer == Player.X && game.Board[row, col] == Player.None)
+        {
+            game.MakeMove(row, col);
+            if (!CheckForGameEnd())
+            {
+                // AI's turn
+                var (aiRow, aiCol) = aiPlayer.GetBestMove(game);
+                game.MakeMoveAI(aiRow, aiCol);
+                CheckForGameEnd();
+            }
+        }
+    }
+
+    private string GetCellContent(int row, int col)
+    {
+        var player = game.Board[row, col];
+        return player == Player.X ? "X" : player == Player.O ? "O" : "";
+    }
+
+    private bool CheckForGameEnd()
+    {
+        if (game.HasWin(Player.X))
+        {
+            response = "Player X wins!";
+            return true;
+        }
+        else if (game.HasWin(Player.O))
+        {
+            response = "Player O wins!";
+            return true;
+        }
+        else if (game.IsDraw())
+        {
+            response = "It's a draw!";
+            return true;
+        }
+        
+        return false;
+    }
+
+}
