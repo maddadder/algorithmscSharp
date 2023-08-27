@@ -1,10 +1,16 @@
 @page "/tictactoe"
 
+<style>
+    .board {
+        --board-size: 3; /* Default board size */
+    }
+</style>
+
 <div class="board">
-    @for (int row = 0; row < 3; row++)
+    @for (int row = 0; row < game.boardSize; row++)
     {
         <div class="row">
-            @for (int col = 0; col < 3; col++)
+            @for (int col = 0; col < game.boardSize; col++)
             {
                 var localRow = row; // Create a local variable to preserve scope
                 var localCol = col; // Create a local variable to preserve scope
@@ -18,12 +24,30 @@
     }
 </div>
 <div>@response</div>
+<div>
+    <button @onclick="ResetGame">Reset Game</button>
+</div>
+
 @code {
 
+    private const int boardSize = 3;
     private string response = string.Empty;
-    private TicTacToeGame game = new TicTacToeGame();
+    private TicTacToeGame game = new TicTacToeGame(boardSize);
     private AIPlayer aiPlayer = new AIPlayer();
-
+    private Random random = new Random();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        bool aiGoesFirst = random.Next(2) == 0;
+        game = new TicTacToeGame(boardSize);
+        
+        if (aiGoesFirst)
+        {
+            var (aiRow, aiCol) = aiPlayer.GetRandomMove(game);
+            game.MakeMoveAI(aiRow, aiCol);
+            CheckForGameEnd();
+        }
+    }
     private void CellClicked(int row, int col)
     {
         if (game.CurrentPlayer == Player.X && game.Board[row, col] == Player.None)
@@ -32,7 +56,7 @@
             if (!CheckForGameEnd())
             {
                 // AI's turn
-                var (aiRow, aiCol) = aiPlayer.GetBestMove(game);
+                var (aiRow, aiCol) = aiPlayer.GetBestMove(game, 15);
                 game.MakeMoveAI(aiRow, aiCol);
                 CheckForGameEnd();
             }
@@ -66,4 +90,8 @@
         return false;
     }
 
+    private void ResetGame()
+    {
+        this.OnInitialized();
+    }
 }
