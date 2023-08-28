@@ -2,6 +2,8 @@
 
 @using Lib.TicTacToe;
 
+<PageTitle>Tic Tac Toe</PageTitle>
+
 <style>
     .board {
         --board-size: @boardSize;
@@ -26,28 +28,36 @@
     }
 </div>
 <div>@response</div>
-
+<div>&#160;</div>
 <div>
     <button @onclick="ResetGame">Reset Game</button>
 </div>
+<div>&#160;</div>
 
 
 @code {
-
-/*
-<div>
-    <InputNumber class="cost" @bind-Value="boardSize" style="width:75px" min="3" max="6" />,
-</div>
-*/
+    
+/*<div>
+    <InputNumber @oninput="BoardSizeChanged" class="cost" @bind-Value="boardSize" style="width:75px" min="3" max="4" />,
+</div>*/
     private int boardSize = 3;
-    private const int maxDepth = 5;
+    private const int maxDepth = 4;
     private string response = string.Empty;
     private TicTacToeGame game;
     private AIPlayer aiPlayer = new AIPlayer(maxDepth);
     private Random random = new Random();
+    
+
+    private void BoardSizeChanged(ChangeEventArgs e)
+    {
+        boardSize = Convert.ToInt32(e.Value);
+        OnInitialized();
+    }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        response = string.Empty;
         bool aiGoesFirst = random.Next(2) == 0;
         game = new TicTacToeGame(boardSize);
         
