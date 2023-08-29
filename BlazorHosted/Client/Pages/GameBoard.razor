@@ -33,18 +33,24 @@
     <button @onclick="ResetGame">Reset Game</button>
 </div>
 <div>&#160;</div>
-
-
+<div>
+    <div>Select Algorithm</div>
+    <InputSelect @bind-Value="selectedAlgorithm" @oninput="SelectedAlgorithmChanged">
+        <option value="minimax">Minimax</option>
+        <option value="mcts">MCTS</option>
+    </InputSelect>
+</div>
 @code {
-    
-/*<div>
+    /*
+    <div>
     <InputNumber @oninput="BoardSizeChanged" class="cost" @bind-Value="boardSize" style="width:75px" min="3" max="4" />,
 </div>*/
+
     private int boardSize = 3;
-    private const int maxDepth = 4;
+    private string selectedAlgorithm = "minimax"; // Default to Minimax
     private string response = string.Empty;
     private TicTacToeGame game;
-    private AIPlayer aiPlayer = new AIPlayer(maxDepth);
+    private IGameAI aiPlayer;
     private Random random = new Random();
     
 
@@ -53,31 +59,45 @@
         boardSize = Convert.ToInt32(e.Value);
         OnInitialized();
     }
+    private void SelectedAlgorithmChanged(ChangeEventArgs e)
+    {
+        selectedAlgorithm = (string)e.Value;
+        OnInitialized();
+    }
+    
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         response = string.Empty;
         bool aiGoesFirst = random.Next(2) == 0;
-        game = new TicTacToeGame(boardSize);
-        
+        game = new TicTacToeGame(boardSize, Player.X);
+        if (selectedAlgorithm == "minimax")
+        {
+            aiPlayer = new MinimaxAI(4);
+        }
+        else if (selectedAlgorithm == "mcts")
+        {
+            aiPlayer = new MonteCarloTreeSearchAI(1000);
+        }
         if (aiGoesFirst)
         {
-            var (aiRow, aiCol) = aiPlayer.GetRandomMove(game);
-            game.MakeMoveAI(aiRow, aiCol);
+            var (aiRow, aiCol) = game.GetRandomMove(game);
+            game.CurrentPlayer = Player.O;
+            game.MakeMove(aiRow, aiCol);
             CheckForGameEnd();
         }
     }
     private void CellClicked(int row, int col)
     {
-        if (game.CurrentPlayer == Player.X && game.Board[row, col] == Player.None)
+        if (game.CurrentPlayer == Player.X && game.Board[row, col] == Player.N)
         {
             game.MakeMove(row, col);
             if (!CheckForGameEnd())
             {
                 // AI's turn
                 var (aiRow, aiCol) = aiPlayer.GetBestMove(game);
-                game.MakeMoveAI(aiRow, aiCol);
+                game.MakeMove(aiRow, aiCol);
                 CheckForGameEnd();
             }
         }

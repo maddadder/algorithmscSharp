@@ -3,39 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Lib.TicTacToe;
-public class AIPlayer
+public class MinimaxAI : IGameAI
 {
     Random random = new Random();
     int maxDepth;
 
-    public AIPlayer(int maxDepth)
+    public MinimaxAI(int maxDepth)
     {
         this.maxDepth = maxDepth;
-    }
-    public (int Row, int Col) GetRandomMove(TicTacToeGame game)
-    {
-        List<(int Row, int Col)> availableMoves = new List<(int, int)>();
-
-        for (int row = 0; row < game.Board.GetLength(0); row++)
-        {
-            for (int col = 0; col < game.Board.GetLength(1); col++)
-            {
-                if (game.Board[row, col] == Player.None)
-                {
-                    availableMoves.Add((row, col));
-                }
-            }
-        }
-
-        if (availableMoves.Count > 0)
-        {
-            int randomIndex = random.Next(availableMoves.Count);
-            return availableMoves[randomIndex];
-        }
-        else
-        {
-            throw new Exception("No available moves.");
-        }
     }
 
     public (int Row, int Col) GetBestMove(TicTacToeGame game)
@@ -47,11 +22,11 @@ public class AIPlayer
         {
             for (int col = 0; col < game.Board.GetLength(1); col++)
             {
-                if (game.Board[row, col] == Player.None)
+                if (game.Board[row, col] == Player.N)
                 {
                     game.Board[row, col] = Player.O;
                     int score = Minimax(game, 0, false);
-                    game.Board[row, col] = Player.None;
+                    game.Board[row, col] = Player.N;
 
                     if (score > bestScore)
                     {
@@ -94,11 +69,11 @@ public class AIPlayer
         {
             for (int col = 0; col < game.Board.GetLength(1); col++)
             {
-                if (game.Board[row, col] == Player.None)
+                if (game.Board[row, col] == Player.N)
                 {
                     game.Board[row, col] = currentPlayer;
                     int score = Minimax(game, depth + 1, !isMaximizing);
-                    game.Board[row, col] = Player.None;
+                    game.Board[row, col] = Player.N;
 
                     if (isMaximizing)
                     {
@@ -125,8 +100,8 @@ public class AIPlayer
             score += EvaluateLine(game.GetRow(i), currentPlayer);
             score += EvaluateLine(game.GetColumn(i), currentPlayer);
         }
-        score += EvaluateLine(game.GetDiagonal1(), currentPlayer);
-        score += EvaluateLine(game.GetDiagonal2(), currentPlayer);
+        score += EvaluateLine(game.GetDiagonal(true), currentPlayer);
+        score += EvaluateLine(game.GetDiagonal(false), currentPlayer);
 
         return score;
     }
@@ -135,7 +110,7 @@ public class AIPlayer
     {
         int aiCount = line.Count(cell => cell == Player.O);
         int opponentCount = line.Count(cell => cell == Player.X);
-        int emptyCount = line.Count(cell => cell == Player.None);
+        int emptyCount = line.Count(cell => cell == Player.N);
 
         int lineScore = 0;
 

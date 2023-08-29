@@ -1,97 +1,97 @@
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+
 namespace Lib.TicTacToe;
 
-public enum Player { None, X, O }
+public enum Player { N, X, O }
 
-public class TicTacToeGame
+public class TicTacToeGame : ICloneable
 {
+    public Random random = new Random();
     public readonly int boardSize;
     public Player[,] Board { get; private set; }
-    public Player CurrentPlayer { get; private set; }
+    public Player CurrentPlayer { get; set; }
 
     // Constructor to initialize the board and start the game
-    public TicTacToeGame(int boardSize)
+    public TicTacToeGame(int boardSize, Player player1)
     {
         this.boardSize = boardSize;
         Board = new Player[boardSize, boardSize];
-        CurrentPlayer = Player.X;
+        CurrentPlayer = player1;
     }
+    public object Clone()
+    {
+        TicTacToeGame clone = new TicTacToeGame(boardSize, this.CurrentPlayer);
+        
+        for (int row = 0; row < boardSize; row++)
+        {
+            for (int col = 0; col < boardSize; col++)
+            {
+                clone.Board[row, col] = Board[row, col];
+            }
+        }
+        
+        return clone;
+    }
+    public (int Row, int Col) GetRandomMove(TicTacToeGame game)
+    {
+        List<(int Row, int Col)> availableMoves = new List<(int, int)>();
 
+        for (int row = 0; row < Board.GetLength(0); row++)
+        {
+            for (int col = 0; col < Board.GetLength(1); col++)
+            {
+                if (Board[row, col] == Player.N)
+                {
+                    availableMoves.Add((row, col));
+                }
+            }
+        }
+
+        if (availableMoves.Count > 0)
+        {
+            int randomIndex = random.Next(availableMoves.Count);
+            return availableMoves[randomIndex];
+        }
+        else
+        {
+            throw new Exception("No available moves.");
+        }
+    }
     public void MakeMove(int row, int col)
     {
-        if (Board[row, col] == Player.None)
+        if (Board[row, col] == Player.N)
         {
             Board[row, col] = CurrentPlayer;
-            CurrentPlayer = CurrentPlayer == Player.X ? Player.O : Player.X;
+            CurrentPlayer = GetOpponent(CurrentPlayer); // Switch players
         }
-    }
-    public void MakeMoveAI(int row, int col)
-    {
-        if (Board[row, col] == Player.None)
-        {
-            Board[row, col] = Player.O;
-            CurrentPlayer = Player.X;
-        }
+        //PrintBoard();
     }
 
     public bool HasWin(Player player)
     {
-        // Check rows
-        for (int row = 0; row < boardSize; row++)
-        {
-            bool allMatch = true;
-            for (int col = 0; col < boardSize; col++)
-            {
-                if (Board[row, col] != player)
-                {
-                    allMatch = false;
-                    break;
-                }
-            }
-            if (allMatch)
-            {
-                return true;
-            }
-        }
-
-        // Check columns
-        for (int col = 0; col < boardSize; col++)
-        {
-            bool allMatch = true;
-            for (int row = 0; row < boardSize; row++)
-            {
-                if (Board[row, col] != player)
-                {
-                    allMatch = false;
-                    break;
-                }
-            }
-            if (allMatch)
-            {
-                return true;
-            }
-        }
-
-        // Check diagonals
-        bool diagonal1Match = true;
-        bool diagonal2Match = true;
+        // Check rows and columns for a win
         for (int i = 0; i < boardSize; i++)
         {
-            if (Board[i, i] != player)
+            if (CheckLineForWin(GetRow(i), player) || CheckLineForWin(GetColumn(i), player))
             {
-                diagonal1Match = false;
+                return true;
             }
-            if (Board[i, boardSize - 1 - i] != player)
-            {
-                diagonal2Match = false;
-            }
-        }
-        if (diagonal1Match || diagonal2Match)
-        {
-            return true;
         }
 
-        return false;
+        // Check main diagonal and anti-diagonal for a win
+        Player[] mainDiagonal = GetDiagonal(true);
+        Player[] antiDiagonal = GetDiagonal(false);
+
+        return CheckLineForWin(mainDiagonal, player) || CheckLineForWin(antiDiagonal, player);
+    }
+
+    private bool CheckLineForWin(Player[] line, Player player)
+    {
+        return line.All(cell => cell == player);
     }
 
     public bool IsDraw()
@@ -100,7 +100,7 @@ public class TicTacToeGame
         {
             for (int col = 0; col < boardSize; col++)
             {
-                if (Board[row, col] == Player.None)
+                if (Board[row, col] == Player.N)
                 {
                     return false; // There's an empty cell, game is not a draw
                 }
@@ -110,43 +110,145 @@ public class TicTacToeGame
         return !HasWin(Player.X) && !HasWin(Player.O);
     }
 
-    public Player[] GetRow(int rowIndex)
-    {
-        Player[] row = new Player[boardSize];
-        for (int col = 0; col < boardSize; col++)
-        {
-            row[col] = Board[rowIndex, col];
-        }
-        return row;
-    }
 
-    public Player[] GetColumn(int colIndex)
+    
+
+    public List<(int Row, int Col)> GetEmptyCells()
     {
-        Player[] column = new Player[boardSize];
+        List<(int Row, int Col)> emptyCells = new List<(int Row, int Col)>();
+
         for (int row = 0; row < boardSize; row++)
         {
-            column[row] = Board[row, colIndex];
+            for (int col = 0; col < boardSize; col++)
+            {
+                if (Board[row, col] == Player.N)
+                {
+                    emptyCells.Add((row, col));
+                }
+            }
         }
-        return column;
+
+        return emptyCells;
+    }
+    public bool IsGameEnd()
+    {
+        return this.HasWin(Player.O) || this.HasWin(Player.X) || this.IsDraw();
     }
 
-    public Player[] GetDiagonal1()
+    internal Player GetOpponent(Player currentPlayer)
     {
-        Player[] diagonal = new Player[boardSize];
+        if(currentPlayer == Player.X)
+            return Player.O;
+        else if (currentPlayer == Player.O)
+            return Player.X;
+        else
+        {
+            return Player.N;
+        }
+    }
+    public Player GetWinner()
+    {
+        // Check rows, columns, and diagonals for a winning sequence
         for (int i = 0; i < boardSize; i++)
         {
-            diagonal[i] = Board[i, i];
+            // Check row winner
+            if (AreAllEqual(Board[i, 0], GetRow(i)))
+            {
+                return Board[i, 0];
+            }
+
+            // Check column winner
+            if (AreAllEqual(Board[0, i], GetColumn(i)))
+            {
+                return Board[0, i];
+            }
         }
-        return diagonal;
+
+        // Check diagonals for a winning sequence
+        if (AreAllEqual(Board[0, 0], GetDiagonal(true)))
+        {
+            return Board[0, 0];
+        }
+        // Check diagonals for a winning sequence
+        if(AreAllEqual(Board[0, boardSize - 1], GetDiagonal(false)))
+        {
+            return Board[0, boardSize - 1];
+        }
+
+        return Player.N; // No winner (draw or ongoing game)
     }
 
-    public Player[] GetDiagonal2()
+    public bool AreAllEqual(Player player, Player[] cells)
     {
-        Player[] diagonal = new Player[boardSize];
-        for (int i = 0; i < boardSize; i++)
+        return cells.All(cell => cell == player);
+    }
+
+    public Player[] GetRow(int row)
+    {
+        return Enumerable.Range(0, boardSize).Select(col => Board[row, col]).ToArray();
+    }
+
+    public Player[] GetColumn(int col)
+    {
+        return Enumerable.Range(0, boardSize).Select(row => Board[row, col]).ToArray();
+    }
+
+    public Player[] GetDiagonal(bool isMainDiagonal)
+    {
+        if(isMainDiagonal)
         {
-            diagonal[i] = Board[i, boardSize - 1 - i];
+            Player[] diagonal = new Player[boardSize];
+            for (int i = 0; i < boardSize; i++)
+            {
+                diagonal[i] = Board[i, i];
+            }
+            return diagonal;
         }
-        return diagonal;
+        else
+        {
+            Player[] diagonal = new Player[boardSize];
+            for (int i = 0; i < boardSize; i++)
+            {
+                diagonal[i] = Board[i, boardSize - 1 - i];
+            }
+            return diagonal;
+        }
+        
+    }
+
+    
+    public void PrintBoard()
+    {
+        for (int row = 0; row < boardSize; row++)
+        {
+            for (int col = 0; col < boardSize; col++)
+            {
+                Debug.Write($"{row},{col},{Board[row, col]}");
+
+                if (col < boardSize - 1)
+                {
+                    Debug.Write(" | ");
+                }
+            }
+
+            Debug.WriteLine("");
+
+            if (row < boardSize - 1)
+            {
+                Debug.WriteLine(new string('-', boardSize * 4 - 1));
+            }
+        }
+
+        Debug.WriteLine("");
+    }
+
+    public void SetBoard(Player[,] newBoard)
+    {
+        if (newBoard.GetLength(0) != boardSize || newBoard.GetLength(1) != boardSize)
+        {
+            throw new ArgumentException("Invalid board size");
+        }
+
+        Board = newBoard;
     }
 }
