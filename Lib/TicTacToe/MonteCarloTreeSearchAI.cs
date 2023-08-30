@@ -37,7 +37,8 @@ public class MonteCarloTreeSearchAI : IGameAI
             
             Backpropagate(expandedNode, expandedNode.State.GetWinner());
         }
-        Node bestChild = rootNode.Children.OrderByDescending(child => (child.Wins) / child.Visits)
+        Node bestChild = rootNode.Children.OrderByDescending(child => child.Wins / child.Visits)
+                                          .ThenByDescending(child => game.random.Next())
                                           .FirstOrDefault();
         return bestChild.Move;
     }
