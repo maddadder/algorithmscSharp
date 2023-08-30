@@ -36,18 +36,20 @@
 <div>
     <div>Select Algorithm</div>
     <InputSelect @bind-Value="selectedAlgorithm" @oninput="SelectedAlgorithmChanged">
-        <option value="minimax">Minimax</option>
         <option value="mcts">MCTS</option>
+        <option value="minimax">Minimax</option>
     </InputSelect>
 </div>
-@code {
-    /*
-    <div>
+<div>&#160;</div>
+<div>
+    <div>Board Size</div>
     <InputNumber @oninput="BoardSizeChanged" class="cost" @bind-Value="boardSize" style="width:75px" min="3" max="4" />,
-</div>*/
+</div>
+@code {
+
 
     private int boardSize = 3;
-    private string selectedAlgorithm = "minimax"; // Default to Minimax
+    private string selectedAlgorithm = "mcts"; // Default to Minimax
     private string response = string.Empty;
     private TicTacToeGame game;
     private IGameAI aiPlayer;
@@ -56,9 +58,17 @@
 
     private void BoardSizeChanged(ChangeEventArgs e)
     {
-        boardSize = Convert.ToInt32(e.Value);
-        OnInitialized();
+        var temp = boardSize;
+        if(!string.IsNullOrEmpty((string)e.Value))
+        {
+            int.TryParse((string)e.Value, out temp);
+            if(temp < 5 && temp > 2){
+                boardSize = temp;
+                OnInitialized();
+            }
+        }
     }
+
     private void SelectedAlgorithmChanged(ChangeEventArgs e)
     {
         selectedAlgorithm = (string)e.Value;
@@ -78,14 +88,7 @@
         }
         else if (selectedAlgorithm == "mcts")
         {
-            aiPlayer = new MonteCarloTreeSearchAI(1000);
-        }
-        if (aiGoesFirst)
-        {
-            var (aiRow, aiCol) = game.GetRandomMove(game);
-            game.CurrentPlayer = Player.O;
-            game.MakeMove(aiRow, aiCol);
-            CheckForGameEnd();
+            aiPlayer = new MonteCarloTreeSearchAI(2000, 6);
         }
     }
     private void CellClicked(int row, int col)

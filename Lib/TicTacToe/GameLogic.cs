@@ -20,7 +20,18 @@ public class TicTacToeGame : ICloneable
     {
         this.boardSize = boardSize;
         Board = new Player[boardSize, boardSize];
-        CurrentPlayer = player1;
+        if(player1 == Player.N){
+            CurrentPlayer = GetRandomPlayer();
+        }
+        else
+        {
+            CurrentPlayer = player1;
+        }
+    }
+    public Player GetRandomPlayer()
+    {
+        int randomIndex = random.Next(2);
+        return randomIndex == 0 ? Player.X : Player.O;
     }
     public object Clone()
     {
@@ -143,7 +154,7 @@ public class TicTacToeGame : ICloneable
             return Player.X;
         else
         {
-            return Player.N;
+            throw new Exception("Cannot swap player");
         }
     }
     public Player GetWinner()
@@ -223,7 +234,8 @@ public class TicTacToeGame : ICloneable
         {
             for (int col = 0; col < boardSize; col++)
             {
-                Debug.Write($"{row},{col},{Board[row, col]}");
+                //Debug.Write($"{row},{col},{Board[row, col]}");
+                Debug.Write($"{Board[row, col]}");
 
                 if (col < boardSize - 1)
                 {

@@ -8,12 +8,14 @@ namespace Lib.TicTacToe;
 public class MonteCarloTreeSearchAI : IGameAI
 {
     private int simulations;
-    public MonteCarloTreeSearchAI(int simulations){
+    private int depth;
+    public MonteCarloTreeSearchAI(int simulations, int depth){
         this.simulations = simulations;
+        this.depth = depth;
     }
     public (int Row, int Col) GetBestMove(TicTacToeGame game)
     {
-        Node rootNode = new Node(null, (-1, -1), game);
+        Node rootNode = new Node(null, (-1, -1), game, 0);
         rootNode.Visits = 0;
         List<(int Row, int Col)> legalMoves = game.GetEmptyCells();
 
@@ -21,21 +23,21 @@ public class MonteCarloTreeSearchAI : IGameAI
         {
             TicTacToeGame nextState = (TicTacToeGame)game.Clone();
             nextState.MakeMove(move.Row, move.Col);
-            Node childNode = new Node(rootNode, move, nextState);
+            Node childNode = new Node(rootNode, move, nextState, rootNode.Depth + 1);
             rootNode.Children.Add(childNode);
         }
 
         for (int i = 0; i < simulations; i++)
         {
             Node selectedNode = Select(rootNode);
-            Node expandedNode = Expand(selectedNode);
+            Node expandedNode = Expand(selectedNode, depth);
             
             // Simulate alternating player turns in the simulation
-            Player winner = SimulateToEnd(expandedNode.State);
+            expandedNode = SimulateToEnd(expandedNode);
             
-            Backpropagate(expandedNode, winner);
+            Backpropagate(expandedNode, expandedNode.State.GetWinner());
         }
-        Node bestChild = rootNode.Children.OrderByDescending(child => child.TotalReward / child.Visits)
+        Node bestChild = rootNode.Children.OrderByDescending(child => (child.Wins) / child.Visits)
                                           .FirstOrDefault();
         return bestChild.Move;
     }
@@ -60,9 +62,9 @@ public class MonteCarloTreeSearchAI : IGameAI
     }
 
 
-    public Node Expand(Node node)
+    public Node Expand(Node node, int depth)
     {
-        if (!node.State.IsGameEnd() && node.Children.Count < node.State.GetEmptyCells().Count)
+        if (!node.State.IsGameEnd() && depth > 0)
         {
             List<(int Row, int Col)> legalMoves = node.State.GetEmptyCells();
 
@@ -75,11 +77,11 @@ public class MonteCarloTreeSearchAI : IGameAI
                 {
                     TicTacToeGame nextState = (TicTacToeGame)node.State.Clone();
                     nextState.MakeMove(move.Row, move.Col);
-                    Node child = new Node(node, move, nextState);
+                    Node child = new Node(node, move, nextState, node.Depth + 1);
 
                     node.Children.Add(child);
 
-                    double uctValue = CalculateUCTValue(child, node.Visits);
+                    double uctValue = CalculateUCTValue(child, node.Visits); // Pass the parent's visits count
                     if (uctValue > bestUCTValue)
                     {
                         bestUCTValue = uctValue;
@@ -90,7 +92,7 @@ public class MonteCarloTreeSearchAI : IGameAI
 
             if (bestChild != null)
             {
-                return bestChild;
+                return Expand(bestChild, depth - 1);
             }
             else
             {
@@ -103,6 +105,7 @@ public class MonteCarloTreeSearchAI : IGameAI
     }
 
 
+
     public void Backpropagate(Node node, Player winner)
     {
         while (node != null)
@@ -110,24 +113,24 @@ public class MonteCarloTreeSearchAI : IGameAI
             // Update the visit count
             node.Visits++;
 
+            //node.State.PrintBoard();
             // remember the the CurrentPlayer just got swapped out
-
+            
             // Update the total reward based on the winner
-            if (winner == node.State.GetOpponent(node.State.CurrentPlayer) && winner != Player.N)
+            if (winner == node.State.GetOpponent(node.State.CurrentPlayer))
             {
                 // If the node's player won, add 1 to the reward and wins
-                node.TotalReward += 1;
-                node.Wins++;
+                node.Wins+=2;
             }
-            else if (winner == node.State.CurrentPlayer && winner != Player.N)
+            else if (winner == node.State.CurrentPlayer)
             {
                 // If the opponent won, subtract 1 from the reward and wins
-                node.TotalReward -= 1;
+                node.Wins-=2;
             }
             else if (winner == Player.N)
             {
                 // For a draw, you can add a smaller reward or bias to encourage quicker wins
-                node.TotalReward += 0;
+                //node.Draws+=1;
             }
             // Move up to the parent node for the next iteration
             node = node.Parent;
@@ -157,26 +160,81 @@ public class MonteCarloTreeSearchAI : IGameAI
 
     public double CalculateUCTValue(Node node, int parentVisits)
     {
-        double explorationFactor = 2; // Adjust based on your exploration strategy
+        if (node.Visits == 0)
+            return double.PositiveInfinity;
 
-        double exploitationValue = node.TotalReward / node.Visits;
+        double explorationFactor = Math.Sqrt(2.0); // Adjust based on your exploration strategy
+
+        double exploitationValue = (node.Wins) / node.Visits;
         double explorationValue = explorationFactor * Math.Sqrt(Math.Log(parentVisits) / node.Visits);
-
         return exploitationValue + explorationValue;
+        
+        // Factor in AI's estimation of potential future wins
+        /*double potentialWinsEstimation = EstimatePotentialWins(node);
+        double potentialWinsValue = potentialWinsEstimation / node.Visits;
+
+        return exploitationValue + explorationValue + potentialWinsValue;*/
+    }
+    /*
+    public double EstimatePotentialWins(Node node)
+    {
+        Player currentPlayer = node.State.CurrentPlayer;
+        Player opponentPlayer = node.State.GetOpponent(currentPlayer);
+
+        int currentPlayerPotentialWins = GetPlayerPotentialWins(node.State, currentPlayer);
+        int opponentPotentialWins = GetPlayerPotentialWins(node.State, opponentPlayer);
+
+        // Estimate the potential future wins for the AI
+        // You can use your own heuristic or evaluation function here
+        // For example, counting the number of potential wins based on the current state
+        double estimatedWins = 0;
+        if(currentPlayer == Player.X){
+            estimatedWins = currentPlayerPotentialWins - opponentPotentialWins;
+        }
+        else if(currentPlayer == Player.O)
+        {
+            estimatedWins = opponentPotentialWins - currentPlayerPotentialWins;
+        }
+        return estimatedWins;
     }
 
-    public Player SimulateToEnd(TicTacToeGame game)
+    public int GetPlayerPotentialWins(TicTacToeGame game, Player player)
     {
-        if (game.IsGameEnd())
+        int potentialWins = 0;
+
+        for (int row = 0; row < game.Board.GetLength(0); row++)
         {
-            return game.GetWinner();
+            for (int col = 0; col < game.Board.GetLength(1); col++)
+            {
+                if (game.Board[row, col] == Player.N)
+                {
+                    TicTacToeGame copyGame = (TicTacToeGame)game.Clone();
+                    copyGame.MakeMove(row, col);
+
+                    if (copyGame.HasWin(player))
+                    {
+                        potentialWins+=1;
+                    }
+                }
+            }
         }
 
-        List<(int Row, int Col)> legalMoves = game.GetEmptyCells();
-        (int Row, int Col) randomMove = legalMoves[game.random.Next(legalMoves.Count)];
+        return potentialWins;
+    }
+    
+    */
+    public Node SimulateToEnd(Node node)
+    {
+        if (node.State.IsGameEnd())
+        {
+            return node;
+        }
 
-        game.MakeMove(randomMove.Row, randomMove.Col);
-        return SimulateToEnd(game); // Recursively continue simulating
+        List<(int Row, int Col)> legalMoves = node.State.GetEmptyCells();
+        (int Row, int Col) randomMove = legalMoves[node.State.random.Next(legalMoves.Count)];
+
+        node.State.MakeMove(randomMove.Row, randomMove.Col);
+        return SimulateToEnd(node); // Recursively continue simulating
     }
 
 }
@@ -189,16 +247,17 @@ public class Node
     public List<Node> Children { get; } = new List<Node>();
     public int Visits { get; set; } = 0;
     public int Wins { get; set; } = 0;
-    public double TotalReward { get; set; } // Total rewards accumulated during simulations
-
-    public Node(Node parent, (int Row, int Col) move, TicTacToeGame state)
+    public int Draws { get; set; } = 0;
+    public int Depth { get; }
+    public Node(Node parent, (int Row, int Col) move, TicTacToeGame state, int depth)
     {
         Parent = parent;
         Move = move;
         State = state;
         Children = new List<Node>();
         Visits = 0;
-        TotalReward = 0;
         Wins = 0;
+        Draws = 0;
+        Depth = depth;
     }
 }
