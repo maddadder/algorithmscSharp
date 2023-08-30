@@ -163,67 +163,30 @@ public class MonteCarloTreeSearchAI : IGameAI
     {
         if (node.Visits == 0)
             return double.PositiveInfinity;
+            
+        double explorationFactor = Math.Sqrt(2.0);
 
-        double explorationFactor = Math.Sqrt(2.0); // Adjust based on your exploration strategy
+        double exploitationValue;
 
-        double exploitationValue = (node.Wins) / node.Visits;
+        if (node.Wins > 0)
+        {
+            exploitationValue = (double)node.Wins / node.Visits;
+        }
+        else if (node.Wins < 0)
+        {
+            exploitationValue = node.Wins / node.Visits;
+        }
+        else
+        {
+            exploitationValue = 0;
+        }
+
         double explorationValue = explorationFactor * Math.Sqrt(Math.Log(parentVisits) / node.Visits);
-        return exploitationValue + explorationValue;
         
-        // Factor in AI's estimation of potential future wins
-        /*double potentialWinsEstimation = EstimatePotentialWins(node);
-        double potentialWinsValue = potentialWinsEstimation / node.Visits;
-
-        return exploitationValue + explorationValue + potentialWinsValue;*/
-    }
-    /*
-    public double EstimatePotentialWins(Node node)
-    {
-        Player currentPlayer = node.State.CurrentPlayer;
-        Player opponentPlayer = node.State.GetOpponent(currentPlayer);
-
-        int currentPlayerPotentialWins = GetPlayerPotentialWins(node.State, currentPlayer);
-        int opponentPotentialWins = GetPlayerPotentialWins(node.State, opponentPlayer);
-
-        // Estimate the potential future wins for the AI
-        // You can use your own heuristic or evaluation function here
-        // For example, counting the number of potential wins based on the current state
-        double estimatedWins = 0;
-        if(currentPlayer == Player.X){
-            estimatedWins = currentPlayerPotentialWins - opponentPotentialWins;
-        }
-        else if(currentPlayer == Player.O)
-        {
-            estimatedWins = opponentPotentialWins - currentPlayerPotentialWins;
-        }
-        return estimatedWins;
+        return exploitationValue + explorationValue;
     }
 
-    public int GetPlayerPotentialWins(TicTacToeGame game, Player player)
-    {
-        int potentialWins = 0;
-
-        for (int row = 0; row < game.Board.GetLength(0); row++)
-        {
-            for (int col = 0; col < game.Board.GetLength(1); col++)
-            {
-                if (game.Board[row, col] == Player.N)
-                {
-                    TicTacToeGame copyGame = (TicTacToeGame)game.Clone();
-                    copyGame.MakeMove(row, col);
-
-                    if (copyGame.HasWin(player))
-                    {
-                        potentialWins+=1;
-                    }
-                }
-            }
-        }
-
-        return potentialWins;
-    }
     
-    */
     public Node SimulateToEnd(Node node)
     {
         if (node.State.IsGameEnd())
