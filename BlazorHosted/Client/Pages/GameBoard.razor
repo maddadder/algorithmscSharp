@@ -42,14 +42,24 @@
 </div>
 <div>&#160;</div>
 <div>
+    <div>Select Difficulty</div>
+    <InputSelect @bind-Value="selectedDifficulty" @oninput="SelectedDifficultyhanged">
+        <option value="easy">easy</option>
+        <option value="medium">medium</option>
+        <option value="hard">hard</option>
+    </InputSelect>
+</div>
+<div>&#160;</div>
+<div>
     <div>Board Size</div>
-    <InputNumber @oninput="BoardSizeChanged" class="cost" @bind-Value="boardSize" style="width:75px" min="3" max="4" />,
+    <InputNumber @oninput="BoardSizeChanged" class="cost" @bind-Value="boardSize" style="width:75px" min="3" max="5" />,
 </div>
 @code {
 
 
     private int boardSize = 3;
-    private string selectedAlgorithm = "mcts"; // Default to Minimax
+    private string selectedDifficulty = "easy"; 
+    private string selectedAlgorithm = "mcts"; 
     private string response = string.Empty;
     private TicTacToeGame game;
     private IGameAI aiPlayer;
@@ -62,11 +72,17 @@
         if(!string.IsNullOrEmpty((string)e.Value))
         {
             int.TryParse((string)e.Value, out temp);
-            if(temp < 5 && temp > 2){
+            if(temp < 6 && temp > 2){
                 boardSize = temp;
                 OnInitialized();
             }
         }
+    }
+
+    private void SelectedDifficultyhanged(ChangeEventArgs e)
+    {
+        selectedDifficulty = (string)e.Value;
+        OnInitialized();
     }
 
     private void SelectedAlgorithmChanged(ChangeEventArgs e)
@@ -82,26 +98,52 @@
         response = string.Empty;
         bool aiGoesFirst = random.Next(2) == 0;
         game = new TicTacToeGame(boardSize, Player.X);
+        
         if (selectedAlgorithm == "minimax")
         {
-            aiPlayer = new MinimaxAI(4);
+            if (selectedDifficulty == "easy")
+            {
+                aiPlayer = new MinimaxAI(1); // Adjust depth for easy difficulty
+            }
+            else if (selectedDifficulty == "medium")
+            {
+                aiPlayer = new MinimaxAI(2); // Adjust depth for medium difficulty
+            }
+            else if (selectedDifficulty == "hard")
+            {
+                aiPlayer = new MinimaxAI(3); // Adjust depth for hard difficulty
+            }
         }
         else if (selectedAlgorithm == "mcts")
         {
-            aiPlayer = new MonteCarloTreeSearchAI(2000, 6);
+            if (selectedDifficulty == "easy")
+            {
+                aiPlayer = new MonteCarloTreeSearchAI(100, 4); // Adjust simulations and depth for easy difficulty
+            }
+            else if (selectedDifficulty == "medium")
+            {
+                aiPlayer = new MonteCarloTreeSearchAI(1000, 5); // Adjust simulations and depth for medium difficulty
+            }
+            else if (selectedDifficulty == "hard")
+            {
+                aiPlayer = new MonteCarloTreeSearchAI(1500, 6); // Adjust simulations and depth for hard difficulty
+            }
         }
     }
+
     private void CellClicked(int row, int col)
     {
         if (game.CurrentPlayer == Player.X && game.Board[row, col] == Player.N)
         {
-            game.MakeMove(row, col);
-            if (!CheckForGameEnd())
-            {
-                // AI's turn
-                var (aiRow, aiCol) = aiPlayer.GetBestMove(game);
-                game.MakeMove(aiRow, aiCol);
-                CheckForGameEnd();
+            if (!CheckForGameEnd()){
+                game.MakeMove(row, col);
+                if (!CheckForGameEnd())
+                {
+                    // AI's turn
+                    var (aiRow, aiCol) = aiPlayer.GetBestMove(game);
+                    game.MakeMove(aiRow, aiCol);
+                    CheckForGameEnd();
+                }
             }
         }
     }
