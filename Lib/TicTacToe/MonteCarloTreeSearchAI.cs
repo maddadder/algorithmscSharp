@@ -38,6 +38,7 @@ public class MonteCarloTreeSearchAI : IGameAI
             Backpropagate(expandedNode, expandedNode.State.GetWinner());
         }
         Node bestChild = rootNode.Children.OrderByDescending(child => child.Wins / child.Visits)
+                                          .ThenByDescending(child => child.Draws)
                                           .ThenByDescending(child => game.random.Next())
                                           .FirstOrDefault();
         return bestChild.Move;
@@ -131,7 +132,7 @@ public class MonteCarloTreeSearchAI : IGameAI
             else if (winner == Player.N)
             {
                 // For a draw, you can add a smaller reward or bias to encourage quicker wins
-                //node.Draws+=1;
+                node.Draws+=1;
             }
             // Move up to the parent node for the next iteration
             node = node.Parent;

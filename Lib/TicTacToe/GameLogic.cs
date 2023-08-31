@@ -47,7 +47,7 @@ public class TicTacToeGame : ICloneable
         
         return clone;
     }
-    public (int Row, int Col) GetRandomMove(TicTacToeGame game)
+    public (int Row, int Col) GetRandomMove()
     {
         List<(int Row, int Col)> availableMoves = new List<(int, int)>();
 

@@ -48,7 +48,7 @@ namespace Test
             var aiPlayer = new MinimaxAI(5);
 
             // Act
-            var randomMove = game.GetRandomMove(game);
+            var randomMove = game.GetRandomMove();
 
             // Assert
             Assert.IsTrue(randomMove.Row >= 0 && randomMove.Row <= 2);

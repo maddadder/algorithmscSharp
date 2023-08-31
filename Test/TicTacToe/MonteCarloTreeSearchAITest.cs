@@ -12,6 +12,7 @@ namespace Test
         [TestMethod]
         public void TestGameSimulation()
         {
+            int winCount = 0;
             for(var i = 0;i<100;i++)
             {
                 Debug.WriteLine("NEW_GAME");
@@ -23,25 +24,30 @@ namespace Test
                 // Create an instance of the MonteCarloTreeSearchAI
                 MonteCarloTreeSearchAI OPlayer = new MonteCarloTreeSearchAI(1000, 6);
                 MinimaxAI XPlayer = new MinimaxAI(4);
+                var XPlayerRandomMove = game.GetRandomMove();
+                game.MakeMove(XPlayerRandomMove.Row, XPlayerRandomMove.Col);
+                
                 // Perform game simulation
                 while (!game.IsGameEnd())
                 {
-                    (int row, int col) XPlayerMove = XPlayer.GetBestMove(game);
-                    game.MakeMove(XPlayerMove.row, XPlayerMove.col);
+                    (int row, int col) OPlayerMove = OPlayer.GetBestMove(game);
+                    game.MakeMove(OPlayerMove.row, OPlayerMove.col);
+                    
                     if (!game.IsGameEnd())
                     {
-                        (int row, int col) OPlayerMove = OPlayer.GetBestMove(game);
-                        game.MakeMove(OPlayerMove.row, OPlayerMove.col);
+                        (int row, int col) XPlayerMove = XPlayer.GetBestMove(game);
+                        game.MakeMove(XPlayerMove.row, XPlayerMove.col);
                     }
                     if (game.IsGameEnd())
                     {
                         // Verify the winner
                         Player actualWinner = game.GetWinner();
                         Debug.WriteLine(actualWinner);
-                        //game.PrintBoard();
-                        Assert.IsTrue(actualWinner == Player.N);
+                        Debug.WriteLine(winCount);
+                        Assert.IsTrue(actualWinner == Player.O || actualWinner == Player.N);
                     }
                 }
+                winCount+=1;
             }  
         }
         [TestMethod]
@@ -126,7 +132,7 @@ namespace Test
             var aiPlayer = new MonteCarloTreeSearchAI(1000, 4);
 
             // Act
-            var randomMove = game.GetRandomMove(game);
+            var randomMove = game.GetRandomMove();
 
             // Assert
             Assert.IsTrue(randomMove.Row >= 0 && randomMove.Row <= 2);
