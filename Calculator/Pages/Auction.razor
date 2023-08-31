@@ -1,0 +1,183 @@
+@page "/auction"
+
+<h3>Auction Simulation</h3>
+
+<div>Select two compatible buyers:</div>
+<InputSelect @bind-Value="selectedBuyer1">
+    @foreach (var buyer in buyers)
+    {
+        <option value="@buyer.Name">@buyer.Name</option>
+    }
+</InputSelect>
+<div>&#160;</div>
+<InputSelect @bind-Value="selectedBuyer2">
+    @foreach (var buyer in buyers)
+    {
+        <option value="@buyer.Name">@buyer.Name</option>
+    }
+</InputSelect>
+<div>&#160;</div>
+<div>Select a product:</div>
+<InputSelect @bind-Value="selectedProduct">
+    @foreach (var product in products)
+    {
+        <option value="@product.Name">@product.Name</option>
+    }
+</InputSelect>
+<div>&#160;</div>
+<div>Enter starting bid:</div>
+<InputNumber @bind-Value="startingBid" step="5" 
+    @onblur="@(async (args) => _ = BidBlur(args, "startingBid"))"/>
+<div>&#160;</div>
+<div>Enter bid for @selectedBuyer1:</div>
+<InputNumber @bind-Value="selectedBuyer1Bid" step="5" 
+    @onblur="@(async (args) => _ = BidBlur(args, "Buyer1"))"/>
+<div>&#160;</div>
+<div>Enter bid for @selectedBuyer2:</div>
+<InputNumber @bind-Value="selectedBuyer2Bid" step="5" 
+    @onblur="@(async (args) => _ = BidBlur(args, "Buyer2"))"/>
+<div>&#160;</div>
+<button @onclick="SimulateAuction">Start Auction</button>
+<div>&#160;</div>
+<h4>Auction Results</h4>
+<p>Winner: @winnerName</p>
+<p>Winning Bid: $@winningBid</p>
+<p style="color:red">@errorResult</p>
+@code {
+    private List<Buyer> buyers;
+    private List<Product> products;
+    private string errorResult;
+    private string selectedBuyer1;
+    private string selectedBuyer2;
+    private string selectedProduct;
+    private decimal startingBid = 0;
+    private string winnerName;
+    private decimal winningBid;
+    private decimal selectedBuyer1Bid = 0;
+    private decimal selectedBuyer2Bid = 0;
+
+    protected override void OnInitialized()
+    {
+        // Initialize buyers and products here
+        buyers = new List<Buyer>
+        {
+            new Buyer { Name = "Buyer 1" },
+            new Buyer { Name = "Buyer 2" },
+            // Add more buyers
+        };
+        selectedBuyer1 = buyers[0].Name;
+        selectedBuyer2 = buyers[1].Name;
+        products = new List<Product>
+        {
+            new Product { Name = "Product A" },
+            new Product { Name = "Product B" },
+            // Add more products
+        };
+        selectedProduct = products[0].Name;
+    }
+
+    private async Task BidBlur(FocusEventArgs args, string inputType)
+    {
+        decimal roundedBid = 0;
+        switch (inputType)
+        {
+            case "startingBid":
+                roundedBid = Math.Floor(startingBid / 5) * 5;
+                if (roundedBid < startingBid)
+                {
+                    startingBid = roundedBid;
+                }
+                break;
+            case "Buyer1":
+                roundedBid = Math.Floor(selectedBuyer1Bid / 5) * 5;
+                if (roundedBid < selectedBuyer1Bid)
+                {
+                    selectedBuyer1Bid = roundedBid;
+                }
+                break;
+            case "Buyer2":
+                roundedBid = Math.Floor(selectedBuyer2Bid / 5) * 5;
+                if (roundedBid < selectedBuyer2Bid)
+                {
+                    selectedBuyer2Bid = roundedBid;
+                }
+                break;
+            default:
+                break;
+        }
+
+        await Task.CompletedTask;
+    }
+
+    private void SimulateAuction()
+    {
+        errorResult = string.Empty;
+        // Find the selected buyers by their names
+        Buyer buyer1 = buyers.FirstOrDefault(b => b.Name == selectedBuyer1);
+        Buyer buyer2 = buyers.FirstOrDefault(b => b.Name == selectedBuyer2);
+        Product product = products.FirstOrDefault(p => p.Name == selectedProduct);
+
+        if (buyer1 == null || buyer2 == null || product == null)
+        {
+            errorResult = "Make sure all selections are made";
+            return;
+        }
+
+        if (buyer1 == buyer2)
+        {
+            errorResult = "Buyers must be unique";
+            return;
+        }
+
+        // Assign the entered bids to the buyers
+        buyer1.Bid = selectedBuyer1Bid;
+        buyer2.Bid = selectedBuyer2Bid;
+
+        // Validate the starting bid
+        if (startingBid <= 0)
+        {
+            errorResult = "Starting bid must be greater than 0";
+            return;
+        }
+
+        // Simulate the auction mechanism
+        decimal currentBid = startingBid;
+        Buyer currentWinner = null;
+
+        while ((buyer1.Bid >= currentBid || buyer2.Bid >= currentBid) && 
+           (buyer1.Bid - currentBid >= 5.00m || buyer2.Bid - currentBid >= 5.00m))
+        {
+            // Determine the highest bidder
+            if(buyer1.Bid >= buyer2.Bid + 5.00m)
+            {
+                currentWinner = buyer1;
+            }
+            else if(buyer2.Bid >= buyer1.Bid + 5.00m)
+            {
+                currentWinner = buyer2;
+            }
+            else
+            {
+                currentWinner = buyer1;
+            }
+            currentBid += 5.00m; // Increment by $5
+        }
+
+        if (currentWinner != null)
+        {
+            // Determine the second-highest bidder
+            Buyer secondHighestBidder = currentWinner == buyer1 ? buyer2 : buyer1;
+
+            // Update the UI with auction results
+            winnerName = currentWinner.Name;
+            winningBid = secondHighestBidder.Bid;
+        }
+        else
+        {
+            // No valid bids
+            winnerName = "No Winner";
+            winningBid = 0;
+        }
+    }
+
+}
