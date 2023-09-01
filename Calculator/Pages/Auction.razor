@@ -50,11 +50,11 @@
     private string selectedBuyer1;
     private string selectedBuyer2;
     private string selectedProduct;
-    private decimal startingBid = 0;
+    private decimal startingBid = 5;
     private string winnerName;
     private decimal winningBid;
-    private decimal selectedBuyer1Bid = 0;
-    private decimal selectedBuyer2Bid = 0;
+    private decimal selectedBuyer1Bid = 5;
+    private decimal selectedBuyer2Bid = 10;
 
     protected override void OnInitialized()
     {
@@ -140,12 +140,23 @@
             return;
         }
 
+        // Validate the buyers bid
+        if (buyer1.Bid < startingBid)
+        {
+            errorResult = $"Buyer 1 bid must be greater than or equal to the starting bid";
+            return;
+        }
+        if (buyer2.Bid < startingBid)
+        {
+            errorResult = $"Buyer 2 bid must be greater than or equal to the starting bid";
+            return;
+        }
+
         // Simulate the auction mechanism
         decimal currentBid = startingBid;
         Buyer currentWinner = null;
 
-        while ((buyer1.Bid >= currentBid || buyer2.Bid >= currentBid) && 
-           (buyer1.Bid - currentBid >= 5.00m || buyer2.Bid - currentBid >= 5.00m))
+        while ((buyer1.Bid >= currentBid || buyer2.Bid >= currentBid))
         {
             // Determine the highest bidder
             if(buyer1.Bid >= buyer2.Bid + 5.00m)
