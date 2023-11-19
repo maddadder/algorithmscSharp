@@ -16,4 +16,4 @@ spec:
         - destination:
             host: {{ include "calculator.fullname" . }}.{{ .Values.appNamespace }}.svc.cluster.local
             port:
-              number: 80
+              number: 8080
